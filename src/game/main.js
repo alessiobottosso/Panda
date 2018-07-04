@@ -13,6 +13,7 @@ game.createScene('Main', {
     
     update: function() {
         if (!game.input.motion) return;
+        if (!player) return;
         var accel = game.input.motion.accelerationIncludingGravity;
         player.sprite.x = game.width / 2 - accel.x * 20;
         player.sprite.y = game.height / 2 - accel.y * 20;
