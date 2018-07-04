@@ -7,7 +7,7 @@ game.addAsset('panda.png');
 
 game.createScene('Main', {
     init: function() {
-        makeFullscreen('canvas');
+        makeFullscreen('pandaDebug');
         var player = new game.Player();
         player.sprite.addTo(this.stage);
     }
