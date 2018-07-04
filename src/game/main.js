@@ -5,31 +5,26 @@ game.module(
 
 game.addAsset('panda.png');
 
-game.createScene('Main', 
-{
-    init: function() 
-    {
+game.createScene('Main', {
+    init: function() {
+        makeFullscreen('canvas');
         var player = new game.Player();
         player.sprite.addTo(this.stage);
-        
-        var tween = new game.Tween(player.sprite.position);
-        tween.to({ x: 200, y: 200 }, 2000);
-        tween.start();
-
-        game.Timer.add(1000, function() 
-        {
-            makeFullscreen('canvas');
-            tween.pause();
-            var remaining = tween.duration - tween.currentTime;
-        });
+    },
+    
+    update: function() {
+        if (!game.input.motion) return;
+        var accel = game.input.motion.accelerationIncludingGravity;
+        player.sprite.x = game.width / 2 - accel.x * 20;
+        player.sprite.y = game.height / 2 - accel.y * 20;
     }
 });
 
 function makeFullscreen(id)
-{	var el = document.getElementById(id);	
-    if	(el.requestFullScreen) el.requestFullScreen();	
-    else if	(el.webkitRequestFullScreen) el.webkitRequestFullScreen();	
-    else if	(el.mozRequestFullScreen   ) el.mozRequestFullScreen();
+{   var el = document.getElementById(id);   
+    if  (el.requestFullScreen) el.requestFullScreen();  
+    else if (el.webkitRequestFullScreen) el.webkitRequestFullScreen();  
+    else if (el.mozRequestFullScreen   ) el.mozRequestFullScreen();
 }
 
 
