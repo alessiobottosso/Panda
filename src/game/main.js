@@ -20,10 +20,4 @@ game.createScene('Main', {
     }
 });
 
-game.createClass('Player', {
-    init: function() {
-        this.sprite = new game.Sprite('panda.png');
-    }
-});
-
 });
