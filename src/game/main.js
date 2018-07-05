@@ -32,12 +32,12 @@ game.createScene('Main', {
     
     update: function() 
     {
-        this.sprite.x += 200 * game.delta;
+        this.sprite.x += 50 * game.delta;
         
         var grap = new game.Graphics();
         grap.drawCircle(5, 5, 5);
         grap.x = this.sprite.x;
-        grap.y = this.sprite.y;
+        grap.y = this.sprite.y / 2;
         grap.addTo(this.container);
         
         if (!game.input.motion) 
