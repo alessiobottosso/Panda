@@ -13,6 +13,9 @@ game.createScene('Main', {
 
         myText = new game.SystemText('Hello Panda');
         myText.addTo(this.stage);
+
+        maxY = 0;
+        minY = 0;
     },
     
     update: function() 
@@ -22,7 +25,16 @@ game.createScene('Main', {
         this.sprite.x = game.width / 2 - accel.x * 20;
         this.sprite.y = game.height / 2 - accel.y * 20;
 
-        myText.text = "Accel Y: " + accel.y;
+        if (accel.y > maxY)
+        {
+            maxY = accel.y;
+        }
+        if (accel.y < minY)
+        {
+            minY = accel.y;
+        }
+
+        myText.text = "Max Y: " + maxY + " - Min Y: " + minY;
 
         if (accel.y >= 15 || accel.y <= -15)
         {
