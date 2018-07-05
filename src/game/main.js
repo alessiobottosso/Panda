@@ -120,7 +120,7 @@ game.createScene('Main', {
         
         // GRAPH DEBUG
         var grap = new game.Graphics();
-        grap.lineWidth = 10;
+        grap.lineWidth = 20;
         grap.drawRect(oldx, oldy, this.sprite.x - oldx, this.sprite.y - oldy);
         grap.addTo(this.container);
         
