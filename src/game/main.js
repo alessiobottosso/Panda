@@ -18,7 +18,7 @@ game.createScene('Main', {
         this.sprite.x = game.width / 2 - accel.x * 20;
         this.sprite.y = game.height / 2 - accel.y * 20;
 
-        if ((this.sprite.y >= game.height / 2 + 10) || (this.sprite.y < game.height / 2 - 10))
+        if ((this.sprite.y >= game.height / 2 + 5) || (this.sprite.y < game.height / 2 - 5))
         {
             navigator.vibrate(200);
         }
