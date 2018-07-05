@@ -12,7 +12,7 @@ game.createScene('Main', {
         this.sprite.addTo(this.stage);
 
         var text = new game.Text('Hello Panda');
-        this.text.addTo(this.stage);
+        text.addTo(this.stage);
     },
     
     update: function() {
