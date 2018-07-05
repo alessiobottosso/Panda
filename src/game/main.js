@@ -39,7 +39,7 @@ game.createScene('Main', {
         if (accel.y >= 15 || accel.y <= -15)
         {
             myText.text = "VIBRATE";
-            navigator.vibrate(10);
+            navigator.vibrate(5);
         }
         else
         {
