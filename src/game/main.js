@@ -10,9 +10,6 @@ game.createScene('Main', {
         this.sprite = new game.Sprite('panda.png');
         this.sprite.anchorCenter();
         this.sprite.addTo(this.stage);
-
-        var text = new game.Text('Hello Panda');
-        text.addTo(this.stage);
     },
     
     update: function() {
