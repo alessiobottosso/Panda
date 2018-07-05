@@ -21,8 +21,6 @@ game.createScene('Main', {
         this.sprite.x = game.width / 2 - accel.x * 20;
         this.sprite.y = game.height / 2 - accel.y * 20;
 
-        this.text.setText ("Accel y: " + accel.y);
-
         if (accel.y >= 15 || accel.y <= -15)
         {
             navigator.vibrate(200);
