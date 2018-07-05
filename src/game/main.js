@@ -11,15 +11,18 @@ game.createScene('Main', {
         this.sprite.anchorCenter();
         this.sprite.addTo(this.stage);
 
-        var debugText = new game.Text('Hello Panda');
-        this.debugText.addTo(this.stage);
+        myText = new game.SystemText('Hello Panda');
+        myText.addTo(this.stage);
     },
     
-    update: function() {
+    update: function() 
+    {
         if (!game.input.motion) return;
         var accel = game.input.motion.accelerationIncludingGravity;
         this.sprite.x = game.width / 2 - accel.x * 20;
         this.sprite.y = game.height / 2 - accel.y * 20;
+
+        myText.text = "Accel Y: " + accel.y;
 
         if (accel.y >= 15 || accel.y <= -15)
         {
