@@ -33,19 +33,21 @@ game.createScene('Main', {
     update: function() 
     {
         this.sprite.x += 25 * game.delta;
-        // EDITOR
-        //if (game.keyboard.down('UP')) this.sprite.y += 25 * game.delta;
-        //if (game.keyboard.down('DOWN')) this.sprite.y -= 25 * game.delta;
         
+        /*
+        // GRAPH DEBUG
         var grap = new game.Graphics();
         grap.drawCircle(5, 5, 5);
         grap.x = this.sprite.x;
         grap.y = this.sprite.y;
         grap.addTo(this.container);
+        */
         
         if (!game.input.motion) 
         {
-            return;
+            // EDITOR
+            if (game.keyboard.down('UP')) this.sprite.y -= 200 * game.delta;
+            if (game.keyboard.down('DOWN')) this.sprite.y += 200 * game.delta;
         }
         else
         {
