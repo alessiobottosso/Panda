@@ -117,7 +117,7 @@ game.createScene('Main', {
         var oldx = this.sprite.x;
         var oldy = this.sprite.y;
         
-        this.sprite.x += 25 * game.delta;
+        this.sprite.x += 100 * game.delta;
         
         // GRAPH DEBUG
         var grap = new game.Graphics();
