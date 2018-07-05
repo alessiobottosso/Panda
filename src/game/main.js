@@ -34,11 +34,16 @@ game.createScene('Main', {
             minY = accel.y;
         }
 
-        myText.text = "Max Y: " + maxY + " - Min Y: " + minY;
+        //myText.text = "Max Y: " + maxY + " - Min Y: " + minY;
 
         if (accel.y >= 15 || accel.y <= -15)
         {
-            navigator.vibrate(200);
+            myText.text = "VIBRATE";
+            navigator.vibrate(100);
+        }
+        else
+        {
+            myText.text = "";
         }
     }
 });
