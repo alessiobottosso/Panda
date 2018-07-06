@@ -99,7 +99,7 @@ game.createScene('Main', {
         {
             var accel = game.input.motion.accelerationIncludingGravity;
             //this.sprite.x = game.width / 2 - accel.x * 20;
-            this.sprite.y = game.height / 2 - accel.y * 20;
+            //this.sprite.y = game.height / 2 - accel.y * 20;
     
             if (accel.y > maxY)
             {
