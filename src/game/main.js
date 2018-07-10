@@ -14,6 +14,7 @@ game.createScene('Main', {
     init: function() 
     {
         this.world = new game.Physics();
+        this.world.gravity.y = 0;
         
         this.player = new game.Spine('spineboy.json');
         this.player.position.x = game.width / 2;
@@ -221,11 +222,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity.y >= 0)
                 {
-                    this.body.velocity.x += 200;	
+                    this.body.velocity.x += 500;	
                 }
                 else
                 {
-                    this.body.velocity.x -= 200;	
+                    this.body.velocity.x -= 500;	
                 }
             }
             
@@ -233,11 +234,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity.y >= 0)
                 {
-                    this.body.velocity.y += 200;	
+                    this.body.velocity.y += 500;	
                 }
                 else
                 {
-                    this.body.velocity.y -= 200;	
+                    this.body.velocity.y -= 500;	
                 }
             }
     
