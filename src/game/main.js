@@ -75,26 +75,30 @@ game.createScene('Main', {
         if(this.body.position.y - height < 0) {			
             this.body.position.y -= this.body.position.y - height;			
             this.body.velocity.y *= -0.75;	
+            navigator.vibrate(2);
         }       	
         
         // Bottom
         if(this.body.position.y + height > game.system.height) 
         {			
             this.body.position.y += game.system.height - this.body.position.y - height;			
-            this.body.velocity.y *= -0.75;		
+            this.body.velocity.y *= -0.75;	
+            navigator.vibrate(2);
         }
         
         // right		
         if(this.body.position.x + width > game.system.width) 
         {			
             this.body.position.x += game.system.width - this.body.position.x - width;			
-            this.body.velocity.x *= -0.75;		
+            this.body.velocity.x *= -0.75;	
+            navigator.vibrate(2);
         }
         
         if(this.body.position.x - width < 0) 
         {			
 	        this.body.position.x -= this.body.position.x - width;			
-	        this.body.velocity.x *= -0.75;			
+	        this.body.velocity.x *= -0.75;	
+	        navigator.vibrate(2);
         }	
         
         var oldx = this.player.x;
@@ -217,11 +221,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity.y >= 0)
                 {
-                    this.body.velocity.x += 20;	
+                    this.body.velocity.x += 200;	
                 }
                 else
                 {
-                    this.body.velocity.x -= 20;	
+                    this.body.velocity.x -= 200;	
                 }
             }
             
@@ -229,11 +233,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity.y >= 0)
                 {
-                    this.body.velocity.y += 20;	
+                    this.body.velocity.y += 200;	
                 }
                 else
                 {
-                    this.body.velocity.y -= 20;	
+                    this.body.velocity.y -= 200;	
                 }
             }
     
