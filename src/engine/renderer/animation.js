@@ -196,12 +196,13 @@ game.createClass('Animation', 'Sprite', {
         @private
     **/
     _updateAnimation: function() {
+        if (game.scene.paused && game.scene._pausedAnims.indexOf(this) !== -1) return;
         var anim = this.currentAnim;
         if (!anim.textures) throw 'No textures found for animation';
         this._frameTime += anim.speed * game.delta;
 
         if (this._frameTime >= 1) {
-            this._frameTime = 0;
+            this._frameTime = this._frameTime % 1;
 
             if (anim.random && anim.textures.length > 1) {
                 var nextFrame = this.currentFrame;
@@ -269,6 +270,9 @@ game.addAttributes('Animation', {
         if (textures.length > 0) {
             textures.sort(game.compare);
             return new game.Animation(textures);
+        }
+        else {
+            throw 'No textures found for ' + name;
         }
     }
 });

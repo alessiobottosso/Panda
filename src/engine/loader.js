@@ -22,17 +22,12 @@ game.createClass('Loader', 'Scene', {
     **/
     loaded: 0,
     /**
-        Function or Scene name to run, when loader complete.
-        @property {Function|String} onComplete
-    **/
-    onComplete: null,
-    /**
         Percent of files loaded.
         @property {Number} percent
     **/
     percent: 0,
     /**
-        Scene to set, when loader complete.
+        Name of scene to set, when loader complete.
         @property {String} scene
     **/
     scene: null,
@@ -83,9 +78,7 @@ game.createClass('Loader', 'Scene', {
         this.totalFiles = this._queue.length;
         if (this.totalFiles === 0) this.percent = 100;
 
-        if (scene) {
-            this.init();
-        }
+        if (scene) this.init();
         return true;
     },
 
@@ -154,6 +147,15 @@ game.createClass('Loader', 'Scene', {
     },
 
     /**
+        @method loadCSS
+        @param {String} filePath
+        @param {Function} callback
+    **/
+    loadCSS: function(filePath, callback) {
+        this.loadFile(filePath, this.parseCSS.bind(this, filePath, callback));
+    },
+
+    /**
         Load file with XMLHttpRequest.
         @method loadFile
         @param {String} filePath
@@ -189,9 +191,12 @@ game.createClass('Loader', 'Scene', {
         @param {Function} callback
     **/
     loadImage: function(filePath, callback) {
-        game.BaseTexture.fromImage(filePath, function() {
-            if (game.Loader.preRender) game.renderer.context.drawImage(this.source, 0, 0);
-            callback();
+        game.BaseTexture.fromImage(filePath, function(error) {
+            if (error) callback(error);
+            else {
+                if (game.Loader.preRender) game.renderer.context.drawImage(this.source, 0, 0);
+                callback();
+            }
         });
     },
 
@@ -202,6 +207,24 @@ game.createClass('Loader', 'Scene', {
     **/
     loadJSON: function(filePath, callback) {
         this.loadFile(filePath, this.parseJSON.bind(this, filePath, callback));
+    },
+
+    /**
+        @method loadScript
+        @param {String} filePath
+        @param {Function} callback
+    **/
+    loadScript: function(filePath, callback) {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = filePath;
+        script.onload = function() {
+            callback();
+        };
+        script.onerror = function(error) {
+            callback('Error loading script ' + filePath);
+        };
+        document.getElementsByTagName('head')[0].appendChild(script);
     },
 
     /**
@@ -272,6 +295,23 @@ game.createClass('Loader', 'Scene', {
     },
 
     /**
+        @method parseCSS
+        @param {String} filePath
+        @param {Function} callback
+        @param {XMLHttpRequest} request
+    **/
+    parseCSS: function(filePath, callback, request) {
+        if (!request.responseText || request.status === 404) callback('Error loading CSS ' + filePath);
+
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = request.responseText;
+        document.getElementsByTagName('head')[0].appendChild(style);
+        
+        callback();
+    },
+
+    /**
         @method parseFont
         @param {String} filePath
         @param {Function} callback
@@ -281,7 +321,7 @@ game.createClass('Loader', 'Scene', {
         if (!request.responseText || request.status === 404) callback('Error loading font ' + filePath);
 
         var text = request.responseText.split('\n');
-        if (text[0].indexOf('xml') !== -1) {
+        if (text[0].indexOf('xml') !== -1 || text[0].indexOf('<font>') !== -1) {
             // XML
             var responseXML = request.responseXML;
             if (!responseXML || /MSIE 9/i.test(navigator.userAgent) || navigator.isCocoonJS) {
@@ -507,9 +547,11 @@ game.addAttributes('Loader', {
     **/
     formats: {
         atlas: 'loadAtlas',
+        css: 'loadCSS',
         png: 'loadImage',
         jpg: 'loadImage',
         jpeg: 'loadImage',
+        js: 'loadScript',
         json: 'loadJSON',
         fnt: 'loadFont',
         svg: 'loadImage'

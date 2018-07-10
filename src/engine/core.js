@@ -99,7 +99,7 @@ var game = {
         Engine version.
         @property {String} version
     **/
-    version: '2.5.0',
+    version: '2.8.1',
     /**
         @property {Boolean} _booted
         @private
@@ -195,17 +195,18 @@ var game = {
     _waitForLoad: 0,
 
     /**
-        Add asset to load queue. Path is relative to media folder. If not id defined, path will be used as id.
+        Add asset to load queue. If not id defined, filename will be used as id.
         @method addAsset
-        @param {String} path
+        @param {String} filename
         @param {String} [id]
     **/
-    addAsset: function(path, id) {
+    addAsset: function(filename, id) {
+        if (!filename) throw 'addAsset: filename undefined';
         if (id && this.paths[id]) return;
-        if (this.paths[path]) return;
-        var realPath = this._getFilePath(path);
+        if (this.paths[filename]) return;
+        var realPath = this._getFilePath(filename);
         if (id) this.paths[id] = realPath;
-        this.paths[path] = realPath;
+        this.paths[filename] = realPath;
         if (this.mediaQueue.indexOf(realPath) === -1) this.mediaQueue.push(realPath);
         return id;
     },
@@ -284,6 +285,7 @@ var game = {
         @return {Class}
     **/
     createClass: function(name, extend, content) {
+        if (!name) throw 'createClass: name undefined';
         if (typeof name === 'object') return this.Class.extend(name);
 
         if (this[name]) throw 'Class ' + name + ' already created';
@@ -293,7 +295,7 @@ var game = {
             extend = 'Class';
         }
 
-        if (!this[extend]) throw 'Class ' + extend + ' not found';
+        if (!this[extend]) throw 'createClass: Class ' + extend + ' not found for ' + name;
 
         this[name] = this[extend].extend(content);
         this[name]._name = name;
@@ -320,7 +322,7 @@ var game = {
     },
 
     /**
-        Define properties to class.
+        Define properties to class with get and set functions.
         @method defineProperties
         @param {String} className
         @param {Object} properties
@@ -343,7 +345,22 @@ var game = {
         @return {Object}
     **/
     getJSON: function(id) {
+        if (!id) throw 'getJSON: id undefined';
         return this.json[this.paths[id]];
+    },
+
+    /**
+        Inject class.
+        @method injectClass
+        @param {String} name
+        @param {Object} content
+        @return {Class}
+    **/
+    injectClass: function(name, content) {
+        if (!name) throw 'injectClass: name undefined';
+        if (!this[name]) throw 'Class ' + name + ' not found';
+        this[name].inject(content);
+        return this[name];
     },
 
     /**
@@ -493,8 +510,8 @@ var game = {
         @chainable
     **/
     require: function(modules) {
-        var i, modules = Array.prototype.slice.call(arguments);
-        for (i = 0; i < modules.length; i++) {
+        modules = Array.prototype.slice.call(arguments);
+        for (var i = 0; i < modules.length; i++) {
             var name = modules[i];
             if (this.config.ignoreModules && this.config.ignoreModules.indexOf(name) !== -1) continue;
             if (name && this._current.requires.indexOf(name) === -1) this._current.requires.push(name);
@@ -592,14 +609,15 @@ var game = {
 
         if (this.device.mobile) {
             // Search for viewport meta
+            var viewportFound = false;
             var metaTags = document.getElementsByTagName('meta');
             for (i = 0; i < metaTags.length; i++) {
                 if (metaTags[i].name === 'viewport') {
-                    var viewportFound = true;
+                    viewportFound = true;
                     break;
                 }
             }
-
+            
             // Add viewport meta, if none found
             if (!viewportFound) {
                 var viewport = document.createElement('meta');
@@ -636,11 +654,10 @@ var game = {
         @private
     **/
     _DOMReady: function() {
-        if (!this._DOMLoaded) {
-            if (!document.body) return setTimeout(this._DOMReady.bind(this), 13);
-            this._DOMLoaded = true;
-            if (this._gameModuleDefined) this._loadModules();
-        }
+        if (this._DOMLoaded) return;
+        if (!document.body) return setTimeout(this._DOMReady.bind(this), 13);
+        this._DOMLoaded = true;
+        if (this._gameModuleDefined) this._loadModules();
     },
 
     /**
@@ -695,8 +712,15 @@ var game = {
 
         // iPhone
         this.device.iPhone = /iPhone/i.test(navigator.userAgent);
-        this.device.iPhone4 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 920);
-        this.device.iPhone5 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1096);
+        this.device.iPhone4 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 960);
+        this.device.iPhone5 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1136);
+        this.device.iPhone6 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1334);
+        this.device.iPhone7 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1334);
+        this.device.iPhone8 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1334);
+        this.device.iPhoneX = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2436);
+        this.device.iPhone6Plus = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2208);
+        this.device.iPhone7Plus = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2208);
+        this.device.iPhone8Plus = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2208);
 
         // iPad
         this.device.iPad = /iPad/i.test(navigator.userAgent);
@@ -711,6 +735,7 @@ var game = {
         this.device.iOS8 = (this.device.iOS && /OS 8/i.test(navigator.userAgent));
         this.device.iOS9 = (this.device.iOS && /OS 9/i.test(navigator.userAgent));
         this.device.iOS10 = (this.device.iOS && /OS 10/i.test(navigator.userAgent));
+        this.device.iOS11 = (this.device.iOS && /OS 11/i.test(navigator.userAgent));
         this.device.WKWebView = (this.device.iOS && window.webkit && window.webkit.messageHandlers);
         
         // Android
@@ -719,6 +744,10 @@ var game = {
         var androidVer = navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
         this.device.androidStock = !!(androidVer && androidVer[1] < 537);
         this.device.androidTV = /Android TV/i.test(navigator.userAgent);
+        this.device.android5 = /Android 5/i.test(navigator.userAgent);
+        this.device.android6 = /Android 6/i.test(navigator.userAgent);
+        this.device.android7 = /Android 7/i.test(navigator.userAgent);
+        this.device.android8 = /Android 8/i.test(navigator.userAgent);
         
         // Microsoft
         this.device.ie9 = /MSIE 9/i.test(navigator.userAgent);

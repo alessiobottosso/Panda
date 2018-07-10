@@ -10,6 +10,10 @@ game.config = {
         resize: false
     },
 
-    mobile: {
+    debug: {
+        enabled: true,
+        showInfo: true,
+        position: 'bottom',
+        panelUpdate: 50
     }
 };

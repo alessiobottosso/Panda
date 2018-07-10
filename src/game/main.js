@@ -56,9 +56,9 @@ game.createScene('Main', {
         // GRAPH DEBUG
         /*
         var grap = new game.Graphics();
-        grap.lineWidth = 20;
-        grap.drawRect(oldx, oldy, this.sprite.x - oldx, this.sprite.y - oldy);
-        grap.addTo(this.container);
+        grap.lineWidth = 2;
+        grap.lineColor = '#ff0000';
+        grap.drawLine(oldx, oldy, this.player.x, this.player.y);
         */
         
         if (!game.input.motion) 
@@ -111,12 +111,13 @@ game.createScene('Main', {
             }
     
             //myText.text = "Max Y: " + maxY + " - Min Y: " + minY;
-    
-            if (accel.y >= 15 || accel.y <= -15)
+            //myText.text = game.debug.fps;
+
+            if (accel.y >= 10 || accel.y <= -10)
             {
                 //myText.text = "VIBRATE";
-                navigator.vibrate(10);
-                
+                navigator.vibrate(5);
+                /*
                 if (this.player.isWalking === true)
                 {
                     //this.sprite.y += 200 * game.delta;
@@ -124,9 +125,11 @@ game.createScene('Main', {
                     this.player.isRunning = true;
                     this.player.play('run', true);
                 }
+                */
             }
             else
             {
+                /*
                 myText.text = "";
                 
                 if (this.player.isWalking === false)
@@ -135,6 +138,7 @@ game.createScene('Main', {
                     this.player.isWalking = true;
                     this.player.play('walk', true);
                 }
+                */
             }
         }
     }

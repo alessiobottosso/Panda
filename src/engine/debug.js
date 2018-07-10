@@ -68,6 +68,14 @@ game.createClass('Debug', {
     _frames: 0,
 
     init: function() {
+        if (game.Debug.showInfo) {
+            console.log('Panda Engine ' + game.version);
+            for (var name in game.modules) {
+                if (name.indexOf('plugin') === 0 && game.modules[name].version) {
+                    console.log(name + ' ' + game.modules[name].version);
+                }
+            }
+        }
         game.Input.inject({
             _calculateXY: function(event) {
                 if (game.Debug.fakeTouch) return;
@@ -175,6 +183,18 @@ game.createClass('Debug', {
     },
 
     /**
+        Add text to debug panel.
+        @method addText
+        @param {String} name
+        @param {Number|Boolean|String} value
+    **/
+    addText: function(name, value) {
+        this.text += name;
+        if (typeof value !== 'undefined') this.text += ': ' + value;
+        this.text += ' ';
+    },
+
+    /**
         @method _addPanel
         @private
     **/
@@ -193,18 +213,6 @@ game.createClass('Debug', {
         this.panel.style.pointerEvents = 'none';
         this.panel.style.opacity = game.Debug.panelAlpha;
         document.body.appendChild(this.panel);
-    },
-
-    /**
-        @method _addText
-        @private
-        @param {String} name
-        @param {Number|Boolean|String} value
-    **/
-    _addText: function(name, value) {
-        this.text += name;
-        if (typeof value !== 'undefined') this.text += ': ' + value;
-        this.text += ' ';
     },
 
     /**
@@ -348,8 +356,8 @@ game.createClass('Debug', {
             }
             else {
                 // Rectangle
-                var hw = hitArea.width * scaleX;
-                var hh = hitArea.height * scaleY;
+                var hw = hitArea.width * scaleX * game.scale;
+                var hh = hitArea.height * scaleY * game.scale;
                 context.setTransform(1, 0, 0, 1, hx, hy);
                 context.fillRect(0, 0, hw, hh);
             }
@@ -485,17 +493,22 @@ game.createClass('Debug', {
         }
     },
 
+    /**
+        @method _updatePanel
+        @private
+    **/
     _updatePanel: function() {
         this.text = '';
-        this._addText(game.version);
-        this._addText('FPS', this.fps);
-        this._addText('CANVAS', game.renderer.canvas.width + 'x' + game.renderer.canvas.height);
-        this._addText('DRAWS', this._draws);
-        this._addText('BODIES', this._bodies.length);
-        this._addText('UPDATES', game.scene.objects.length);
-        this._addText('TWEENS', game.scene.tweens.length);
-        this._addText('TIMERS', game.scene.timers.length);
-        this._addText('HIRES', game.scale);
+        this.addText(game.version);
+        this.addText('FPS', this.fps);
+        this.addText('CANVAS', game.renderer.canvas.width + 'x' + game.renderer.canvas.height);
+        this.addText('DRAWS', this._draws);
+        this.addText('BODIES', this._bodies.length);
+        this.addText('UPDATES', game.scene.objects.length);
+        this.addText('TWEENS', game.scene.tweens.length);
+        this.addText('TIMERS', game.scene.timers.length);
+        this.addText('HIRES', game.scale);
+        game.Debug.updatePanel.call(this);
         this.panel.innerHTML = this.text;
     }
 });
@@ -692,6 +705,12 @@ game.addAttributes('Debug', {
     **/
     showHitAreas: false,
     /**
+        Show version info on console.
+        @attribute {Boolean} showInfo
+        @default true
+    **/
+    showInfo: true,
+    /**
         Show debug panel.
         @attribute {Boolean} showPanel
         @default true
@@ -702,7 +721,13 @@ game.addAttributes('Debug', {
         @attribute {Boolean} showSprites
         @default false
     **/
-    showSprites: false
+    showSprites: false,
+    /**
+        Function that is called every time the debug panel is updated.
+        @method updatePanel
+        @static
+    **/
+    updatePanel: function() {}
 });
 
 game.createClass('DebugTouch', {

@@ -22,12 +22,12 @@ game.createClass('System', {
     **/
     canvasWidth: 0,
     /**
-        Current delta time in seconds (game.delta).
+        Time since last frame (seconds), shorthand game.delta
         @property {Number} delta
     **/
     delta: 0,
     /**
-        Height of the game canvas (game.height).
+        Height of the game canvas (pixels), shorthand game.height
         @property {Number} height
     **/
     height: 0,
@@ -57,7 +57,12 @@ game.createClass('System', {
     **/
     scene: null,
     /**
-        Width of the game canvas (game.width).
+        Name of current scene.
+        @property {String} sceneName
+    **/
+    sceneName: null,
+    /**
+        Width of the game canvas (pixels), shorthand game.width
         @property {Number} width
     **/
     width: 0,
@@ -369,10 +374,12 @@ game.createClass('System', {
         @private
     **/
     _setSceneNow: function(sceneName, param) {
+        this.sceneName = sceneName;
         this._newSceneName = null;
         if (this.scene && this.scene._exit(sceneName)) return;
         if (this.paused) this.paused = false;
         game.TilingSprite.clearCache();
+        game.Sprite._clearTintedTextures();
         this.scene = new game[sceneName](param);
         this._startRunLoop();
     },
@@ -467,9 +474,9 @@ game.addAttributes('System', {
     /**
         Scale canvas for HiDPI screens.
         @attribute {Boolean} hidpi
-        @default false
+        @default true
     **/
-    hidpi: false,
+    hidpi: true,
     /**
         HiRes mode multiplier.
         @attribute {Number} hires
