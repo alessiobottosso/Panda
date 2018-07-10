@@ -27,6 +27,8 @@ game.createScene('Main', {
         this.body.position.set(
             this.player.position.x, 
             this.player.position.y );
+            
+        this.body.velocityLimit.y = 10000;
         
         this.body.mass = 1;
         
@@ -75,7 +77,7 @@ game.createScene('Main', {
         // Top		
         if(this.body.position.y - height < 0) {			
             this.body.position.y -= this.body.position.y - height;			
-            this.body.velocity.y *= -0.75;	
+            this.body.velocity.y *= -0.95;	
             navigator.vibrate(2);
         }       	
         
@@ -83,7 +85,7 @@ game.createScene('Main', {
         if(this.body.position.y + height > game.system.height) 
         {			
             this.body.position.y += game.system.height - this.body.position.y - height;			
-            this.body.velocity.y *= -0.75;	
+            this.body.velocity.y *= -0.95;	
             navigator.vibrate(2);
         }
         
@@ -91,14 +93,14 @@ game.createScene('Main', {
         if(this.body.position.x + width > game.system.width) 
         {			
             this.body.position.x += game.system.width - this.body.position.x - width;			
-            this.body.velocity.x *= -0.75;	
+            this.body.velocity.x *= -0.95;	
             navigator.vibrate(2);
         }
         
         if(this.body.position.x - width < 0) 
         {			
 	        this.body.position.x -= this.body.position.x - width;			
-	        this.body.velocity.x *= -0.75;	
+	        this.body.velocity.x *= -0.95;	
 	        navigator.vibrate(2);
         }	
         
