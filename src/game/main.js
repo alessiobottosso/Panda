@@ -206,7 +206,7 @@ game.createScene('Main', {
         }
         else
         {
-            var accel = game.input.motion.accelerationIncludingGravity;
+            var accel = game.input.motion.acceleration;
             //this.player.x = game.width / 2 - accel.x * 20;
             //this.player.y = game.height / 2 - accel.y * 20;
             /*
