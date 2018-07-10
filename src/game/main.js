@@ -29,12 +29,14 @@ game.createScene('Main', {
             this.player.position.y );
             
         this.body.velocityLimit.y = 10000;
+        this.body.damping = 0.3;
         
         this.body.mass = 1;
         
         var shape = new game.Rectangle();
         shape.width = this.player.width;
         shape.height = this.player.height;
+
         this.body.addShape(shape);
         this.body.addTo(game.scene.world);
         
@@ -68,6 +70,7 @@ game.createScene('Main', {
     
     update: function() 
     {
+        //this.player.rotation += (this.body.velocity.x / 200) * game.delta;
         this.player.position.copy(this.body.position);
         this.player.position.y += 100;
         
@@ -220,15 +223,15 @@ game.createScene('Main', {
             }
             */
             
-            if (accel.x >= 10)
+            if (accel.x >= 5)
             {
                 if (this.body.velocity.y >= 0)
                 {
-                    this.body.velocity.x += 500;	
+                    this.body.velocity.x += 750;	
                 }
                 else
                 {
-                    this.body.velocity.x -= 500;	
+                    this.body.velocity.x -= 750;	
                 }
             }
             
