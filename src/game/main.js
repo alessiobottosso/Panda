@@ -24,6 +24,8 @@ game.createScene('Main', {
         });
         this.world.on('impact', function(data) {
             // Collision
+            navigator.vibrate(5);
+            
         });
         this.world.on('postStep', function(data) {
             // After collision
