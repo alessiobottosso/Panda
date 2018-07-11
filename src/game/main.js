@@ -18,6 +18,7 @@ game.createScene('Main', {
         this.world.gravity.y = 0;
         
         // Walls
+        /*
         var bottomBody = new game.Body();
         var bottomShape = new game.Rectangle();
         bottomShape.width = game.width;
@@ -62,6 +63,7 @@ game.createScene('Main', {
         leftBody.addTo(this.world);
         rightBody.addShape(rightShape);
         rightBody.addTo(this.world);
+        */
         
         // Creates the spine Object
         this.player = new game.Spine('spineboy.json');
@@ -151,7 +153,6 @@ game.createScene('Main', {
         var width  = this.body.shape.width / 2;
         var height = this.body.shape.height / 2;	
         
-        /*
         // Top		
         if(this.body.position.y - height < 0) {			
             this.body.position.y -= this.body.position.y - height;			
@@ -181,7 +182,6 @@ game.createScene('Main', {
 	        this.body.velocity.x *= -0.95;	
 	        navigator.vibrate(2);
         }	
-        */
         
         var oldx = this.player.x;
         var oldy = this.player.y;
