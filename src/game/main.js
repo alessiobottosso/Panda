@@ -9,6 +9,7 @@ game.module(
 game.addAsset('panda.png');
 game.addAsset('spineboy.atlas');
 game.addAsset('spineboy.json');
+game.addAsset('button.png');
 
 game.createScene('Main', {
     init: function() 
@@ -376,6 +377,76 @@ game.createScene('Main', {
                 }
                 */
             }
+        }
+    }
+});
+
+game.createScene('Title', {
+    backgroundColor: 'black',
+    
+    init: function() 
+    {
+        /*
+        var logo = new game.Sprite('logo.png');
+        logo.anchorCenter();
+        logo.center(this.stage);
+        logo.addTo(this.stage);
+        logo.scale.x = 0;
+        logo.scale.y = 0;   
+        
+        var tween = new game.Tween(logo.scale); // Pass the property to Tween
+        // Define the tween target values
+        tween.to(
+            {
+                x: 1,
+                y: 1
+            }, 500);
+        
+        tween.easing ('Back.Out');
+        tween.start();
+        */
+        
+        var button = new game.Button('button.png', function()
+        {
+            game.system.setScene('Main');
+        });
+        
+        button.sprite.position.x = game.width / 2;
+        button.sprite.position.y = 900;
+        button.sprite.addTo(this.stage);
+    }
+});
+
+game.createClass('Button', {
+    init: function(texture, callback) 
+    {
+        this.callback = callback;
+        this.sprite = new game.Sprite(texture);
+        this.sprite.anchorCenter();
+        this.sprite.interactive = true;
+        this.sprite.mousedown = this.mousedown.bind(this);
+        this.sprite.mouseup = this.mouseup.bind(this);
+        this.sprite.mouseupoutside = this.mouseup.bind(this);
+        this.sprite.click = this.click.bind(this);
+    },
+    
+    mousedown: function()
+    {
+        this.sprite.scale.x = 0.9;
+        this.sprite.scale.y = 0.9;
+    },
+    
+    mouseup: function()
+    {
+        this.sprite.scale.x = 1;
+        this.sprite.scale.y = 1;
+    },
+    
+    click: function()
+    {
+        if (typeof this.callback === 'function')
+        {
+            this.callback();
         }
     }
 });

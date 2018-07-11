@@ -1,5 +1,5 @@
 game.config = {
-    name: '',
+    name: 'Panda Test',
 
     system: {
         width: 768,
@@ -7,7 +7,8 @@ game.config = {
         rotateScreen: true,
         scale: true,
         center: true,
-        resize: false
+        resize: false,
+        startScene: "Title"
     },
 
     debug: {
