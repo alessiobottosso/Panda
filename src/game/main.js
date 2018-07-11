@@ -353,25 +353,25 @@ game.createScene('Main', {
             
             if (accel.x >= 5)
             {
-                if (this.body.velocity.y >= 0)
+                if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity.x += 750;	
+                    this.body.velocity[0] += 500;	
                 }
                 else
                 {
-                    this.body.velocity.x -= 750;	
+                    this.body.velocity[0] -= 500;	
                 }
             }
             
             if (accel.y >= 10)
             {
-                if (this.body.velocity.y >= 0)
+                if (this.body.velocity[1] >= 0)
                 {
-                    this.body.velocity.y += 500;	
+                    this.body.velocity[1] += 500;	
                 }
                 else
                 {
-                    this.body.velocity.y -= 500;	
+                    this.body.velocity[1] -= 500;	
                 }
             }
     
