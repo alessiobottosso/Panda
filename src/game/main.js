@@ -84,6 +84,7 @@ game.createScene('Main', {
         this.body.mass = 1;
         
         // Creates the shape for the body
+        //var shape = new game.Circle(this.player.width / 1.5);
         var shape = new game.Rectangle();
         shape.width = this.player.width;
         shape.height = this.player.height;
@@ -165,7 +166,7 @@ game.createScene('Main', {
     
     update: function() 
     {
-        //this.player.rotation += (this.body.velocity.x / 200) * game.delta;
+        //this.player.rotation += (this.body.velocity.x / 100) * game.delta;
         this.player.position.copy(this.body.position);
         this.player.position.y += 150;
         
