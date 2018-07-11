@@ -2,7 +2,8 @@ game.module(
     'game.main'
 )
 .require(
-    'plugin.spine'
+    'plugin.spine',
+    'plugin.p2',
 )
 .body(function() {
 
@@ -14,96 +15,119 @@ game.addAsset('button.png');
 game.createScene('Main', {
     init: function() 
     {
-        // Physics world for collisions
+        // Physics world for collision
         this.world = new game.Physics();
         this.world.gravity.y = 0;
         
+        this.world.on('beginContact', function(data) {
+            // Before collision
+        });
+        this.world.on('impact', function(data) {
+            // Collision
+        });
+        this.world.on('postStep', function(data) {
+            // After collision
+        });
+        
+        var ratio = this.world.ratio;
+        
         // Walls
-        var bottomBody = new game.Body();
-        var bottomShape = new game.Rectangle();
-        bottomShape.width = game.width;
-        bottomShape.height = 1;
-        bottomBody.position.x = game.width / 2;
-        bottomBody.position.y = game.height;
-        bottomBody.collisionGroup = 1;
-        bottomBody.static = true;
+        var wallShape, wallBody;
+        // Left wall
+        wallShape = new p2.Box({ width: 2, height: game.height / ratio });
+        wallBody = new game.Body({
+            position: [-1, game.height / 2 / ratio]
+        });
+        //wallBody.collisionGroup = 1;
+        wallBody.addShape(wallShape);
+        this.world.addBody(wallBody);
+
+        // Right wall
+        wallShape = new p2.Box({ width: 2, height: game.height / ratio });
+        wallBody = new game.Body({
+            position: [game.width / ratio + 1, game.height / 2 / ratio]
+        });
+        wallBody.collisionGroup = 1;
+        wallBody.addShape(wallShape);
+        this.world.addBody(wallBody);
+
+        // Top wall
+        wallShape = new p2.Box({ width: game.width / ratio, height: 2 });
+        wallBody = new game.Body({
+            position: [game.width / 2 / ratio, -1]
+        });
+        //wallBody.collisionGroup = 1;
+        wallBody.addShape(wallShape);
+        this.world.addBody(wallBody);
         
-        var upperBody = new game.Body();
-        var upperShape = new game.Rectangle();
-        upperShape.width = game.width;
-        upperShape.height = 1;
-        upperBody.position.x = game.width / 2;
-        upperBody.position.y = 0;
-        upperBody.collisionGroup = 1;
-        upperBody.static = true;
-        
-        var leftBody = new game.Body();
-        var leftShape = new game.Rectangle();
-        leftShape.width = 2;
-        leftShape.height = game.height;
-        leftBody.position.x = 0;
-        leftBody.position.y = game.height / 2;
-        leftBody.collisionGroup = 2;
-        leftBody.static = true;
-        
-        var rightBody = new game.Body();
-        var rightShape = new game.Rectangle();
-        rightShape.width = 2;
-        rightShape.height = game.height;
-        rightBody.position.x = game.width;
-        rightBody.position.y = game.height / 2;
-        rightBody.collisionGroup = 2;
-        rightBody.static = true;
-        
-        bottomBody.addShape(bottomShape);
-        bottomBody.addTo(this.world);
-        upperBody.addShape(upperShape);
-        upperBody.addTo(this.world);
-        leftBody.addShape(leftShape);
-        leftBody.addTo(this.world);
-        rightBody.addShape(rightShape);
-        rightBody.addTo(this.world);
+        // Bottom wall
+        wallShape = new p2.Box({ width: game.width / ratio, height: 2 });
+        wallBody = new game.Body({
+            position: [game.width / 2 / ratio, game.height / ratio + 1]
+        });
+        //wallBody.collisionGroup = 1;
+        wallBody.addShape(wallShape);
+        this.world.addBody(wallBody);
+
         
         // Creates the spine Object
         this.player = new game.Spine('spineboy.json');
         this.player.scale.x = 0.5;
         this.player.scale.y = 0.5;
+        
         // Position it to the center of the screen
         this.player.position.x = game.width / 2;
         this.player.position.y = game.height / 2;
         // Set the looped walk animation
         this.player.play('walk', true);
-        
+    
+        /*
         // Creates the physics body
-        this.body = new game.Body();
-        this.body.position.set(
-            this.player.position.x, 
-            this.player.position.y );
-            
-        this.body.velocityLimit.y = 10000;
+        this.body = new game.Body({
+            position: [this.player.position.x / ratio, this.player.position.y / ratio]
+        });
+         
+        //this.body.velocityLimit.y = 10000;
         this.body.damping = 0.3;
         this.body.mass = 1;
+        */
         
-        // Creates the shape for the body
-        //var shape = new game.Circle(this.player.width / 1.5);
-        var shape = new game.Rectangle();
-        shape.width = this.player.width;
-        shape.height = this.player.height;
-
+        this.body = new game.Body({
+            mass: 1,
+            position: [
+                this.player.position.x / game.scene.world.ratio,
+                this.player.position.y / game.scene.world.ratio
+            ],
+            angle: Math.random() * Math.PI / 8
+        });
+        
+        
+        var shape = new p2.Box({ 
+            width: this.player.width / ratio, 
+            height: this.player.height / ratio 
+        });
+        /*
+        var shape = new p2.Circle({
+            radius: this.player.width / 2 / game.scene.world.ratio
+        });
+        */
+        
         this.body.addShape(shape);
         this.body.addTo(game.scene.world);
         
-        this.body.collideAgainst = [1, 2];
+        //this.body.collideAgainst = [1, 2];
         
-        this.body.collide = this.collide.bind(this);
-        
+        //this.body.collide = this.collide.bind(this);
+    
         this.player.addTo(this.stage);
         
         this.player.isWalking = true;
         this.player.isRunning = false;
         
-        //this.container = new game.Container();
-        //this.container.addTo(this.stage);
+        this.container = new game.Container();
+        this.container.addTo(this.stage);
+        
+        this.player.addTo(this.container);
         
         //this.sprite = new game.Sprite('panda.png');
         //this.sprite.anchorCenter();
@@ -143,7 +167,7 @@ game.createScene('Main', {
                 this.body.position.y += game.system.height - this.body.position.y - height;	
             }
             
-            this.body.velocity.y *= -0.95;	
+            this.body.velocity[1] *= -0.95;	
             navigator.vibrate(2);
             return true;
         }
@@ -160,7 +184,7 @@ game.createScene('Main', {
             }
             
             //Is colliding with the sie walls
-            this.body.velocity.x *= -0.95;	
+            this.body.velocity[0] *= -0.95;	
             navigator.vibrate(2);
         }
     },
@@ -168,11 +192,15 @@ game.createScene('Main', {
     update: function() 
     {
         //this.player.rotation += (this.body.velocity.x / 100) * game.delta;
-        this.player.position.copy(this.body.position);
-        this.player.position.y += 150;
+        var cosx = Math.cos(this.body.angle);
+        var sinx = Math.sin(this.body.angle);
         
-        var width  = this.body.shape.width / 2;
-        var height = this.body.shape.height / 2;	
+        this.player.position.x = (this.body.position[0] - 1.5 * sinx) * game.scene.world.ratio;
+        this.player.position.y = (this.body.position[1] + 1.5 * cosx) * game.scene.world.ratio;
+        this.player.rotation = this.body.angle;
+
+        //var width  = this.body.shape.width / 2;
+        //var height = this.body.shape.height / 2;	
         
         /*
         // Top		
@@ -232,13 +260,13 @@ game.createScene('Main', {
                     this.player.isRunning = true;
                     this.player.play('run', true);
                 }
-                if (this.body.velocity.y >= 0)
+                if (this.body.velocity[1] >= 0)
                 {
-                    this.body.velocity.y += 50;	
+                    this.body.velocity[1] += 5;	
                 }
                 else
                 {
-                    this.body.velocity.y -= 50;	
+                    this.body.velocity[1] -= 5;	
                 }
             }
             else if (game.keyboard.down('DOWN'))
@@ -250,13 +278,13 @@ game.createScene('Main', {
                     this.player.isRunning = true;
                     this.player.play('run', true);
                 }
-                if (this.body.velocity.y >= 0)
+                if (this.body.velocity[1] >= 0)
                 {
-                    this.body.velocity.y += 50;	
+                    this.body.velocity[1] += 5;	
                 }
                 else
                 {
-                    this.body.velocity.y -= 50;	
+                    this.body.velocity[1] -= 5;	
                 }
             }
             else if (game.keyboard.down('RIGHT'))
@@ -268,13 +296,13 @@ game.createScene('Main', {
                     this.player.isRunning = true;
                     this.player.play('run', true);
                 }
-                if (this.body.velocity.x >= 0)
+                if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity.x += 50;	
+                    this.body.velocity[0] += 5;	
                 }
                 else
                 {
-                    this.body.velocity.x -= 50;	
+                    this.body.velocity[0] -= 5;	
                 }
             }
             else if (game.keyboard.down('LEFT'))
@@ -286,13 +314,13 @@ game.createScene('Main', {
                     this.player.isRunning = true;
                     this.player.play('run', true);
                 }
-                if (this.body.velocity.x >= 0)
+                if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity.x += 50;	
+                    this.body.velocity[0] += 5;
                 }
                 else
                 {
-                    this.body.velocity.x -= 50;	
+                    this.body.velocity[0] -= 5;	
                 }
             }
             
@@ -412,7 +440,7 @@ game.createScene('Title', {
         });
         
         button.sprite.position.x = game.width / 2;
-        button.sprite.position.y = 900;
+        button.sprite.position.y = game.height - 200;
         button.sprite.addTo(this.stage);
     }
 });

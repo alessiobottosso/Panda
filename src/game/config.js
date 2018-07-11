@@ -15,6 +15,7 @@ game.config = {
         enabled: true,
         showInfo: true,
         position: 'bottom',
-        panelUpdate: 50
+        panelUpdate: 50,
+        sensorColor: '#ffffff'
     }
 };
