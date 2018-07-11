@@ -355,11 +355,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity[0] += 500;	
+                    this.body.velocity[0] += 5;	
                 }
                 else
                 {
-                    this.body.velocity[0] -= 500;	
+                    this.body.velocity[0] -= 5;	
                 }
             }
             
@@ -367,11 +367,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity[1] >= 0)
                 {
-                    this.body.velocity[1] += 500;	
+                    this.body.velocity[1] += 5;	
                 }
                 else
                 {
-                    this.body.velocity[1] -= 500;	
+                    this.body.velocity[1] -= 5;	
                 }
             }
     
