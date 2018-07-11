@@ -13,16 +13,67 @@ game.addAsset('spineboy.json');
 game.createScene('Main', {
     init: function() 
     {
+        // Physics world for collisions
         this.world = new game.Physics();
         this.world.gravity.y = 0;
         
+        // Walls
+        var bottomBody = new game.Body();
+        var bottomShape = new game.Rectangle();
+        bottomShape.width = game.width;
+        bottomShape.height = 1;
+        bottomBody.position.x = game.width / 2;
+        bottomBody.position.y = game.height;
+        bottomBody.collisionGroup = 1;
+        bottomBody.static = true;
+        
+        var upperBody = new game.Body();
+        var upperShape = new game.Rectangle();
+        upperShape.width = game.width;
+        upperShape.height = 1;
+        upperBody.position.x = game.width / 2;
+        upperBody.position.y = 0;
+        upperBody.collisionGroup = 1;
+        upperBody.static = true;
+        
+        var leftBody = new game.Body();
+        var leftShape = new game.Rectangle();
+        leftShape.width = 2;
+        leftShape.height = game.height;
+        leftBody.position.x = 0;
+        leftBody.position.y = game.height / 2;
+        leftBody.collisionGroup = 2;
+        leftBody.static = true;
+        
+        var rightBody = new game.Body();
+        var rightShape = new game.Rectangle();
+        rightShape.width = 2;
+        rightShape.height = game.height;
+        rightBody.position.x = game.width;
+        rightBody.position.y = game.height / 2;
+        rightBody.collisionGroup = 2;
+        rightBody.static = true;
+        
+        bottomBody.addShape(bottomShape);
+        bottomBody.addTo(this.world);
+        upperBody.addShape(upperShape);
+        upperBody.addTo(this.world);
+        leftBody.addShape(leftShape);
+        leftBody.addTo(this.world);
+        rightBody.addShape(rightShape);
+        rightBody.addTo(this.world);
+        
+        // Creates the spine Object
         this.player = new game.Spine('spineboy.json');
+        this.player.scale.x = 0.5;
+        this.player.scale.y = 0.5;
+        // Position it to the center of the screen
         this.player.position.x = game.width / 2;
         this.player.position.y = game.height / 2;
-        this.player.scale.x = 0.35;
-        this.player.scale.y = 0.35;
+        // Set the looped walk animation
         this.player.play('walk', true);
         
+        // Creates the physics body
         this.body = new game.Body();
         this.body.position.set(
             this.player.position.x, 
@@ -30,9 +81,9 @@ game.createScene('Main', {
             
         this.body.velocityLimit.y = 10000;
         this.body.damping = 0.3;
-        
         this.body.mass = 1;
         
+        // Creates the shape for the body
         var shape = new game.Rectangle();
         shape.width = this.player.width;
         shape.height = this.player.height;
@@ -40,6 +91,9 @@ game.createScene('Main', {
         this.body.addShape(shape);
         this.body.addTo(game.scene.world);
         
+        this.body.collideAgainst = [1, 2];
+        
+        this.body.collide = this.collide.bind(this);
         
         this.player.addTo(this.stage);
         
@@ -68,15 +122,36 @@ game.createScene('Main', {
         //camera.addTo(this.container);
     },
     
+    collide: function(other)
+    {
+        // Top and bottoms walls
+        if (other.collisionGroup === 1)
+        {
+            //Is colliding with the Floor
+            //this.body.position.y -= this.body.position.y - height;			
+            this.body.velocity.y *= -0.95;	
+            navigator.vibrate(2);
+            return true;
+        }
+        // Side walls
+        else if (other.collisionGroup === 2)
+        {
+            //Is colliding with the sie walls
+            this.body.velocity.x *= -0.99;	
+            navigator.vibrate(2);
+        }
+    },
+    
     update: function() 
     {
         //this.player.rotation += (this.body.velocity.x / 200) * game.delta;
         this.player.position.copy(this.body.position);
-        this.player.position.y += 100;
+        this.player.position.y += 150;
         
         var width  = this.body.shape.width / 2;
         var height = this.body.shape.height / 2;	
         
+        /*
         // Top		
         if(this.body.position.y - height < 0) {			
             this.body.position.y -= this.body.position.y - height;			
@@ -106,6 +181,7 @@ game.createScene('Main', {
 	        this.body.velocity.x *= -0.95;	
 	        navigator.vibrate(2);
         }	
+        */
         
         var oldx = this.player.x;
         var oldy = this.player.y;
