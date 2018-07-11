@@ -18,7 +18,6 @@ game.createScene('Main', {
         this.world.gravity.y = 0;
         
         // Walls
-        /*
         var bottomBody = new game.Body();
         var bottomShape = new game.Rectangle();
         bottomShape.width = game.width;
@@ -63,7 +62,6 @@ game.createScene('Main', {
         leftBody.addTo(this.world);
         rightBody.addShape(rightShape);
         rightBody.addTo(this.world);
-        */
         
         // Creates the spine Object
         this.player = new game.Spine('spineboy.json');
@@ -126,11 +124,23 @@ game.createScene('Main', {
     
     collide: function(other)
     {
+        var width  = this.body.shape.width / 2;
+        var height = this.body.shape.height / 2;	
+        
         // Top and bottoms walls
         if (other.collisionGroup === 1)
         {
             //Is colliding with the Floor
-            //this.body.position.y -= this.body.position.y - height;			
+            //this.body.position.y -= this.body.position.y - height;
+            if(this.body.position.y - height < 0) 
+            {			
+                this.body.position.y -= this.body.position.y - height;	
+            }
+            else if(this.body.position.y + height > game.system.height) 
+            {			
+                this.body.position.y += game.system.height - this.body.position.y - height;	
+            }
+            
             this.body.velocity.y *= -0.95;	
             navigator.vibrate(2);
             return true;
@@ -138,8 +148,17 @@ game.createScene('Main', {
         // Side walls
         else if (other.collisionGroup === 2)
         {
+            if(this.body.position.x + width > game.system.width) 
+            {			
+                this.body.position.x += game.system.width - this.body.position.x - width;			
+            }
+            else if(this.body.position.x - width < 0) 
+            {			
+	            this.body.position.x -= this.body.position.x - width;	
+            }
+            
             //Is colliding with the sie walls
-            this.body.velocity.x *= -0.99;	
+            this.body.velocity.x *= -0.95;	
             navigator.vibrate(2);
         }
     },
@@ -153,6 +172,7 @@ game.createScene('Main', {
         var width  = this.body.shape.width / 2;
         var height = this.body.shape.height / 2;	
         
+        /*
         // Top		
         if(this.body.position.y - height < 0) {			
             this.body.position.y -= this.body.position.y - height;			
@@ -176,12 +196,14 @@ game.createScene('Main', {
             navigator.vibrate(2);
         }
         
+        // Left
         if(this.body.position.x - width < 0) 
         {			
 	        this.body.position.x -= this.body.position.x - width;			
 	        this.body.velocity.x *= -0.95;	
 	        navigator.vibrate(2);
         }	
+        */
         
         var oldx = this.player.x;
         var oldy = this.player.y;
