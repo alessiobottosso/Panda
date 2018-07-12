@@ -101,7 +101,7 @@ game.createScene('Main', {
                 this.player.position.x / game.scene.world.ratio,
                 this.player.position.y / game.scene.world.ratio
             ],
-            angle: Math.random() * Math.PI / 8
+            angle: 0 * Math.random() * Math.PI / 8
         });
         
         
