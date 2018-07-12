@@ -353,7 +353,7 @@ game.createScene('Main', {
             }
             */
             
-            if (accel.x >= 5)
+            if (accel.x >= 10)
             {
                 if (this.body.velocity[0] >= 0)
                 {
