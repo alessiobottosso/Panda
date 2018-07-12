@@ -17,7 +17,7 @@ game.createScene('Main', {
     {
         // Physics world for collision
         this.world = new game.Physics();
-        this.world.gravity.y = 0;
+        this.world.gravity[1] = 0;
         
         this.world.on('beginContact', function(data) {
             // Before collision
