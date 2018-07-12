@@ -96,6 +96,7 @@ game.createScene('Main', {
         
         this.body = new game.Body({
             mass: 1,
+            damping: 0.3,
             position: [
                 this.player.position.x / game.scene.world.ratio,
                 this.player.position.y / game.scene.world.ratio
@@ -300,11 +301,11 @@ game.createScene('Main', {
                 }
                 if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity[0] += 5;	
+                    this.body.velocity[0] += 2;	
                 }
                 else
                 {
-                    this.body.velocity[0] -= 5;	
+                    this.body.velocity[0] -= 2;	
                 }
             }
             else if (game.keyboard.down('LEFT'))
@@ -318,11 +319,11 @@ game.createScene('Main', {
                 }
                 if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity[0] += 5;
+                    this.body.velocity[0] += 2;
                 }
                 else
                 {
-                    this.body.velocity[0] -= 5;	
+                    this.body.velocity[0] -= 2;	
                 }
             }
             
@@ -353,15 +354,15 @@ game.createScene('Main', {
             }
             */
             
-            if (accel.x >= 15)
+            if (accel.x >= 20)
             {
                 if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity[0] += 5;	
+                    this.body.velocity[0] += 10;	
                 }
                 else
                 {
-                    this.body.velocity[0] -= 5;	
+                    this.body.velocity[0] -= 10;	
                 }
             }
             
@@ -369,11 +370,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity[1] >= 0)
                 {
-                    this.body.velocity[1] += 5;	
+                    this.body.velocity[1] += 2.5;	
                 }
                 else
                 {
-                    this.body.velocity[1] -= 5;	
+                    this.body.velocity[1] -= 2.5;	
                 }
             }
     
