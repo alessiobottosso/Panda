@@ -339,7 +339,7 @@ game.createScene('Main', {
         }
         else
         {
-            var accel = game.input.motion.acceleration;
+            var accel = game.input.motion.accelerationIncludingGravity;
             //this.player.x = game.width / 2 - accel.x * 20;
             //this.player.y = game.height / 2 - accel.y * 20;
             /*
@@ -353,15 +353,15 @@ game.createScene('Main', {
             }
             */
             
-            if (accel.x >= 10)
+            if (accel.x >= 15)
             {
                 if (this.body.velocity[0] >= 0)
                 {
-                    this.body.velocity[0] += 7;	
+                    this.body.velocity[0] += 5;	
                 }
                 else
                 {
-                    this.body.velocity[0] -= 7;	
+                    this.body.velocity[0] -= 5;	
                 }
             }
             
@@ -369,11 +369,11 @@ game.createScene('Main', {
             {
                 if (this.body.velocity[1] >= 0)
                 {
-                    this.body.velocity[1] += 7;	
+                    this.body.velocity[1] += 5;	
                 }
                 else
                 {
-                    this.body.velocity[1] -= 7;	
+                    this.body.velocity[1] -= 5;	
                 }
             }
     
