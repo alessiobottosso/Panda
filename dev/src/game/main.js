@@ -496,7 +496,7 @@ game.createScene('Gameplay', {
             if(currentSign*this.sign == -1)
             {
                 CHECK++;
-                this.maxX=0;
+                this.maxX=0; 
                 this.maxY=0;
                 this.minX=0;
                 this.minY=0;
