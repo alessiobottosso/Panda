@@ -545,7 +545,7 @@ game.createScene('Gameplay', {
             (this.playerBody.position[1] + 2.0 * cosx) * game.scene.world.ratio;
         
         this.player.rotation = this.playerBody.angle;
-      
+        this.motionDelta.text = ('Motion Delta: ' + game.delta);
         if (!game.input.motion) 
         {
             // EDITOR DEBUG LOGIC
@@ -671,11 +671,11 @@ game.createScene('Gameplay', {
             {
                 if (this.playerBody.velocity[1] >= 0)
                 {
-                    this.playerBody.velocity[1] +=delta
+                    this.playerBody.velocity[1] += game.delta * 500
                 }
                 else
                 {
-                    this.playerBody.velocity[1] -=delta
+                    this.playerBody.velocity[1] -= game.delta * 500
                 }
             }
             
