@@ -480,14 +480,30 @@ game.createScene('Gameplay', {
         this.maxX = 0;
         this.maxY = 0;
         this.minY = 0;
+        this.minX = 0;
     },
     
     updateScore: function(accel) 
     {
-        if(Math.abs(accel.y) > 5)
+        if(this.sign === undefined)
         {
-            //CHECK++;
-            //this.Score.text = ('score: ' + CHECK);
+            this.sign =-1;
+        }
+        var abs=Math.abs(accel.y);
+        if(abs > 5)
+        {
+            var currentSign = accel.y / abs;
+            if(currentSign*this.sign == -1)
+            {
+                CHECK++;
+                maxX=0;
+                maxY=0;
+                minX=0;
+                minY=0;
+            }
+            this.sign = currentSign;
+            
+            this.Score.text = ('score: ' + CHECK);
         }
     },
     
@@ -581,12 +597,8 @@ game.createScene('Gameplay', {
             // MOTION INPUT
             var accel = game.input.motion.acceleration;
             var delta = game.input.motion.interval;
-            updateScore(accel);
+            this.updateScore(accel);
             
-            if (accel.x < this.minX)
-            {
-                this.minX = accel.x;
-            }
             if (accel.x > this.maxX)
             {
                 this.maxX = accel.x;
@@ -598,6 +610,10 @@ game.createScene('Gameplay', {
             if (accel.y < this.minY)
             {
                 this.minY = accel.y;
+            }
+            if (accel.x < this.minX)
+            {
+                this.minX = accel.x;
             }
             
             if (accel.y >= 15)
