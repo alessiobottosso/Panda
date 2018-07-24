@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="full-screen" content="yes"/>
+  <meta name="screen-orientation" content="portrait"/>
+
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  
+</head>
+<body>
+  
+  <script src="https://connect.facebook.net/en_US/fbinstant.6.0.js"></script>
+  
+  <script src="js/data.js" ></script>
+  <script type="text/javascript">
+
+    const BACKEND_URL = 'https://enid2d.cloud.reply.eu';
+    const MESSAGE_TO_BOT = {'message' : 'Don\'t Panic!'}
+    const DATA_TO_STORE = {'meaning' : 42};
+    
+    //window.onload = function() {
+      FBInstant.initializeAsync().then(function() {
+	    FBInstant.setLoadingProgress(100);
+        FBInstant.startGameAsync().then(function() {
+
+          //
+          // Bot data
+          //
+          var entryPointData = FBInstant.getEntryPointData();
+          console.log('entryPointData', entryPointData);
+          if (entryPointData) {
+            showMessage('bot-payload-content', JSON.stringify(entryPointData));
+          } else {
+            showMessage('bot-payload-content', 'No data');
+          }
+
+          //
+          // Backend game data
+          //
+          var contextId = getOrCreateContextId();
+          console.log('Going to retrieve backend data');
+
+          // Signing context ID
+          FBInstant.player.getSignedPlayerInfoAsync(contextId)
+          .then(function(signedPlayerInfo){
+            // Requesting data from backend passing the signature as an argument
+            // The backend APP can retrieve contextId from the signature
+            var signature = signedPlayerInfo.getSignature();
+            return new backendClient(BACKEND_URL).load(signature)
+          })
+          .then(function(response){
+            // Got successful response from backend
+            console.log('Loaded from backend', response);
+            if (response.empty) {
+              showMessage('backend-match-content', 'No data');
+            } else {
+              showMessage('backend-match-content', JSON.stringify(response.data));
+            }
+          }.bind(this))
+          .catch(function(error){
+            // Got error response from backend
+            console.error('Not loaded from backend', error);
+            showMessage('error-messages', 'Error loading backend data:' + error.message);
+          }.bind(this))
+        })
+          .catch(function(error){
+            console.error('error', error);
+            showMessage('error-messages', 'Error startGameAsync:' + error.message);
+          });
+      });
+    //};
+
+    function sendBotData() {
+      FBInstant.setSessionData(MESSAGE_TO_BOT);
+      showMessage('bot-payload-content', 'Session data was set. Closing game to get bot message.');
+      FBInstant.quit();
+    }
+
+    function saveBackendData() {
+      var contextId = getOrCreateContextId();
+
+      // Sign data before sending to backend, so we can verify it's 
+      // legitimally sent by the game
+      FBInstant.player
+        .getSignedPlayerInfoAsync(JSON.stringify(DATA_TO_STORE))
+        .then(function(result){
+          return new backendClient(BACKEND_URL)
+            .save(
+              contextId, 
+              result.getPlayerID(),
+              result.getSignature(), 
+            );
+        }.bind(this))
+        .then(function(response){
+          if (response.success) {
+            showMessage(
+              'backend-match-content', 
+              'Data saved to backend. <br /> ' + JSON.stringify(DATA_TO_STORE)
+            );
+          } else {
+            showMessage(
+              'backend-match-content',
+              'Data not saved to backend ' + JSON.stringify(response)
+            );
+          }
+        }.bind(this))
+        .catch(function(error) {
+          showMessage(
+            'error-messages', 
+            'Error saving backend data:' + error.message
+          );
+        }.bind(this));
+    }
+
+    function getOrCreateContextId() {
+      var contextType = FBInstant.context.getType();
+      var contextId = FBInstant.context.getID();
+      if (contextType == 'SOLO') {
+        contextId = FBInstant.player.getID() + '_SOLO';
+      }
+      return contextId;
+    }
+
+    function showMessage(div, message) {
+      document.getElementById(div).innerHTML = message;
+    }
+
+  </script>
+
+  <h1>
+    Instant Games Demos 
+  </h1>
+  <h2> 
+    Server Communication 
+  </h2>
+
+  <div class="panel">
+    <img src="img/title_img.png" class="img-title" />
+  </div>
+
+  <div class="panel">
+    <p>Payload received from Bot:</p>
+    <div id="bot-payload-content" class="display-data">
+    </div>
+
+    <p>Press the button below to send a custom message to the Bot. </p>
+    <input type="button"
+    id="btn-send-message"
+    class="button"
+    onclick="sendBotData();"
+    value="Send Message to Bot"
+    />
+  </div>
+
+  <div class="panel">
+    <p>Data stored in the backend:</p>
+    <div id="backend-match-content" class="display-data">
+    </div>
+
+    <p> 
+      Press the button below to save data in your backend service
+    </p>
+    <input type="button" 
+    id="btn-save-data" 
+    class="button"
+    onclick="saveBackendData();" 
+    value="Save Backend Data" />
+  </div>
+
+  <div id="error-messages" class="display-data">
+  </div>
+  
+</body>
+</html>

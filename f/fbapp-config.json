@@ -1,0 +1,11 @@
+{
+  "instant_games": {
+    "platform_version": "RICH_GAMEPLAY",
+
+    "custom_update_templates": {
+      "play_turn": {
+        "example": "X just invaded Y's village!"
+      }
+    }
+  }
+}
