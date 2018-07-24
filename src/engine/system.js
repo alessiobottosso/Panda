@@ -22,12 +22,12 @@ game.createClass('System', {
     **/
     canvasWidth: 0,
     /**
-        Current delta time in seconds (game.delta).
+        Time since last frame (seconds), shorthand game.delta
         @property {Number} delta
     **/
     delta: 0,
     /**
-        Height of the game canvas (game.height).
+        Height of the game canvas (pixels), shorthand game.height
         @property {Number} height
     **/
     height: 0,
@@ -57,7 +57,12 @@ game.createClass('System', {
     **/
     scene: null,
     /**
-        Width of the game canvas (game.width).
+        Name of current scene.
+        @property {String} sceneName
+    **/
+    sceneName: null,
+    /**
+        Width of the game canvas (pixels), shorthand game.width
         @property {Number} width
     **/
     width: 0,
@@ -125,6 +130,8 @@ game.createClass('System', {
         this.canvasWidth = this.originalWidth * game.scale;
         this.canvasHeight = this.originalHeight * game.scale;
 
+        if (typeof document === 'undefined') return;
+        
         var visibilityChange;
         if (typeof document.hidden !== 'undefined') {
             visibilityChange = 'visibilitychange';
@@ -330,7 +337,7 @@ game.createClass('System', {
         game.Timer.update();
         game.delta = this.delta = game.Timer.delta / 1000;
 
-        game.input._update();
+        if (game.input) game.input._update();
         this.scene._update();
 
         if (this._newSceneName) this._setSceneNow(this._newSceneName, this._newSceneParam);
@@ -369,10 +376,12 @@ game.createClass('System', {
         @private
     **/
     _setSceneNow: function(sceneName, param) {
+        this.sceneName = sceneName;
         this._newSceneName = null;
         if (this.scene && this.scene._exit(sceneName)) return;
         if (this.paused) this.paused = false;
         game.TilingSprite.clearCache();
+        game.Sprite._clearTintedTextures();
         this.scene = new game[sceneName](param);
         this._startRunLoop();
     },
@@ -430,11 +439,16 @@ game.createClass('System', {
         @private
     **/
     _updateWindowSize: function() {
+        if (typeof document === 'undefined') return;
         this._windowWidth = game.device.WKWebView ? document.documentElement.clientWidth : window.innerWidth;
         this._windowHeight = game.device.WKWebView ? document.documentElement.clientHeight : window.innerHeight;
         if (game.device.crosswalk && this._windowWidth === 0) {
             this._windowWidth = window.screen.width;
             this._windowHeight = window.screen.height;
+        }
+        if (Math.abs(window.orientation) === 90 && game.device.iPhone && game.device.safari) {
+            // Fix iPhone Safari landscape fullscreen
+            this._windowHeight++;
         }
     }
 });
@@ -467,9 +481,9 @@ game.addAttributes('System', {
     /**
         Scale canvas for HiDPI screens.
         @attribute {Boolean} hidpi
-        @default false
+        @default true
     **/
-    hidpi: false,
+    hidpi: true,
     /**
         HiRes mode multiplier.
         @attribute {Number} hires

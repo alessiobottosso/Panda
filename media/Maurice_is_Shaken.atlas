@@ -1,0 +1,167 @@
+
+Maurice_is_Shaken.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+MA_ArmDown_Back
+  rotate: false
+  xy: 1323, 1895
+  size: 322, 135
+  orig: 322, 135
+  offset: 0, 0
+  index: -1
+MA_ArmDown_Front
+  rotate: false
+  xy: 1647, 1879
+  size: 300, 151
+  orig: 300, 151
+  offset: 0, 0
+  index: -1
+MA_ArmUp_Back
+  rotate: false
+  xy: 1007, 1686
+  size: 263, 78
+  orig: 263, 78
+  offset: 0, 0
+  index: -1
+MA_ArmUp_Front
+  rotate: true
+  xy: 903, 1503
+  size: 197, 98
+  orig: 197, 98
+  offset: 0, 0
+  index: -1
+MA_Body
+  rotate: false
+  xy: 2, 943
+  size: 352, 501
+  orig: 352, 501
+  offset: 0, 0
+  index: -1
+MA_Eyebrow_Back
+  rotate: true
+  xy: 512, 1037
+  size: 115, 64
+  orig: 115, 64
+  offset: 0, 0
+  index: -1
+MA_Eyebrow_Front
+  rotate: true
+  xy: 1949, 1885
+  size: 145, 83
+  orig: 145, 83
+  offset: 0, 0
+  index: -1
+MA_Eyelids_01
+  rotate: false
+  xy: 2, 126
+  size: 263, 90
+  orig: 263, 90
+  offset: 0, 0
+  index: -1
+MA_Eyelids_02
+  rotate: false
+  xy: 2, 34
+  size: 263, 90
+  orig: 263, 90
+  offset: 0, 0
+  index: -1
+MA_Eyelids_03
+  rotate: false
+  xy: 1622, 1787
+  size: 263, 90
+  orig: 263, 90
+  offset: 0, 0
+  index: -1
+MA_Eyes
+  rotate: false
+  xy: 614, 1448
+  size: 176, 41
+  orig: 176, 41
+  offset: 0, 0
+  index: -1
+MA_Eyes_Back
+  rotate: false
+  xy: 1323, 1765
+  size: 297, 128
+  orig: 297, 128
+  offset: 0, 0
+  index: -1
+MA_Head
+  rotate: false
+  xy: 2, 1446
+  size: 610, 584
+  orig: 610, 584
+  offset: 0, 0
+  index: -1
+MA_Leg_Back
+  rotate: false
+  xy: 614, 1702
+  size: 391, 328
+  orig: 391, 328
+  offset: 0, 0
+  index: -1
+MA_Leg_Front
+  rotate: false
+  xy: 2, 574
+  size: 331, 367
+  orig: 331, 367
+  offset: 0, 0
+  index: -1
+MA_Mouth_01
+  rotate: true
+  xy: 356, 1154
+  size: 290, 221
+  orig: 290, 221
+  offset: 0, 0
+  index: -1
+MA_Mouth_02
+  rotate: false
+  xy: 1007, 1766
+  size: 314, 264
+  orig: 314, 264
+  offset: 0, 0
+  index: -1
+MA_Mouth_03
+  rotate: false
+  xy: 614, 1491
+  size: 287, 209
+  orig: 287, 209
+  offset: 0, 0
+  index: -1
+MA_Mouth_04
+  rotate: false
+  xy: 2, 391
+  size: 283, 181
+  orig: 283, 181
+  offset: 0, 0
+  index: -1
+MA_Mouth_05
+  rotate: false
+  xy: 2, 218
+  size: 282, 171
+  orig: 282, 171
+  offset: 0, 0
+  index: -1
+MA_Neck
+  rotate: false
+  xy: 356, 967
+  size: 154, 185
+  orig: 154, 185
+  offset: 0, 0
+  index: -1
+MA_Nose
+  rotate: false
+  xy: 1128, 1567
+  size: 70, 117
+  orig: 70, 117
+  offset: 0, 0
+  index: -1
+MA_Tail
+  rotate: false
+  xy: 1003, 1551
+  size: 123, 133
+  orig: 123, 133
+  offset: 0, 0
+  index: -1

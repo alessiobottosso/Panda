@@ -34,6 +34,11 @@ game.createClass('Scene', {
     **/
     paused: false,
     /**
+        List of physics worlds in scene.
+        @property {Array} physics
+    **/
+    physics: [],
+    /**
         Main container for scene.
         @property {Container} stage
     **/
@@ -69,6 +74,11 @@ game.createClass('Scene', {
     **/
     _mouseDownY: null,
     /**
+        @property {Array} _pausedAnims
+        @private
+    **/
+    _pausedAnims: [],
+    /**
         @property {Array} _pausedObjects
         @private
     **/
@@ -95,8 +105,8 @@ game.createClass('Scene', {
             this.backgroundColor = '#000';
         }
 
-        game.input._reset();
-        game.keyboard._reset();
+        if (game.input) game.input._reset();
+        if (game.keyboard) game.keyboard._reset();
 
         game.scene = this;
         
@@ -145,6 +155,7 @@ game.createClass('Scene', {
         @param {Boolean} shift
         @param {Boolean} ctrl
         @param {Boolean} alt
+        @return {Boolean} return true to prevent default keydown action.
     **/
     keydown: function() {},
     
@@ -214,6 +225,7 @@ game.createClass('Scene', {
     **/
     pause: function() {
         if (this.paused) return;
+        this._pausedAnims.length = 0;
         this._pausedObjects.length = 0;
         this._pausedTimers.length = 0;
         this._pausedTweens.length = 0;
@@ -226,6 +238,7 @@ game.createClass('Scene', {
         for (var i = 0; i < this.tweens.length; i++) {
             this._pausedTweens.push(this.tweens[i]);
         }
+        this._getPausedAnims();
         this.objects.length = 0;
         this.timers.length = 0;
         this.tweens.length = 0;
@@ -234,7 +247,7 @@ game.createClass('Scene', {
     },
     
     /**
-        Remove object from scene.
+        Remove object from scene, so it's update function doesn't get called anymore.
         @method removeObject
         @param {Object} object
     **/
@@ -291,6 +304,7 @@ game.createClass('Scene', {
         for (var i = 0; i < this._pausedTweens.length; i++) {
             this.tweens.push(this._pausedTweens[i]);
         }
+        this._pausedAnims.length = 0;
         this.paused = false;
         this.onResume();
     },
@@ -323,6 +337,15 @@ game.createClass('Scene', {
         
         var exit = this.exit(sceneName);
         return exit;
+    },
+
+    _getPausedAnims: function(container) {
+        container = container || this.stage;
+        for (var i = 0; i < container.children.length; i++) {
+            var child = container.children[i];
+            if (child instanceof game.Animation) this._pausedAnims.push(child);
+            if (child.children.length) this._getPausedAnims(child);
+        }
     },
 
     /**
@@ -421,7 +444,9 @@ game.createClass('Scene', {
     **/
     _updateCollision: function() {
         if (this.paused) return;
-        if (this.world) this.world._updateCollision();
+        for (var i = 0; i < this.physics.length; i++) {
+            this.physics[i]._updateCollision();
+        }
     },
 
     /**
@@ -441,7 +466,9 @@ game.createClass('Scene', {
     **/
     _updatePhysics: function() {
         if (this.paused) return;
-        if (this.world) this.world._update();
+        for (var i = 0; i < this.physics.length; i++) {
+            this.physics[i]._update();
+        }
     },
 
     /**
@@ -449,7 +476,7 @@ game.createClass('Scene', {
         @private
     **/
     _updateRenderer: function() {
-        game.renderer._render(this.stage);
+        if (game.renderer) game.renderer._render(this.stage);
     },
 
     /**

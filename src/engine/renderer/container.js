@@ -1,4 +1,4 @@
-/**
+﻿/**
     @module renderer.container
 **/
 game.module(
@@ -159,7 +159,25 @@ game.createClass('Container', {
         @chainable
     **/
     addChild: function(child) {
+        if (!child) throw 'addChild: child undefined';
         child.parent = this;
+        return this;
+    },
+    
+    /**
+        @method addChildAt
+        @param {Container} child
+        @param {Number} index
+        @chainable
+    **/
+    addChildAt: function(child, index) {
+        if (!child) throw 'addChildAt: child undefined';
+        this.addChild(child);
+        if (index >= 0 && index < this.children.length - 1) {
+            console.log('splicing');
+            this.children.splice(this.children.indexOf(child));
+            this.children.splice(index, 0, child);
+        }
         return this;
     },
 
@@ -167,10 +185,12 @@ game.createClass('Container', {
         Add this to container.
         @method addTo
         @param {Container} container
+        @param {Number} [index]
         @chainable
     **/
-    addTo: function(container) {
-        this.parent = container;
+    addTo: function(container, index) {
+        if (!container) throw 'addTo: child undefined';
+        container.addChildAt(this, index);
         return this;
     },
 
@@ -179,7 +199,9 @@ game.createClass('Container', {
         @chainable
     **/
     anchorCenter: function() {
-        this.anchor.set(this.width / 2, this.height / 2);
+        var width = this.width / this.scale.x;
+        var height = this.height / this.scale.y;
+        this.anchor.set(width / 2, height / 2);
         return this;
     },
 
@@ -194,24 +216,29 @@ game.createClass('Container', {
     **/
     center: function(target, offsetX, offsetY, worldPos) {
         if (!target) target = this.parent;
-        if (!target) return;
+        if (!target) throw 'center: target undefined';
 
         if (target === game.scene.stage) {
             var x = game.width / 2;
             var y = game.height / 2;
+            x += this.anchor.x * this.scale.x;
+            y += this.anchor.y * this.scale.y;
         }
         else {
+            target.updateTransform();
             var tb = target._getBounds();
-            var x = tb.width / 2;
-            var y = tb.height / 2;
             if (worldPos) {
-                x += tb.x;
-                y += tb.y;
+                var x = tb.x + tb.width / 2;
+                var y = tb.y + tb.height / 2;
             }
+            else {
+                var x = -target.anchor.x + tb.width / target.scale.x / 2;
+                var y = -target.anchor.y + tb.height / target.scale.y / 2;
+            }
+            x += this.anchor.x * this.scale.x;
+            y += this.anchor.y * this.scale.y;
         }
         var bounds = this._getBounds();
-        x += this.anchor.x * this.scale.x;
-        y += this.anchor.y * this.scale.y;
         x -= bounds.width * this.scale.x / 2;
         y -= bounds.height * this.scale.y / 2;
         offsetX = offsetX || 0;
@@ -236,7 +263,7 @@ game.createClass('Container', {
         @return {Boolean}
     **/
     hitTest: function(target) {
-        if (!target) return false;
+        if (!target) throw 'hitTest: target undefined';
 
         var a = this._getBounds();
         var b = target._getBounds();
@@ -307,6 +334,20 @@ game.createClass('Container', {
     mouseupoutside: function() {},
 
     /**
+        Check if container is on the screen.
+        @method onScreen
+        @return {Boolean} Return true, if on the screen.
+    **/
+    onScreen: function() {
+        var bounds = this._getBounds();
+        if (bounds.x + bounds.width < 0) return false;
+        if (bounds.x > game.width) return false;
+        if (bounds.y + bounds.height < 0) return false;
+        if (bounds.y > game.height) return false;
+        return true;
+    },
+
+    /**
         Remove this from it's parent.
         @method remove
         @chainable
@@ -335,6 +376,7 @@ game.createClass('Container', {
         @chainable
     **/
     removeChild: function(child) {
+        if (!child) throw 'removeChild: child undefined';
         var index = this.children.indexOf(child);
         if (index === -1) return;
         this.children.splice(index, 1);
@@ -354,6 +396,7 @@ game.createClass('Container', {
         @chainable
     **/
     swap: function(container) {
+        if (!container) throw 'swap: container undefined';
         if (!this.parent) return;
         this.parent.swapChildren(this, container);
         return this;
@@ -376,6 +419,50 @@ game.createClass('Container', {
         this.children[index1] = child2;
         this.children[index2] = child;
     },
+    
+    /**
+        Move container to first children.
+        @method toBottom
+    **/
+    toBottom: function() {
+        if (!this.parent) return;
+        var parent = this.parent;
+        this.remove();
+        this.addTo(parent, 0);
+    },
+    
+    /**
+        Move container to last children.
+        @method toTop
+    **/
+    toTop: function() {
+        if (!this.parent) return;
+        var parent = this.parent;
+        this.remove();
+        this.addTo(parent);
+    },
+
+    /**
+        Get current world position
+        @method toWorldPosition
+        @param {Vector} [vector] Vector to set world position
+        @param {Boolean} [local] Convert world position to local position
+        @return {Vector} Returns new Vector, if vector parameter not defined
+    **/
+    toWorldPosition: function(vector, local) {
+        if (this._lastTransformUpdate !== game.Timer.time) this._updateParentTransform();
+
+        var x = local ? -this.parent._worldTransform.tx + this.position.x : this._worldTransform.tx;
+        var y = local ? -this.parent._worldTransform.ty + this.position.y : this._worldTransform.ty;
+
+        if (!local) {
+            x += this.anchor.x;
+            y += this.anchor.y;
+        }
+
+        if (vector) vector.set(x, y);
+        else return new game.Vector(x, y);
+    },
 
     /**
         @method updateTransform
@@ -395,12 +482,20 @@ game.createClass('Container', {
 
         var ax = this.anchor.x;
         var ay = this.anchor.y;
+
         lt.a = this._cosCache * this.scale.x;
         lt.b = this._sinCache * this.scale.x;
         lt.c = -this._sinCache * this.scale.y;
         lt.d = this._cosCache * this.scale.y;
         lt.tx = this.position.x - (ax * lt.a + ay * lt.c);
         lt.ty = this.position.y - (ax * lt.b + ay * lt.d);
+
+        if (this.parent.texture) {
+            var pax = this.parent.anchor.x;
+            var pay = this.parent.anchor.y;
+            lt.tx += pax;
+            lt.ty += pay;
+        }
 
         wt.a = lt.a * pt.a + lt.b * pt.c;
         wt.b = lt.a * pt.b + lt.b * pt.d;

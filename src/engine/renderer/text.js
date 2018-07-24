@@ -166,6 +166,18 @@ game.createClass('Text', 'Container', {
     **/
     fontClass: null,
     /**
+        If text height is higher than maxHeight value, text will be scaled down to fit maxHeight. 0 to disable.
+        @property {Number} maxHeight
+        @default 0
+    **/
+    maxHeight: 0,
+    /**
+        If text width is higher than maxWidth value, text will be scaled down to fit maxWidth. 0 to disable.
+        @property {Number} maxWidth
+        @default 0
+    **/
+    maxWidth: 0,
+    /**
         Current text value.
         @property {String} text
     **/
@@ -335,6 +347,7 @@ game.createClass('Text', 'Container', {
         var y = 0;
         var curLine = 0;
         var curWord = 0;
+        var prevChar = 0;
 
         if (this.align === 'center') x = width / 2 - this._lines[0].width / 2;
         if (this.align === 'right') x = width - this._lines[0].width;
@@ -362,7 +375,7 @@ game.createClass('Text', 'Container', {
                 // Only add space if not beginning of line
                 if (x > 0) {
                     x += this.fontClass.spaceWidth;
-                    curWord++;
+                    if (prevChar !== 32) curWord++;
                 }
                 curWord++;
             }
@@ -373,6 +386,8 @@ game.createClass('Text', 'Container', {
                 x = 0;
                 curWord++;
             }
+
+            prevChar = charCode;
 
             var charObj = this.fontClass.chars[charCode];
             if (!charObj) continue;
@@ -389,6 +404,21 @@ game.createClass('Text', 'Container', {
         }
 
         this.updateTransform();
+
+        if (!this.maxWidth && !this.maxHeight) return;
+
+        var scale = 0;
+
+        if (this.maxWidth && this.width > this.maxWidth) {
+            scale = this.maxWidth / this.width;
+        }
+        if (this.maxHeight && this.height > this.maxHeight) {
+            scale = this.maxHeight / this.height;
+        }
+
+        scale.limit(0, 1);
+
+        this.scale.set(scale);
     }
 });
 
@@ -450,7 +480,7 @@ game.createClass('SystemText', 'Container', {
         context.globalAlpha = this._worldAlpha;
         context.setTransform(wt.a, wt.b, wt.c, wt.d, wt.tx * game.scale, (wt.ty + this.size) * game.scale);
         context.fillStyle = this.color;
-        context.font = this.size * game.scale * game.scale + 'px ' + this.font;
+        context.font = this.size * game.scale + 'px ' + this.font;
         context.textAlign = this.align;
         context.fillText(this.text, 0, 0);
     }
