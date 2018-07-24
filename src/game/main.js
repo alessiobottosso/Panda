@@ -466,6 +466,12 @@ game.createScene('Gameplay', {
         this.motionDelta.y = 150;
         this.motionDelta.color = 'black';
         this.motionDelta.addTo(this.stage);
+
+        this.Score = new game.SystemText('score');
+        this.Score.size = 40;
+        this.Score.y = 300;
+        this.Score.color = 'black';
+        this.Score.addTo(this.stage);
         
         this.limitX = 10;
         this.limitY = 10;
@@ -480,8 +486,8 @@ game.createScene('Gameplay', {
     {
         if(Math.abs(accel.y) > 5)
         {
-            CHECK++;
-            this.score.text = ('score: ' + CHECK);
+            //CHECK++;
+            //this.Score.text = ('score: ' + CHECK);
         }
     },
     
