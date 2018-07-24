@@ -491,6 +491,7 @@ game.createScene('Gameplay', {
     
     updateScore: function(accel) 
     {
+        this.limY=15;
         if(this.sign === undefined)
         {
             this.sign =-1;
@@ -501,7 +502,10 @@ game.createScene('Gameplay', {
             var currentSign = accel.y / abs;
             if(currentSign*this.sign == -1)
             {
-                CHECK++;
+                if(this.maxY<limY && this.minY>-limY )
+                {
+                    CHECK++;
+                }
                 this.maxX=0; 
                 this.maxY=0;
                 this.minX=0;
