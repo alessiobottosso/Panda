@@ -410,29 +410,35 @@ game.createScene('Gameplay', {
         
         this.player.addTo(this.stage);
         
-        
+        var a=0;
+        var b=90;
+        var c=250;
         // Debug
         this.maxMotionTextX = new game.SystemText('Max Motion x: 0');
-        this.maxMotionTextX.size = 24;
-        this.maxMotionTextX.y = 0;
+        this.maxMotionTextX.size = 100;
+        this.maxMotionTextX.x = c;
+        this.maxMotionTextX.y = a;a+=b;
         this.maxMotionTextX.color = 'black';
         this.maxMotionTextX.addTo(this.stage);
         
         this.maxMotionTextY = new game.SystemText('Max Motion y: 0');
-        this.maxMotionTextY.size = 24;
-        this.maxMotionTextY.y = 35;
+        this.maxMotionTextY.size = 100;
+        this.maxMotionTextY.x = c;
+        this.maxMotionTextY.y = a;a+=b;
         this.maxMotionTextY.color = 'black';
         this.maxMotionTextY.addTo(this.stage);
         
         this.minMotionTextX = new game.SystemText('Min Motion x: 0');
-        this.minMotionTextX.size = 24;
-        this.minMotionTextX.y = 70;
+        this.minMotionTextX.size =100;
+        this.minMotionTextX.x = c;
+        this.minMotionTextX.y = a;a+=b;
         this.minMotionTextX.color = 'black';
         this.minMotionTextX.addTo(this.stage);
         
         this.minMotionTextY = new game.SystemText('Min Motion y: 0');
-        this.minMotionTextY.size = 24;
-        this.minMotionTextY.y = 105;
+        this.minMotionTextY.size = 100;
+        this.minMotionTextY.x = c;
+        this.minMotionTextY.y = a;a+=b;
         this.minMotionTextY.color = 'black';
         this.minMotionTextY.addTo(this.stage);
 
@@ -500,12 +506,6 @@ game.createScene('Gameplay', {
                 this.maxY=0;
                 this.minX=0;
                 this.minY=0;
-            this.maxMotionTextX.text = ('Max Motion x: ' + this.maxX);
-            this.maxMotionTextY.text = ('Max Motion y: ' + this.maxY);
-            this.minMotionTextX.text = ('Min Motion x: ' + this.minX);
-            this.minMotionTextY.text = ('Min Motion y: ' + this.minY);
-
-                
             }
             this.sign = currentSign;
             
