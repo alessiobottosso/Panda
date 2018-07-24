@@ -500,6 +500,12 @@ game.createScene('Gameplay', {
                 this.maxY=0;
                 this.minX=0;
                 this.minY=0;
+            this.maxMotionTextX.text = ('Max Motion x: ' + this.maxX);
+            this.maxMotionTextY.text = ('Max Motion y: ' + this.maxY);
+            this.minMotionTextX.text = ('Min Motion x: ' + this.minX);
+            this.minMotionTextY.text = ('Min Motion y: ' + this.minY);
+
+                
             }
             this.sign = currentSign;
             
