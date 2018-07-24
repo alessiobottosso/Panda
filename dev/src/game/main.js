@@ -671,11 +671,11 @@ game.createScene('Gameplay', {
             {
                 if (this.playerBody.velocity[1] >= 0)
                 {
-                    this.playerBody.velocity[1] += game.delta * 500
+                    this.playerBody.velocity[1] += game.delta * 5000
                 }
                 else
                 {
-                    this.playerBody.velocity[1] -= game.delta * 500
+                    this.playerBody.velocity[1] -= game.delta * 5000
                 }
             }
             
