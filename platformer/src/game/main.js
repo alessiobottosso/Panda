@@ -111,6 +111,11 @@ game.createScene('Main', {
         this.stepb=0;
         this.steps=[];
     },
+    mousedown: function(x, y)
+    	{
+    	    this.super(x,y)
+        this.player.jump();
+    },
     update:function()
     {
         if(this.steps.length>10)
