@@ -32,14 +32,14 @@ BUTTON_RELEASED = "button2.png"
 
 SOUND_PRESSED = "click1.m4a" 
 SOUND_RELEASED = "click2.m4a"
-SOUND_STAR = "click1.m4a"
-SOUND_PACK = "click2.m4a"
+SOUND_STAR = "sfx_collect_star.m4a"
+SOUND_PACK = "sfx_collect_gift.m4a"
 
 SOUND_STEP1 = "audio1.m4a"
 SOUND_STEP2 = "audio2.m4a"
 
-SOUND_JUMP1 = "SFX_Jump_22.m4a"
-SOUND_JUMP2 = "SFX_Jump_09.m4a"
+SOUND_JUMP1 = "sfx_player_jump.m4a"
+SOUND_JUMP2 = "sfx_player_double_jump.m4a"
 
 
 
