@@ -16,6 +16,6 @@ game.config = {
     
     renderer: {
         roundPixels: true,
-        scaleMode:'nearest'
+        scaleMode:'linear'
     }
 };

@@ -44,8 +44,8 @@ game.module(
             s.x = HALF_WIDTH
             s.y = game.height*0.25
             s.anchorCenter();
-            s.scale.x=2;
-            s.scale.y=2;
+            s.scale.x=1;
+            s.scale.y=1;
             s.addTo(game.scene.stage);
 
             this.buildGrid();
@@ -85,7 +85,7 @@ game.module(
                 var y=(i)%4;
 
                 this.plot(x,y,PORTRAIT+'Bg.png',0,0.5)
-                this.plot(x,y,PORTRAIT+j+'.png',+4,1)
+                this.plot(x,y,PORTRAIT+j+'.png',+4,0.5)
     
                 
             }
