@@ -7,7 +7,7 @@ game.module(
         init: function(e) {
             var t = 40
               , i = 2 * t + 2 + t - 1
-              , s = 9;
+              , s = 6;
             this.bar = new game.Graphics,
             this.bar.beginFill("#222222"),
             this.bar.drawRect(0, 0, 2+ i*0.66, s),
@@ -22,6 +22,7 @@ game.module(
                 var a = new game.Sprite(n);
                 a.position.x = 1 + 2 * o,
                 a.position.y = 1,
+                a.scale.y=0.5,
                 a.visible = !1,
                 a.addTo(this.bar)
             }

@@ -9,7 +9,7 @@
 )
 
 .body(function() {
-//LEVEL_DESIGN="level4.json"
+//LEVEL_DESIGN="level.json"
 LEVEL_DESIGN="";
 
 LOCAL_MODE=true;
@@ -122,13 +122,30 @@ game.addAsset('tileset.png');
 
 game.addAsset('t1.png');
 
+
+game.addAsset('block.png');
+
+game.addAsset('Juv_Xmas_UI_4x_SelectPlayer.jpg');
+
+
+game.addAsset('portraitBg1.png');
 game.addAsset('portraitFg.png');
 game.addAsset('portraitBg.png');
+game.addAsset('portraitLock.png');
 
 game.addAsset('portrait0.png');
 game.addAsset('portrait1.png');
 game.addAsset('portrait2.png');
 game.addAsset('portrait3.png');
+game.addAsset('portrait4.png');
+game.addAsset('portrait5.png');
+
+game.addAsset('Juv_Xmas_UI_Selection_Greek_DOWN.png');
+game.addAsset('Juv_Xmas_UI_Selection_Greek_UP.png');
+
+
+
+
 
 
 
@@ -391,7 +408,7 @@ function AddButtons()
     }
     
 	game.scene.soundButton = new game.Button(soundButton,
-		0.08 * game.width, 0.95 * game.height,
+		0.07 * game.width, 0.95 * game.height,
 		function() {
 	        if(game.mute == false)
 	        {
@@ -472,6 +489,10 @@ function CommonUpdate()
 
 function IsWalkable(tileid)
 {
+    if(tileid==1+20)
+    {
+        return true;
+    }
     if(tileid==1+16)
     {
         return true;

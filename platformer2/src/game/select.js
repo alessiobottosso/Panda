@@ -14,25 +14,58 @@ game.module(
         init: function() 
     	{
     	    AddForegroundUI();
-    	    
-            this.text = new game.Text("01 - Select");
-            this.text.cache=true;
-            this.text.anchor.set(0,0);
-            this.text.x=game.width/2 - this.text.width/2
-            this.text.y+=game.height * 0.05 + this.text.height/2;
+    	    this.rowLocked=2;
+
+            this.text = CreateText("Name.Surname88",HALF_WIDTH,
+            0.025*game.height,0,25)
+            this.text.addTo(game.scene.stage)
+
+            this.text = CreateText("SELECT YOUR PLAYER",
+            HALF_WIDTH, 0.076*game.height,0,39)
             this.text.addTo(game.scene.stage)
     
+        
+	   // SetColor(text2,tint);
+    //     var f= text2.height/text2.fontClass.lineHeight;
+	   // text2.y =+offsetY + (1/f )*(-text2.height*text2.scale.y/2)
+
+
     	    this.x=0;
     	    this.y=0;
             this.scalex=107;
             this.scaley=107;
-            this.yy = game.height*0.4;
+            this.yy = game.height*0.45;
     	    this.xx = HALF_WIDTH- this.scalex*3;
     	    
-
-            var s = new game.Sprite(PORTRAIT+'Bg.png')
+            var s = new game.Sprite('Juv_Xmas_UI_Selection_Greek_UP.png')
             s.x = HALF_WIDTH
-            s.y = game.height*0.25
+            s.y = game.height*0.14
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+    	    
+            var s = new game.Sprite('block.png')
+            s.x = HALF_WIDTH
+            s.y = game.height*0.282
+            s.scale.y=2.95;
+            s.scale.x=8;
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+    	    
+            var s = new game.Sprite('Juv_Xmas_UI_Selection_Greek_DOWN.png')
+            s.x = HALF_WIDTH
+            s.y = game.height*0.424
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+
+            this.text = CreateText("Surname",HALF_WIDTH,
+            0.38*game.height,0,35)
+            this.text.addTo(game.scene.stage)
+
+
+
+            var s = new game.Sprite(PORTRAIT+'Bg1.png')
+            s.x = 0+HALF_WIDTH
+            s.y = 8+4+game.height*0.25
             s.anchorCenter();
             s.scale.x=1;
             s.scale.y=1;
@@ -68,23 +101,26 @@ game.module(
             s.y = this.y*this.scaley;
             s.scale.x=0.5;
             s.scale.y=0.5;
-            s.x+=this.xx;
-            s.y+=this.yy;
+            this.xx1=-8+this.xx
+            this.yy1=-8+this.yy
+            s.x+=this.xx1;
+            s.y+=this.yy1;
             s.addTo(game.scene.stage);
             this.frame=s;
         
             this.prevX=this.x;
             this.prevY=this.y;
-        
+
+
     	},
     	plotSelectedImg: function()
     	{
     	    if(this.selectedImg) this.selectedImg.remove();
             this.selectIdx = this.x+this.y*6;
-            if(this.selectIdx>3)this.selectIdx = 1;
+            if(this.selectIdx>=6)this.selectIdx = 1;
             var s = new game.Sprite(PORTRAIT+this.selectIdx+'.png')
             s.x = HALF_WIDTH
-            s.y = game.height*0.25
+            s.y = 8+2+game.height*0.25
             s.anchorCenter();
             s.scale.x=1;
             s.scale.y=1;
@@ -96,22 +132,25 @@ game.module(
     	    
             for(var i=0;i<24;++i)
             {
-                var j=(i>0)?1:0;
-                var x=~~((i)/4);
-                var y=(i)%4;
+                var j=(i<6)?i:1;
+                var y=~~((i)/6);
+                var x=(i)%6;
                 this.plot(x,y,PORTRAIT+'Bg.png',0)
-                this.plot(x,y,PORTRAIT+j+'.png',+4)
+                this.plot(x,y,PORTRAIT+j+'.png',0+4,4)
+                if(y>=this.rowLocked)
+                    this.plot(x,y,PORTRAIT+'Lock.png',4,4)
+                
             }
 
     	},
-    	plot:function(x,y,name, offset,scale)
+    	plot:function(x,y,name, offset,offset1)
     	{
                 var s = new game.Sprite(name)
                 s.x = x*this.scalex;
                 s.y = y*this.scaley;
                 s.scale.x=0.5;
                 s.scale.y=0.5;
-                s.x+=this.xx;
+                s.x+=this.xx+offset;
                 s.y+=this.yy+offset;
                 s.addTo(game.scene.stage);
     	},
@@ -141,29 +180,36 @@ game.module(
             }
             if (key === 'DOWN') 
             {
+                if(this.y+1<this.rowLocked)
                 this.y++
                 if(this.y>3)
                     this.y=3
             }
         },
+        rndSelect:function()
+        {
+            var length = this.rowLocked*6 - 1
+            this.selectIdx=1+Math.floor((Math.random() * length));
+            if(this.selectIdx==0)
+                this.rndSelect()
+            this.x = this.selectIdx % 6; 
+            this.y = ~~(this.selectIdx / 6) ;
+            this.plotSelectedImg();
+        },
     	start: function()
     	{
+    	    if(this.selectIdx==0)
+    	    {
+    	        this.rndSelect();
+    	    }
     	    game.selectIdx = this.selectIdx;
     	    GoToScene('Tutorial');
     	    //GoToScene('Main');
     	},
     	select: function(x, y)
     	{
-    	    var j=-1;
-    	    for(var i=0;i<7;++i)
-    	    {
-    	        if(x<(i)*this.scalex+this.xx)
-    	        {
-    	            j=i;
-    	            break;
-    	        }
-    	    }
-    	    if(j>0) this.x =j-1;
+    	    if (y < game.height*0.40) return;
+    	    if (y > game.height*0.80) return;
     	    
     	    var k=0;
     	    for(var i=0;i<5;++i)
@@ -174,7 +220,28 @@ game.module(
     	            break;
     	        }
     	    }
-    	    if(k>0) this.y =k-1;
+
+	        if(k-1<this.rowLocked )
+            {
+        	    if(k>0) 
+    	            this.y =k-1;
+        	            
+        	    var j=-1;
+        	    for(var i=0;i<7;++i)
+        	    {
+        	        if(x<(i)*this.scalex+this.xx)
+        	        {
+        	            j=i;
+        	            break;
+        	        }
+        	    }
+        	    if(j>0) this.x =j-1;
+            }
+            
+            if(this.x==0 && this.y==0)
+            {
+                this.rndSelect();    
+            }
     	},
     	mousedown: function(x, y)
     	{
@@ -186,12 +253,12 @@ game.module(
     	    CommonUpdate();
             if(this.prevX!=this.x)
             {
-                this.frame.x = this.x*this.scalex+this.xx;
+                this.frame.x = this.x*this.scalex+this.xx1;
                 this.plotSelectedImg();
             }
             if(this.prevY!=this.y)
             {
-                this.frame.y = this.y*this.scaley+this.yy;
+                this.frame.y = this.y*this.scaley+this.yy1;
                 this.plotSelectedImg();
             }
             this.prevX=this.x;
