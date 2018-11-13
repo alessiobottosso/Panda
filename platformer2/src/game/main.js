@@ -30,12 +30,15 @@ game.createScene('Main', {
         this.initialCorrectionX=d/10+00;
         this.startingTime = Date.now();
         this.layers =[];
+        
         this.layers.push("layer_08.png");
         this.layers.push("layer_07.png");
         this.layers.push("layer_06.png");
-        this.layers.push("layer_05.png");
-        this.layers.push("layer_04.png");
-        this.layers.push("layer_03.png");
+        
+         this.layers.push("layer_05.png");
+         
+        // this.layers.push("layer_04.png");
+        // this.layers.push("layer_03.png");
 
         this.bgLayer=[];    
         this.layers.forEach(function(element) {
@@ -136,6 +139,8 @@ game.createScene('Main', {
                 s.remove();
             }else
             {
+                //var s= this.steps.pop();
+                //s.body.remove();
                 if(!top.sounded)
                 {
                     top.sounded=true; 

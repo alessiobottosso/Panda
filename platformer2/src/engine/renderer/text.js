@@ -1,4 +1,4 @@
-﻿/**
+/**
     @module renderer.text
 **/
 game.module(
@@ -12,7 +12,7 @@ game.module(
 /**
     @class Font
     @constructor
-    @param {Object} data
+    @param {XML|JSON} data
 **/
 game.createClass('Font', {
     /**
@@ -24,6 +24,11 @@ game.createClass('Font', {
     **/
     chars: {},
     /**
+        @property {Number} letterSpacing
+        @default 0
+    **/
+    letterSpacing: 0,
+    /**
         @property {Number} lineHeight
     **/
     lineHeight: 0,
@@ -33,27 +38,55 @@ game.createClass('Font', {
     spaceWidth: 0,
 
     staticInit: function(data) {
-        var image = data.getElementsByTagName('page')[0].getAttribute('file');
-        var info = data.getElementsByTagName('info')[0];
-        var common = data.getElementsByTagName('common')[0];
-        var chars = data.getElementsByTagName('char');
-
+        if (data.getElementsByTagName) {
+            var image = data.getElementsByTagName('page')[0].getAttribute('file');
+            var info = data.getElementsByTagName('info')[0];
+            var common = data.getElementsByTagName('common')[0];
+            var chars = data.getElementsByTagName('char');
+        }
+        else {
+            var image = data.pages[0].file;
+            var info = data.info;
+            var common = data.common;
+            var chars = data.chars;
+        }
+        
         this.baseTexture = game.BaseTexture.fromImage(game._getFilePath(image));
-        this.lineHeight = parseInt(common.getAttribute('lineHeight'));
+        if (data.getElementsByTagName) this.lineHeight = parseInt(common.getAttribute('lineHeight'));
+        else this.lineHeight = parseInt(common.lineHeight);
         
         for (var i = 0; i < chars.length; i++) {
-            var xadvance = parseInt(chars[i].getAttribute('xadvance'));
-            var id = parseInt(chars[i].getAttribute('id'));
+            if (data.getElementsByTagName) {
+                var xadvance = parseInt(chars[i].getAttribute('xadvance'));
+                var id = parseInt(chars[i].getAttribute('id'));
+            }
+            else {
+                var xadvance = parseInt(chars[i].xadvance);
+                var id = parseInt(chars[i].id);
+            }
+            
             if (id === 32) {
                 this.spaceWidth = xadvance;
                 continue;
             }
-            var xoffset = parseInt(chars[i].getAttribute('xoffset'));
-            var yoffset = parseInt(chars[i].getAttribute('yoffset'));
-            var x = parseInt(chars[i].getAttribute('x')) / game.scale;
-            var y = parseInt(chars[i].getAttribute('y')) / game.scale;
-            var width = parseInt(chars[i].getAttribute('width')) / game.scale;
-            var height = parseInt(chars[i].getAttribute('height')) / game.scale;
+
+            if (data.getElementsByTagName) {
+                var xoffset = parseInt(chars[i].getAttribute('xoffset'));
+                var yoffset = parseInt(chars[i].getAttribute('yoffset'));
+                var x = parseInt(chars[i].getAttribute('x')) / game.scale;
+                var y = parseInt(chars[i].getAttribute('y')) / game.scale;
+                var width = parseInt(chars[i].getAttribute('width')) / game.scale;
+                var height = parseInt(chars[i].getAttribute('height')) / game.scale;
+            }
+            else {
+                var xoffset = parseInt(chars[i].xoffset);
+                var yoffset = parseInt(chars[i].yoffset);
+                var x = parseInt(chars[i].x) / game.scale;
+                var y = parseInt(chars[i].y) / game.scale;
+                var width = parseInt(chars[i].width) / game.scale;
+                var height = parseInt(chars[i].height) / game.scale;
+            }
+
             var texture = new game.Texture(this.baseTexture, x, y, width, height);
 
             this.chars[id] = {
@@ -75,11 +108,17 @@ game.addAttributes('Font', {
     /**
         @method fromData
         @static
-        @param {Object} data
+        @param {XML|JSON} data
     **/
     fromData: function(data) {
-        var info = data.getElementsByTagName('info')[0];
-        var face = info.getAttribute('face');
+        if (data.getElementsByTagName) {
+            var info = data.getElementsByTagName('info')[0];
+            var face = info.getAttribute('face');
+        }
+        else {
+            var face = data.info.face;
+        }
+        
         var font = game.Font.cache[face];
 
         if (!font) {
@@ -103,6 +142,7 @@ game.addAttributes('Font', {
 });
 
 /**
+    Text that uses bitmap fonts for rendering.
     @class Text
     @extends Container
     @constructor
@@ -111,22 +151,39 @@ game.addAttributes('Font', {
 **/
 game.createClass('Text', 'Container', {
     /**
+        Align for multi-lined text. Can be left, center or right.
         @property {String} align
     **/
     align: 'left',
     /**
+        Name of the font that this text is using.
         @property {String} font
     **/
     font: null,
     /**
+        Font class that this text is using.
         @property {Font} fontClass
     **/
     fontClass: null,
     /**
+        If text height is higher than maxHeight value, text will be scaled down to fit maxHeight. 0 to disable.
+        @property {Number} maxHeight
+        @default 0
+    **/
+    maxHeight: 0,
+    /**
+        If text width is higher than maxWidth value, text will be scaled down to fit maxWidth. 0 to disable.
+        @property {Number} maxWidth
+        @default 0
+    **/
+    maxWidth: 0,
+    /**
+        Current text value.
         @property {String} text
     **/
     text: null,
     /**
+        If text width is higher than wrap value, text will be wrapped to multiple lines. 0 to disable.
         @property {Number} wrap
     **/
     wrap: 0,
@@ -243,7 +300,7 @@ game.createClass('Text', 'Container', {
             var charObj = this.fontClass.chars[charCode];
             if (!charObj) continue;
 
-            curWordWidth += charObj.xadvance;
+            curWordWidth += charObj.xadvance + this.fontClass.letterSpacing;
         }
 
         // Add last word
@@ -290,6 +347,7 @@ game.createClass('Text', 'Container', {
         var y = 0;
         var curLine = 0;
         var curWord = 0;
+        var prevChar = 0;
 
         if (this.align === 'center') x = width / 2 - this._lines[0].width / 2;
         if (this.align === 'right') x = width - this._lines[0].width;
@@ -317,7 +375,7 @@ game.createClass('Text', 'Container', {
                 // Only add space if not beginning of line
                 if (x > 0) {
                     x += this.fontClass.spaceWidth;
-                    curWord++;
+                    if (prevChar !== 32) curWord++;
                 }
                 curWord++;
             }
@@ -328,6 +386,8 @@ game.createClass('Text', 'Container', {
                 x = 0;
                 curWord++;
             }
+
+            prevChar = charCode;
 
             var charObj = this.fontClass.chars[charCode];
             if (!charObj) continue;
@@ -340,10 +400,25 @@ game.createClass('Text', 'Container', {
             sprite.position.y = (y + charObj.yoffset) / game.scale;
             this.addChild(sprite);
 
-            x += charObj.xadvance;
+            x += charObj.xadvance + this.fontClass.letterSpacing;
         }
 
         this.updateTransform();
+
+        if (!this.maxWidth && !this.maxHeight) return;
+
+        var scale = 0;
+
+        if (this.maxWidth && this.width > this.maxWidth) {
+            scale = this.maxWidth / this.width;
+        }
+        if (this.maxHeight && this.height > this.maxHeight) {
+            scale = this.maxHeight / this.height;
+        }
+
+        scale.limit(0, 1);
+
+        this.scale.set(scale);
     }
 });
 
@@ -356,6 +431,7 @@ game.addAttributes('Text', {
 });
 
 /**
+    Text that uses canvas fillText for rendering.
     @class SystemText
     @extends Container
     @constructor

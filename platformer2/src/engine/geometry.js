@@ -85,6 +85,40 @@ game.createClass('Circle', {
 });
 
 /**
+    @class Polygon
+    @constructor
+    @param {Array} points
+**/
+game.createClass('Polygon', {
+    /**
+        List of points in polygon. Can be list of numbers or vectors.
+        @property {Array} points
+    **/
+    points: [],
+
+    staticInit: function(points) {
+        if (!points) return;
+        for (var i = 0; i < points.length; i++) {
+            if (points[i] instanceof game.Vector) this.points.push(points[i]);
+            else {
+                this.points.push(new game.Vector(points[i], points[i + 1]));
+                i++;
+            }
+        }
+    },
+    
+    /**
+        Close polygon.
+        @method close
+    **/
+    close: function() {
+        if (this.points[0] !== this.points[this.points.length - 1]) {
+            this.points.push(this.points[0]);
+        }
+    }
+});
+
+/**
     @class Rectangle
     @constructor
     @param {Number} width
@@ -126,10 +160,20 @@ game.createClass('Rectangle', {
         @param {Number} y
     **/
     set: function(width, height, x, y) {
-        this.width = width || this.width;
+        this.width = typeof width === 'number' ? width : this.width;
         this.height = typeof height === 'number' ? height : this.width;
-        this.x = x || this.x;
-        this.y = y || this.y;
+        this.x = typeof x === 'number' ? x : this.x;
+        this.y = typeof y === 'number' ? y : this.y;
+    },
+    
+    /**
+        Swap width and height values.
+        @method swap
+    **/
+    swap: function() {
+        var height = this.height;
+        this.height = this.width;
+        this.width = height;
     }
 });
 
@@ -233,11 +277,11 @@ game.createClass('Vector', {
         @chainable
     **/
     distance: function(x, y) {
-        x = x instanceof game.Vector ? x.x : x;
-        y = x instanceof game.Vector ? x.y : (y || ((y !== 0) ? x : 0));
-        x = x - this.x;
-        y = y - this.y;
-        return Math.sqrt(x * x + y * y);
+        var x1 = x instanceof game.Vector ? x.x : x;
+        var y1 = x instanceof game.Vector ? x.y : (y || ((y !== 0) ? x : 0));
+        x1 = x1 - this.x;
+        y1 = y1 - this.y;
+        return Math.sqrt(x1 * x1+ y1 * y1);
     },
 
     /**
@@ -303,6 +347,18 @@ game.createClass('Vector', {
         this.x = this.x.limit(-vector.x, vector.x);
         this.y = this.y.limit(-vector.y, vector.y);
         return this;
+    },
+
+    /**
+        Change values based on distance and angle.
+        @method move
+        @param {Number} distance
+        @param {Vector|Number} angle
+    **/
+    move: function(distance, angle) {
+        if (angle instanceof game.Vector) angle = this.angle(angle);
+        this.x += distance * Math.cos(angle);
+        this.y += distance * Math.sin(angle);
     },
 
     /**
@@ -395,6 +451,18 @@ game.createClass('Vector', {
         this.x -= x instanceof game.Vector ? x.x : x;
         this.y -= x instanceof game.Vector ? x.y : (y || ((y !== 0) ? x : 0));
         return this;
+    },
+
+    /**
+        Swap vector values with another vector.
+        @method swap
+        @param {Vector} target
+    **/
+    swap: function(target) {
+        var x = this.x;
+        var y = this.y;
+        this.copy(target);
+        target.set(x, y);
     }
 });
 

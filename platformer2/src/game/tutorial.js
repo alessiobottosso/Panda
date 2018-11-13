@@ -21,10 +21,19 @@ game.module(
         this.text.y+=game.height * 0.05 + this.text.height/2;
         this.text.addTo(game.scene.stage)
 
-        this.button = new game.ForgeButton(BUTTON_PRESSED, BUTTON_RELEASED,
-            HALF_WIDTH,0.9*game.height,"button",{},40,"#555555","#550055",function()
-            {
-                if(!LOCAL_MODE) 
+        this.button = new CreateDefaultButton(
+            HALF_WIDTH,0.95*game.height,"button",40,
+            function()
+            {  
+                game.scene.start();
+            });
+
+    
+            //GoToScene('Main');
+    	},
+    	start:function()
+    	{
+    	   if(!LOCAL_MODE) 
                 {
                     var xhr = new XMLHttpRequest();
                     xhr.open('GET', "https://ipinfo.io/json", true);
@@ -42,17 +51,20 @@ game.module(
                 
                 if(LOCAL_MODE) game.startReceived=true;
                 game.scene.button.setEnable(false)
-            });
-        SetDefaultButtonBehavior(game.scene.button,100);
-        this.button.addTo(game.scene.stage);
-    
-            //GoToScene('Main');
-    	}
-    	,
+
+    	},
     	update:function()
     	{
     	    CommonUpdate();
-    	}
+    	},
+        keydown: function(key) 
+        {
+            if (key === 'SPACE') 
+            {
+                game.scene.start();
+            }
+        },
+
     });
 
 

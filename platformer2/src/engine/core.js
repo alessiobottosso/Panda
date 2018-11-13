@@ -24,11 +24,6 @@ var game = {
     **/
     device: {},
     /**
-        Device acceleration.
-        @property {DeviceAcceleration} devicemotion
-    **/
-    devicemotion: null,
-    /**
         Instance of Input class.
         @property {Input} input
     **/
@@ -80,6 +75,11 @@ var game = {
     **/
     pool: null,
     /**
+        Instance of Renderer class.
+        @property {Renderer} renderer
+    **/
+    renderer: null,
+    /**
         Scale multiplier for Retina and HiRes mode.
         @property {Number} scale
         @default 1
@@ -99,7 +99,7 @@ var game = {
         Engine version.
         @property {String} version
     **/
-    version: '2.0.2',
+    version: '2.9.0',
     /**
         @property {Boolean} _booted
         @private
@@ -174,6 +174,11 @@ var game = {
     **/
     _loadFinished: false,
     /**
+        @property {HTMLImageElement} _logoSource
+        @private
+    **/
+    _logoSource: null,
+    /**
         @property {Array} _moduleQueue
         @private
     **/
@@ -190,17 +195,18 @@ var game = {
     _waitForLoad: 0,
 
     /**
-        Add asset to load queue. Path is relative to media folder. If not id defined, path will be used as id.
+        Add asset to load queue. If not id defined, filename will be used as id.
         @method addAsset
-        @param {String} path
+        @param {String} filename
         @param {String} [id]
     **/
-    addAsset: function(path, id) {
+    addAsset: function(filename, id) {
+        if (!filename) throw 'addAsset: filename undefined';
         if (id && this.paths[id]) return;
-        if (this.paths[path]) return;
-        var realPath = this._getFilePath(path);
+        if (this.paths[filename]) return;
+        var realPath = this._getFilePath(filename);
         if (id) this.paths[id] = realPath;
-        this.paths[path] = realPath;
+        this.paths[filename] = realPath;
         if (this.mediaQueue.indexOf(realPath) === -1) this.mediaQueue.push(realPath);
         return id;
     },
@@ -239,18 +245,6 @@ var game = {
     },
 
     /**
-        Clear engine cache.
-        @method clearCache
-    **/
-    clearCache: function() {
-        this.Texture.clearCache();
-        this.BaseTexture.clearCache();
-        this.Font.clearCache();
-        this.json = {};
-        this.paths = {};
-    },
-
-    /**
         Copy object.
         @method copy
         @param {Object} object
@@ -260,7 +254,7 @@ var game = {
         var l, c, i;
         if (
             !object || typeof object !== 'object' ||
-            object instanceof HTMLElement ||
+            (typeof document !== 'undefined' && object instanceof HTMLElement) ||
             object instanceof this.Class ||
             (this.Container && object instanceof this.Container)
         ) {
@@ -291,6 +285,7 @@ var game = {
         @return {Class}
     **/
     createClass: function(name, extend, content) {
+        if (!name) throw 'createClass: name undefined';
         if (typeof name === 'object') return this.Class.extend(name);
 
         if (this[name]) throw 'Class ' + name + ' already created';
@@ -300,7 +295,7 @@ var game = {
             extend = 'Class';
         }
 
-        if (!this[extend]) throw 'Class ' + extend + ' not found';
+        if (!this[extend]) throw 'createClass: Class ' + extend + ' not found for ' + name;
 
         this[name] = this[extend].extend(content);
         this[name]._name = name;
@@ -327,7 +322,7 @@ var game = {
     },
 
     /**
-        Define properties to class.
+        Define properties to class with get and set functions.
         @method defineProperties
         @param {String} className
         @param {Object} properties
@@ -350,7 +345,22 @@ var game = {
         @return {Object}
     **/
     getJSON: function(id) {
+        if (!id) throw 'getJSON: id undefined';
         return this.json[this.paths[id]];
+    },
+
+    /**
+        Inject class.
+        @method injectClass
+        @param {String} name
+        @param {Object} content
+        @return {Class}
+    **/
+    injectClass: function(name, content) {
+        if (!name) throw 'injectClass: name undefined';
+        if (!this[name]) throw 'Class ' + name + ' not found';
+        this[name].inject(content);
+        return this[name];
     },
 
     /**
@@ -456,10 +466,11 @@ var game = {
         @method removeAllAssets
     **/
     removeAllAssets: function() {
-        if (game.Audio) game.Audio.clearCache();
-        game.BaseTexture.clearCache();
-        game.Texture.clearCache();
-        game.TilingSprite.clearCache();
+        if (this.Audio) this.Audio.clearCache();
+        this.BaseTexture.clearCache();
+        this.Texture.clearCache();
+        this.TilingSprite.clearCache();
+        this.Font.clearCache();
         this.json = {};
         this.paths = {};
     },
@@ -473,6 +484,13 @@ var game = {
         if (!this.paths[id]) return;
         var path = this.paths[id];
 
+        if (path.indexOf('.atlas') !== -1 && this.json[path]) {
+            var atlas = this.json[path];
+            for (var frame in atlas.frames) {
+                delete game.Texture.cache[frame];
+            }
+            delete game.BaseTexture.cache[game._getFilePath(atlas.meta.image)];
+        }
         if (game.Audio && game.Audio.cache[path]) delete game.Audio.cache[path];
         if (game.BaseTexture.cache[path]) delete game.BaseTexture.cache[path];
         if (game.Texture.cache[path]) delete game.Texture.cache[path];
@@ -492,13 +510,44 @@ var game = {
         @chainable
     **/
     require: function(modules) {
-        var i, modules = Array.prototype.slice.call(arguments);
-        for (i = 0; i < modules.length; i++) {
+        modules = Array.prototype.slice.call(arguments);
+        for (var i = 0; i < modules.length; i++) {
             var name = modules[i];
             if (this.config.ignoreModules && this.config.ignoreModules.indexOf(name) !== -1) continue;
             if (name && this._current.requires.indexOf(name) === -1) this._current.requires.push(name);
         }
         return this;
+    },
+
+    /**
+        Take screenshot from the game.
+        @method screenshot
+        @param {Function} callback
+        @param {Number} [x]
+        @param {Number} [y]
+        @param {Number} [width]
+        @param {Number} [height]
+    **/
+    screenshot: function(callback, x, y, width, height) {
+        if (!this.renderer) return;
+
+        x = typeof x === 'number' ? x : 0;
+        y = typeof y === 'number' ? y : 0;
+        width = width || game.width;
+        height = height || game.height;
+
+        var img = document.createElement('img');
+        img.crossOrigin = game.BaseTexture.crossOrigin;
+        img.onload = function() {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+
+            callback(canvas.toDataURL());
+        };
+        img.src = this.renderer.canvas.toDataURL();
     },
 
     /**
@@ -510,12 +559,13 @@ var game = {
         
         // Required classes
         this.system = new this.System();
-        this.input = new this.Input(this.renderer.canvas);
+        if (this.renderer) this.input = new this.Input(this.renderer.canvas);
 
         // Optional classes
-        if (this.Keyboard) this.keyboard = new this.Keyboard();
-        if (this.Audio) this.audio = new this.Audio();
+        if (this.renderer && this.Keyboard) this.keyboard = new this.Keyboard();
+        if (this.renderer && this.Audio) this.audio = new this.Audio();
         if (this.Pool) this.pool = new this.Pool();
+        if (this.config.id && !this.Storage.id) this.Storage.id = this.config.id;
         if (this.Storage && this.Storage.id) this.storage = new this.Storage();
 
         // Load plugins
@@ -525,6 +575,18 @@ var game = {
 
         if (this.Debug && this.Debug.enabled) this.debug = new this.Debug();
 
+        // Logo
+        if (typeof document !== 'undefined') {
+            var canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 120 * game.scale;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(this._logoSource, 0, 0, canvas.width, canvas.height / 2);
+            ctx.rotate(Math.PI);
+            ctx.translate(-canvas.width, -canvas.height);
+            ctx.drawImage(this._logoSource, 0, 0, canvas.width, canvas.height / 2);
+            this.logo = new game.Texture(new game.BaseTexture(canvas));
+        }
+        
         this.isStarted = true;
         if (!this.system._rotateScreenVisible) this.onStart();
     },
@@ -537,25 +599,12 @@ var game = {
         this._booted = true;
         this._loadNativeExtensions();
         this._loadDeviceInformation();
-
-        this._normalizeVendorAttribute(window, 'requestAnimationFrame');
-        this._normalizeVendorAttribute(navigator, 'vibrate');
-
-        // Load device specific config
-        for (var i in this.device) {
-            if (this.device[i] && this.config[i]) {
-                for (var o in this.config[i]) {
-                    if (typeof this.config[i][o] === 'object') {
-                        this.merge(this.config[o], this.config[i][o]);
-                    }
-                    else {
-                        this.config[o] = this.config[i][o];
-                    }
-                }
-            }
+        if (typeof window === 'object') {
+            this._normalizeVendorAttribute(window, 'requestAnimationFrame');
+            this._normalizeVendorAttribute(navigator, 'vibrate');
         }
 
-        if (document.location.href.match(/\?nocache/) || this.config.disableCache) this._nocache = '?' + Date.now();
+        if (typeof document === 'object' && document.location.href.match(/\?nocache/) || this.config.disableCache) this._nocache = '?' + Date.now();
 
         // Default config
         if (typeof this.config.sourceFolder === 'undefined') this.config.sourceFolder = 'src';
@@ -563,14 +612,15 @@ var game = {
 
         if (this.device.mobile) {
             // Search for viewport meta
+            var viewportFound = false;
             var metaTags = document.getElementsByTagName('meta');
             for (i = 0; i < metaTags.length; i++) {
                 if (metaTags[i].name === 'viewport') {
-                    var viewportFound = true;
+                    viewportFound = true;
                     break;
                 }
             }
-
+            
             // Add viewport meta, if none found
             if (!viewportFound) {
                 var viewport = document.createElement('meta');
@@ -584,7 +634,7 @@ var game = {
 
         this.module('engine.core');
 
-        if (document.readyState === 'complete') {
+        if (typeof document === 'undefined' || document.readyState === 'complete') {
             this._DOMReady();
         }
         else {
@@ -599,7 +649,7 @@ var game = {
     **/
     _clearGameLoop: function(id) {
         if (this._gameLoops[id]) delete this._gameLoops[id];
-        else window.clearInterval(id);
+        else clearInterval(id);
     },
 
     /**
@@ -607,11 +657,10 @@ var game = {
         @private
     **/
     _DOMReady: function() {
-        if (!this._DOMLoaded) {
-            if (!document.body) return setTimeout(this._DOMReady.bind(this), 13);
-            this._DOMLoaded = true;
-            if (this._gameModuleDefined) this._loadModules();
-        }
+        if (this._DOMLoaded) return;
+        if (typeof document === 'object' && !document.body) return setTimeout(this._DOMReady.bind(this), 13);
+        this._DOMLoaded = true;
+        if (this._gameModuleDefined) this._loadModules();
     },
 
     /**
@@ -621,7 +670,7 @@ var game = {
         @return {String}
     **/
     _getFilePath: function(file) {
-        if (file.indexOf('://') !== -1) return file;
+        if (file.indexOf('://') !== -1 || file.indexOf('data:') !== -1) return file;
         if (this.config.mediaFolder) file = this.config.mediaFolder + '/' + file;
         return file;
     },
@@ -655,6 +704,10 @@ var game = {
         @private
     **/
     _loadDeviceInformation: function() {
+        if (typeof window === 'undefined') {
+            this.device.headless = true;
+            return;
+        }
         this.device.pixelRatio = window.devicePixelRatio || 1;
         this.device.screen = {
             width: window.screen.availWidth * this.device.pixelRatio,
@@ -666,8 +719,15 @@ var game = {
 
         // iPhone
         this.device.iPhone = /iPhone/i.test(navigator.userAgent);
-        this.device.iPhone4 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 920);
-        this.device.iPhone5 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1096);
+        this.device.iPhone4 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 960);
+        this.device.iPhone5 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1136);
+        this.device.iPhone6 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1334);
+        this.device.iPhone7 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1334);
+        this.device.iPhone8 = (this.device.iPhone && this.device.pixelRatio === 2 && this.device.screen.height === 1334);
+        this.device.iPhoneX = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2436);
+        this.device.iPhone6Plus = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2208);
+        this.device.iPhone7Plus = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2208);
+        this.device.iPhone8Plus = (this.device.iPhone && this.device.pixelRatio === 3 && this.device.screen.height === 2208);
 
         // iPad
         this.device.iPad = /iPad/i.test(navigator.userAgent);
@@ -682,12 +742,19 @@ var game = {
         this.device.iOS8 = (this.device.iOS && /OS 8/i.test(navigator.userAgent));
         this.device.iOS9 = (this.device.iOS && /OS 9/i.test(navigator.userAgent));
         this.device.iOS10 = (this.device.iOS && /OS 10/i.test(navigator.userAgent));
-
+        this.device.iOS11 = (this.device.iOS && /OS 11/i.test(navigator.userAgent));
+        this.device.WKWebView = (this.device.iOS && window.webkit && window.webkit.messageHandlers);
+        
         // Android
         this.device.android = /android/i.test(navigator.userAgent);
         this.device.android2 = /android 2/i.test(navigator.userAgent);
         var androidVer = navigator.userAgent.match(/Android.*AppleWebKit\/([\d.]+)/);
         this.device.androidStock = !!(androidVer && androidVer[1] < 537);
+        this.device.androidTV = /Android TV/i.test(navigator.userAgent);
+        this.device.android5 = /Android 5/i.test(navigator.userAgent);
+        this.device.android6 = /Android 6/i.test(navigator.userAgent);
+        this.device.android7 = /Android 7/i.test(navigator.userAgent);
+        this.device.android8 = /Android 8/i.test(navigator.userAgent);
         
         // Microsoft
         this.device.ie9 = /MSIE 9/i.test(navigator.userAgent);
@@ -719,6 +786,7 @@ var game = {
         this.device.facebook = /FB/i.test(navigator.userAgent);
 
         this.device.mobile = this.device.iOS || this.device.android || this.device.wp || this.device.wt;
+        if (this.device.androidTV) this.device.mobile = false;
 
         if (typeof navigator.plugins === 'undefined' || navigator.plugins.length === 0) {
             if (window.ActiveXObject) {
@@ -876,6 +944,12 @@ var game = {
         String.prototype.ucfirst = function() {
             return this.charAt(0).toUpperCase() + this.slice(1);
         };
+
+        if (typeof Intl === 'object') {
+            // Natural alphanumerical sort
+            var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+            this.compare = collator.compare;
+        }
     },
 
     /**
@@ -888,6 +962,12 @@ var game = {
 
         var path = name.replace(/\./g, '/') + '.js' + this._nocache;
         if (this.config.sourceFolder) path = this.config.sourceFolder + '/' + path;
+        
+        if (typeof document === 'undefined') {
+            require('../../' + path);
+            this._scriptLoaded();
+            return;
+        }
 
         var script = document.createElement('script');
         script.type = 'text/javascript';
@@ -917,6 +997,21 @@ var game = {
         @private
     **/
     _ready: function() {
+        // Apply device specific config
+        for (var i in this.device) {
+            if (this.device[i] && this.config[i]) {
+                for (var o in this.config[i]) {
+                    if (typeof this.config[i][o] === 'object') {
+                        this.config[o] = this.config[o] || {};
+                        this.merge(this.config[o], this.config[i][o]);
+                    }
+                    else {
+                        this.config[o] = this.config[i][o];
+                    }
+                }
+            }
+        }
+
         // Parse config
         for (var c in this.config) {
             var m = c.ucfirst();
@@ -926,17 +1021,19 @@ var game = {
                 }
             }
         }
+        
+        if (typeof document === 'undefined') return;
+        this._logoSource = document.createElement('img');
+        this._logoSource.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAA8BAMAAABfg2ObAAAALVBMVEUAAAD4uABHR0f4uABHR0f4uAD4uABHR0dHR0dHR0f4uABHR0f4uABHR0f4uADOcJEWAAAADXRSTlMAqqpV6UQkUMmUdBvjKrIhowAAAH1JREFUSMdjKLmLB7gz4Ae++DRfIaD5Ll4wqnlU8xDQzCqIDKRI05z3DgUsIEmzHapmgVHNo5qpovkGInkS1uykhApmo2cMGTyaFRgIAMZRzaOaRzUPJs2sEM0BZGlmSDYGAjMG0jUjwKjmUc2jmontlE0gUXMJckNgA2l6ASc7KJOPBNRIAAAAAElFTkSuQmCC';
+        this._logoSource.onload = this._readyLogo.bind(this);
+    },
 
-        var canvas = document.createElement('canvas');
-        canvas.width = canvas.height = 120;
-        var ctx = canvas.getContext('2d');
-        var source = document.createElement('img');
-        source.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4BAMAAADLSivhAAAAMFBMVEUAAAD4uABHR0f4uABHR0f4uAD4uAD4uABHR0dHR0dHR0f4uABHR0f4uABHR0f4uADRufxZAAAADnRSTlMAqqpV6aNEJFDJlHQb44EUTvwAAADvSURBVFjD7dkhDsIwFMbxQsIEIJiYIiRk4QYIJAkKReAGuwMHwOwcCwdAwA3QOO6AmalBTAJhGa9dspa3dGLJ9/c/t2bvtSKWhtbC3MaEHxYsjQEDtwB7O19pzMOHl9aZhZc6HgEDO8EpfZ52vAr1TuWDMTHgqbDUAQYGdox7Od7Wwl6OIw6m9vNPC8HHFDAw8L9L2ZGJY8WmV9Fkw0TbNHn19U2TV1eqAQMDGzD9tPmYxgU+pkGFj2lEAgYGdozv/rfgd65vod6sElNZgRNZzo6fBZbAwE7wQMcZC4uLrxREbbnABgaurMHnP8vD4xvY9ByhjWrtdAAAAABJRU5ErkJggg==';
-        source.onload = function() {
-            ctx.drawImage(source, 0, 0);
-        };
-        this.logo = new game.Texture(new game.BaseTexture(canvas));
-
+    /**
+        Called, when logo source is loaded.
+        @method _readyLogo
+        @private
+    **/
+    _readyLogo: function() {
         if (!this.onReady()) {
             if (this.config.autoStart !== false) this.start();
         }
@@ -957,8 +1054,8 @@ var game = {
         @return {Number}
     **/
     _setGameLoop: function(callback) {
-        if (this.System.frameRate) return window.setInterval(callback, 1000 / this.System.frameRate);
-        if (window.requestAnimationFrame) {
+        if (this.System.frameRate) return setInterval(callback, 1000 / this.System.frameRate);
+        if (typeof requestAnimationFrame === 'function') {
             var id = this._gameLoopId++;
             this._gameLoops[id] = true;
 
@@ -970,9 +1067,7 @@ var game = {
             window.requestAnimationFrame(animate);
             return id;
         }
-        else {
-            return window.setInterval(callback, 1000 / 60);
-        }
+        return setInterval(callback, 1000 / 60);
     },
 
     /**

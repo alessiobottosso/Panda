@@ -1,4 +1,4 @@
-﻿/**
+/**
     @module input
 **/
 game.module(
@@ -7,6 +7,7 @@ game.module(
 .body(function() {
 
 /**
+    Interactivity controller. Instance automatically created at `game.input`
     @class Input
     @constructor
     @param {HTMLCanvasElement} canvas
@@ -17,6 +18,11 @@ game.createClass('Input', {
         @property {Array} items
     **/
     items: [],
+    /**
+        Device motion info.
+        @property {DeviceMotionEvent} motion
+    **/
+    motion: null,
     /**
         Mouse position.
         @property {Vector} mouse
@@ -71,6 +77,7 @@ game.createClass('Input', {
         target.addEventListener('mouseout', this._mouseout.bind(this));
         window.addEventListener('blur', this._mouseout.bind(this));
         window.addEventListener('mouseup', this._mouseup.bind(this));
+        if (game.device.mobile) window.addEventListener('devicemotion', this._devicemotion.bind(this));
     },
 
     /**
@@ -84,6 +91,15 @@ game.createClass('Input', {
         var y = (event.clientY - rect.top) * (game.renderer.canvas.height / rect.height);
         event.canvasX = x / game.scale;
         event.canvasY = y / game.scale;
+    },
+
+    /**
+        @method _devicemotion
+        @param {DeviceMotionEvent} event
+        @private
+    **/
+    _devicemotion: function(event) {
+        this.motion = event;
     },
 
     /**
@@ -138,6 +154,10 @@ game.createClass('Input', {
         @private
     **/
     _mousedown: function(event) {
+        if (game.Input.focusOnMouseDown) {
+            window.focus();
+            game.renderer.canvas.focus();
+        }
         if (!game.scene) return;
 
         this._preventDefault(event);
@@ -245,7 +265,7 @@ game.createClass('Input', {
     _processEvent: function(eventName, event) {
         for (var i = this.items.length - 1; i >= 0; i--) {
             var item = this.items[i];
-            if (!item._interactive || !item.visible || item.alpha <= 0 || !item.renderable) continue;
+            if (!item._interactive || !item.visible) continue;
             if (this._hitTest(item, event.canvasX, event.canvasY)) {
                 if (!item[eventName](event.canvasX, event.canvasY, event.identifier, event)) {
                     return item;
@@ -366,13 +386,19 @@ game.addAttributes('Input', {
     **/
     clickTimeout: 500,
     /**
+        Set focus to canvas in mousedown event.
+        @attribute {Boolean} focusOnMouseDown
+        @default true
+    **/
+    focusOnMouseDown: true,
+    /**
         Enable multitouch.
         @attribute {Boolean} multitouch
         @default true
     **/
     multitouch: true,
     /**
-        Should events prevent default action.
+        Should mouse and touch events prevent default action.
         @attribute {Boolean} preventDefault
         @default true
     **/
@@ -380,6 +406,7 @@ game.addAttributes('Input', {
 });
 
 /**
+    Keyboard controller. Instance automatically created at `game.keyboard`
     @class Keyboard
 **/
 game.createClass('Keyboard', {
@@ -392,7 +419,7 @@ game.createClass('Keyboard', {
     init: function() {
         window.addEventListener('keydown', this._keydown.bind(this));
         window.addEventListener('keyup', this._keyup.bind(this));
-        window.addEventListener('blur', this._resetKeys.bind(this));
+        window.addEventListener('blur', this._reset.bind(this));
     },
 
     /**
@@ -402,7 +429,7 @@ game.createClass('Keyboard', {
         @return {Boolean}
     **/
     down: function(key) {
-        return !!this._keysDown[key];
+        return !!this._keysDown[key.toUpperCase()];
     },
 
     /**
@@ -413,9 +440,13 @@ game.createClass('Keyboard', {
     _keydown: function(event) {
         if (document.activeElement !== document.body && document.activeElement !== game.renderer.canvas) return;
         if (!game.system._running) return;
+        if (game.Keyboard.preventDefault) event.preventDefault();
         var key = game.Keyboard.keys[event.keyCode];
         if (!key) key = event.keyCode;
-        if (this._keysDown[key]) return event.preventDefault();
+        if (this._keysDown[key]) {
+            event.preventDefault();
+            return;
+        }
         this._keysDown[key] = true;
         if (game.scene && game.scene.keydown) {
             var prevent = game.scene.keydown(key, this.down('SHIFT'), this.down('CTRL'), this.down('ALT'));
@@ -437,10 +468,10 @@ game.createClass('Keyboard', {
     },
 
     /**
-        @method _resetKeys
+        @method _reset
         @private
     **/
-    _resetKeys: function() {
+    _reset: function() {
         for (var key in this._keysDown) {
             this._keysDown[key] = false;
         }
@@ -449,7 +480,7 @@ game.createClass('Keyboard', {
 
 game.addAttributes('Keyboard', {
     /**
-        List of available keys.
+        List of key codes and their key names. Key events are not called to key codes, that are not in the list.
         @attribute {Object} keys
     **/
     keys: {
@@ -542,7 +573,13 @@ game.addAttributes('Keyboard', {
         189: 'MINUS',
         192: 'GRAVE_ACCENT',
         222: 'SINGLE_QUOTE'
-    }
+    },
+    /**
+        Should keydown event prevent default action.
+        @attribute {Boolean} preventDefault
+        @default false
+    **/
+    preventDefault: false
 });
 
 });

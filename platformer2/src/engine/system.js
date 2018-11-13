@@ -1,4 +1,4 @@
-﻿/**
+/**
     @module system
 **/
 game.module(
@@ -7,6 +7,7 @@ game.module(
 .body(function() {
 
 /**
+    System manager. Instance automatically created at `game.system`
     @class System
 **/
 game.createClass('System', {
@@ -21,12 +22,12 @@ game.createClass('System', {
     **/
     canvasWidth: 0,
     /**
-        Current delta time in seconds (game.delta).
+        Time since last frame (seconds), shorthand game.delta
         @property {Number} delta
     **/
     delta: 0,
     /**
-        Height of the game canvas (game.height).
+        Height of the game canvas (pixels), shorthand game.height
         @property {Number} height
     **/
     height: 0,
@@ -51,17 +52,17 @@ game.createClass('System', {
     **/
     paused: false,
     /**
-        Is engine in Retina mode.
-        @property {Boolean} retina
-    **/
-    retina: false,
-    /**
         Current scene (game.scene).
         @property {Scene} scene
     **/
     scene: null,
     /**
-        Width of the game canvas (game.width).
+        Name of current scene.
+        @property {String} sceneName
+    **/
+    sceneName: null,
+    /**
+        Width of the game canvas (pixels), shorthand game.width
         @property {Number} width
     **/
     width: 0,
@@ -108,25 +109,29 @@ game.createClass('System', {
         game.width = this.width = this.originalWidth = game.System.width;
         game.height = this.height = this.originalHeight = game.System.height;
         game.delta = this.delta;
+
+        var realWidth = this.originalWidth;
+        var realHeight = this.originalHeight;
+        if (game.System.hidpi) {
+            realWidth /= game.device.pixelRatio;
+            realHeight /= game.device.pixelRatio;
+        }
         
         for (var i = 2; i <= game.System.hires; i += 2) {
             var ratio = game.System.hiresRatio * (i / 2);
             var width = game.System.hiresDeviceSize ? game.device.screen.width : this._windowWidth;
             var height = game.System.hiresDeviceSize ? game.device.screen.height : this._windowHeight;
-            if (width >= this.originalWidth * ratio && height >= this.originalHeight * ratio) {
+            if (width >= realWidth * ratio && height >= realHeight * ratio) {
                 this.hires = true;
                 game.scale = i;
             }
         }
 
-        if (game.System.retina && game.device.pixelRatio === 2 && game.scale < game.System.hires) {
-            this.retina = true;
-            game.scale *= 2;
-        }
-
         this.canvasWidth = this.originalWidth * game.scale;
         this.canvasHeight = this.originalHeight * game.scale;
 
+        if (typeof document === 'undefined') return;
+        
         var visibilityChange;
         if (typeof document.hidden !== 'undefined') {
             visibilityChange = 'visibilitychange';
@@ -150,20 +155,15 @@ game.createClass('System', {
 
         if (game.System.resize) game.System.center = false;
 
-        if (game.device.mobile) {
-            window.addEventListener('devicemotion', function(event) {
-                game.accelerometer = event.accelerationIncludingGravity;
-            });
-        }
-
         this._initRenderer();
 
-        if (this.retina) {
-            this.canvasWidth /= 2;
-            this.canvasHeight /= 2;
+        if (game.System.hidpi)  {
+            this.canvasWidth /= game.device.pixelRatio;
+            this.canvasHeight /= game.device.pixelRatio;
         }
 
-        window.addEventListener('resize', this._onWindowResize.bind(this));
+        if (game.device.WKWebView) window.addEventListener('orientationchange', this._onWindowResize.bind(this));
+        else window.addEventListener('resize', this._onWindowResize.bind(this));
         this._onWindowResize();
     },
 
@@ -236,12 +236,13 @@ game.createClass('System', {
     },
 
     /**
-        Change current scene.
+        Change current scene. If you don't define sceneName, current scene will be restarted.
         @method setScene
         @param {String} sceneName
         @param {String} [param]
     **/
     setScene: function(sceneName, param) {
+        if (!sceneName && this.scene) sceneName = this.scene.constructor._name;
         if (!game[sceneName]) throw 'Scene ' + sceneName + ' not found';
         if (this._running && !this.paused) {
             this._newSceneName = sceneName;
@@ -285,7 +286,7 @@ game.createClass('System', {
             game.renderer._position((this._windowWidth - this.canvasWidth) / 2, (this._windowHeight - this.canvasHeight) / 2);
         }
 
-        if (game.System.scale || game.System.resize || this.retina) {
+        if (game.System.scale || game.System.resize || game.System.hidpi && game.device.pixelRatio > 1) {
             game.renderer._size(this.canvasWidth, this.canvasHeight);
         }
 
@@ -336,7 +337,7 @@ game.createClass('System', {
         game.Timer.update();
         game.delta = this.delta = game.Timer.delta / 1000;
 
-        game.input._update();
+        if (game.input) game.input._update();
         this.scene._update();
 
         if (this._newSceneName) this._setSceneNow(this._newSceneName, this._newSceneParam);
@@ -375,10 +376,12 @@ game.createClass('System', {
         @private
     **/
     _setSceneNow: function(sceneName, param) {
+        this.sceneName = sceneName;
         this._newSceneName = null;
         if (this.scene && this.scene._exit(sceneName)) return;
         if (this.paused) this.paused = false;
         game.TilingSprite.clearCache();
+        game.Sprite._clearTintedTextures();
         this.scene = new game[sceneName](param);
         this._startRunLoop();
     },
@@ -436,8 +439,17 @@ game.createClass('System', {
         @private
     **/
     _updateWindowSize: function() {
-        this._windowWidth = window.innerWidth;
-        this._windowHeight = window.innerHeight;
+        if (typeof document === 'undefined') return;
+        this._windowWidth = game.device.WKWebView ? document.documentElement.clientWidth : window.innerWidth;
+        this._windowHeight = game.device.WKWebView ? document.documentElement.clientHeight : window.innerHeight;
+        if (game.device.crosswalk && this._windowWidth === 0) {
+            this._windowWidth = window.screen.width;
+            this._windowHeight = window.screen.height;
+        }
+        if (Math.abs(window.orientation) === 90 && game.device.iPhone && game.device.safari) {
+            // Fix iPhone Safari landscape fullscreen
+            this._windowHeight++;
+        }
     }
 });
 
@@ -455,11 +467,23 @@ game.addAttributes('System', {
     **/
     center: true,
     /**
+        Set custom frame rate for game loop.
+        @attribute {Number} frameRate
+        @default null
+    **/
+    frameRate: null,
+    /**
         System height.
         @attribute {Number} height
         @default 768
     **/
     height: 768,
+    /**
+        Scale canvas for HiDPI screens.
+        @attribute {Boolean} hidpi
+        @default true
+    **/
+    hidpi: true,
     /**
         HiRes mode multiplier.
         @attribute {Number} hires
@@ -473,7 +497,7 @@ game.addAttributes('System', {
     **/
     hiresDeviceSize: false,
     /**
-        Ratio value, when hires mode is used.
+        Ratio value, when HiRes mode is used.
         @attribute {Number} hiresRatio
         @default 2
     **/
@@ -496,12 +520,6 @@ game.addAttributes('System', {
         @default false
     **/
     resize: false,
-    /**
-        Use Retina mode.
-        @attribute {Boolean} retina
-        @default false
-    **/
-    retina: false,
     /**
         Use rotate screen on mobile.
         @attribute {Boolean} rotateScreen

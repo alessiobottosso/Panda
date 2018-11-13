@@ -1,4 +1,4 @@
-﻿/**
+/**
     @module renderer.tilingsprite
 **/
 game.module(

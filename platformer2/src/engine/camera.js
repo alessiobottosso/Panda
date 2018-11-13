@@ -44,9 +44,9 @@ game.createClass('Camera', {
     /**
         Round camera position.
         @property {Boolean} rounding
-        @default false
+        @default true
     **/
-    rounding: false,
+    rounding: true,
     /**
         Position of the camera sensor.
         @property {Vector} sensorPosition
@@ -200,16 +200,7 @@ game.createClass('Camera', {
         @param {Number} y
         @private
     **/
-	oldPosX:undefined,
-	oldPosY:undefined,
     _setPosition: function(x, y) {
-		if(Math.abs(x-this.oldPosX) < this.threshold && Math.abs(y-this.oldPosY) < this.threshold) 
-		{	
-			return
-		}
-		 
-		this.oldPosX=x;
-		this.oldPosY=y;
         this.position.set(x - this.offset.x, y - this.offset.y);
 
         if (this.position.x < this.limit.x) {

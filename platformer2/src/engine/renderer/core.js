@@ -18,6 +18,7 @@ game.module(
 .body(function() {
 
 /**
+    Canvas renderer. Instance automatically created at `game.renderer`
     @class Renderer
     @constructor
     @param {Number} width
@@ -201,6 +202,10 @@ game.createClass('Matrix', {
         this.ty = proto.ty;
         return this;
     }
+});
+
+game.addAttributes('Matrix', {
+    empty: new game.Matrix()
 });
 
 });

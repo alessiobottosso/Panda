@@ -1,4 +1,4 @@
-﻿/**
+/**
     @module renderer.texture
 **/
 game.module(
@@ -94,6 +94,12 @@ game.addAttributes('BaseTexture', {
     **/
     cache: {},
     /**
+        Default crossOrigin property to use in all Image sources
+        @attribute {String} crossOrigin
+        @default ''
+    **/
+    crossOrigin: '',
+    /**
         @method clearCache
         @static
     **/
@@ -147,6 +153,7 @@ game.addAttributes('BaseTexture', {
 
         if (!baseTexture) {
             var source = document.createElement('img');
+            if (this.crossOrigin) source.crossOrigin = this.crossOrigin;
             source.src = path + game._nocache;
             baseTexture = new game.BaseTexture(source, loadCallback);
             baseTexture._id = path;
@@ -189,8 +196,26 @@ game.createClass('Texture', {
         @property {Number} width
     **/
     width: 0,
+    /**
+        @property {Vector} _anchor
+        @private
+    **/
+    _anchor: null,
+    /**
+        @property {Vector} _offset
+        @private
+    **/
+    _offset: null,
+    /**
+        @property {Vector} _trim
+        @private
+    **/
+    _trim: null,
 
     staticInit: function(baseTexture, x, y, width, height) {
+        this._anchor = new game.Vector();
+        this._offset = new game.Vector();
+        this._trim = new game.Vector();
         this.baseTexture = baseTexture instanceof game.BaseTexture ? baseTexture : game.BaseTexture.fromAsset(baseTexture);
         this.position = new game.Vector(x, y);
         this.width = width || this.baseTexture.width;

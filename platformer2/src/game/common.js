@@ -1,4 +1,4 @@
-game.module(
+ game.module(
     'game.common'
 )
 .require(
@@ -9,8 +9,8 @@ game.module(
 )
 
 .body(function() {
-//LEVEL_DESIGN="level0.json"
-LEVEL_DESIGN=""
+//LEVEL_DESIGN="level4.json"
+LEVEL_DESIGN="";
 
 LOCAL_MODE=true;
 DEBUG = true;
@@ -26,35 +26,49 @@ Lambda = 1;
 XSpeed=3;
 XScale=1;
 Fake3d = false;
-layerFg="main"
-layerSx="sx"
-layerDx="dx"
-layerBg="bg"
-BACKGROUND_COLOR = "#000000"
+layerFg="main";
+layerSx="sx";
+layerDx="dx";
+layerBg="bg";
 
-PORTRAIT = "portrait"
-
-BUTTON_PRESSED = "button1.png"
-BUTTON_RELEASED = "button2.png"
-
-SOUND_PRESSED = "click1.m4a" 
-SOUND_RELEASED = "click2.m4a"
-
-SOUND_SELECT = "sfx_select.m4a" 
-
-SOUND_STAR = "sfx_collect_star.m4a"
-SOUND_PACK = "sfx_collect_gift.m4a"
-
-SOUND_STEP1 = "audio1.m4a"
-SOUND_STEP2 = "audio2.m4a"
-
-SOUND_JUMP1 = "sfx_player_jump.m4a"
-SOUND_JUMP2 = "sfx_player_double_jump.m4a"
+COLOR_BLACK = "#000000";
+COLOR_WHITE = "#FFFFFF";
+COLOR_DARKGRAY = "#686868";
+COLOR_DOVEGRAY = "#AD986E";
+COLOR_GREEN = "#285D4F";
+COLOR_DARKGREEN = "#14322B";
+COLOR_LIGHTBLUE = "#A4D2D5";
+BACKGROUND_COLOR = "#14322B";
 
 
 
+PORTRAIT = "portrait";
+
+BUTTON_ACTIVE = "Juv_Xmas_UI_Button_Active.png";
+BUTTON_DISABLED = "Juv_Xmas_UI_Button_Disabled.png";
+BUTTON_PRESSED = "Juv_Xmas_UI_Button_Pressed.png";
+
+
+
+SOUND_PRESSED = "click1.m4a" ;
+SOUND_RELEASED = "click2.m4a";
+
+SOUND_SELECT = "sfx_select.m4a" ;
+
+SOUND_STAR = "sfx_collect_star.m4a";
+SOUND_PACK = "sfx_collect_gift.m4a";
+
+SOUND_STEP1 = "audio1.m4a";
+SOUND_STEP2 = "audio2.m4a";
+
+SOUND_JUMP1 = "sfx_player_jump.m4a";
+SOUND_JUMP2 = "sfx_player_double_jump.m4a";
+
+
+
+game.addAsset(BUTTON_ACTIVE);
+game.addAsset(BUTTON_DISABLED);
 game.addAsset(BUTTON_PRESSED);
-game.addAsset(BUTTON_RELEASED);
 
 game.addAsset(SOUND_PRESSED);
 game.addAsset(SOUND_RELEASED);
@@ -113,23 +127,25 @@ game.addAsset('portraitBg.png');
 
 game.addAsset('portrait0.png');
 game.addAsset('portrait1.png');
+game.addAsset('portrait2.png');
+game.addAsset('portrait3.png');
 
 
 
 
 game.createClass('ForgeButton', 'Button', {
 	//We extend the standard button
-	staticInit: function(texture1, texture2, x, y, text, textProps, size, tint1, tint2, callback) 
+	staticInit: function(texture1, texture2, texture3,
+	    x, y, text, textProps, size,
+    	tint1, tint2, tint3, callback) 
 	{
 		this.super(texture2, x, y, callback);
 		this.myEnabled = true;
 		this.callback = callback;
 		
-		this.sprite.alpha=0;
-		this.sprite.aaa="sprite";
+		//this.sprite.alpha=0;
 		
 		this.sprite2 = new game.Sprite(texture1);
-		this.sprite2.aaa="sprite2";
 		this.sprite2.anchorCenter();
 		this.sprite2.alpha=1;
 		this.sprite2.buttonMode = true;
@@ -140,6 +156,14 @@ game.createClass('ForgeButton', 'Button', {
 		this.sprite2.mousedown = this.mousedown.bind(this);
 		this.sprite2.mouseup = this.mouseup.bind(this);
 		this.sprite2.mouseupoutside = this.mouseup.bind(this);
+
+
+		this.sprite3 = new game.Sprite(texture3);
+		this.sprite3.anchorCenter();
+		this.sprite3.alpha=0;
+		this.sprite3.position.x = x;
+		this.sprite3.position.y = y;
+
 
 	    var n = text.search("\n");
 	    var text1="";
@@ -154,14 +178,17 @@ game.createClass('ForgeButton', 'Button', {
 	    {
     		this.innerCreateText(text, this.sprite,size,tint2,-interleave * game.height);
     		this.innerCreateText(text1, this.sprite,size,tint2,interleave * game.height);
-    		this.innerCreateText(text, this.sprite2,size,tint1,-interleave * game.height);
-    		this.innerCreateText(text1, this.sprite2,size,tint1,interleave * game.height);
+    		this.innerCreateText(text, this.sprite2,size,tint1,-3-interleave * game.height);
+    		this.innerCreateText(text1, this.sprite2,size,tint1,-3+interleave * game.height);
+    		this.innerCreateText(text, this.sprite3,size,tint3,-interleave * game.height);
+    		this.innerCreateText(text1, this.sprite3,size,tint3,+interleave * game.height);
 
 	    }
 	    else
 	    {
         	this.innerCreateText(text, this.sprite,size,tint2,0);
-        	this.innerCreateText(text, this.sprite2,size,tint1,0);
+        	this.innerCreateText(text, this.sprite2,size,tint1,-3);
+        	this.innerCreateText(text, this.sprite3,size,tint3,-2);
 	    }
 	    this.sprite2.click = this.click.bind(this);
 	},
@@ -172,13 +199,21 @@ game.createClass('ForgeButton', 'Button', {
 	    
 	    SetColor(text2,tint);
         var f= text2.height/text2.fontClass.lineHeight;
-	    text2.y =offsetY + (1/f )*(-text2.height*text2.scale.y/2)
-	    text2.x = container.width/2;
-	    text2.y += container.height/2;
+	    text2.y =+offsetY + (1/f )*(-text2.height*text2.scale.y/2)
+	    //text2.x = container.width/2;
+	    //text2.y += container.height/2;
 		text2.addTo(container);
 	},
 	setEnable: function(value)
 	{
+	    if(value)
+	    {
+	        this.sprite3.alpha=0;
+	    }
+	    else
+	    {
+	        this.sprite3.alpha=1;
+	    }
 	    this.myEnabled = value;
 		this.sprite.interactive = value;
 		this.sprite2.interactive = value;
@@ -186,6 +221,7 @@ game.createClass('ForgeButton', 'Button', {
 	addTo: function(container) {
 		this.super(container);
 		container.addChild(this.sprite2);
+		container.addChild(this.sprite3);
 	},
 	scaleIn: function(delay) {
 		delay = delay || 0;
@@ -218,6 +254,8 @@ game.createClass('ForgeButton', 'Button', {
 		this.sprite.position.y = y;
 		this.sprite2.position.x = x;
 		this.sprite2.position.y = y;
+		this.sprite3.position.x = x;
+		this.sprite3.position.y = y;
 		
 	},
 	setScale: function(x,y)
@@ -227,6 +265,8 @@ game.createClass('ForgeButton', 'Button', {
 		this.sprite.scale.y = y;
 		this.sprite2.scale.x = x;
 		this.sprite2.scale.y = y;
+		this.sprite3.scale.x = x;
+		this.sprite3.scale.y = y;
 		
 	},
 	mousedown: function()
@@ -285,6 +325,29 @@ game.createClass('ForgeButton', 'Button', {
 
 });
 
+function CreateDefaultButton(x,y,text,size,callback)
+{
+            var button = new game.ForgeButton(BUTTON_ACTIVE, BUTTON_PRESSED, BUTTON_DISABLED,
+            x,y,text,{},size,COLOR_BLACK,COLOR_BLACK,COLOR_DARKGRAY, callback);
+            
+            SetDefaultButtonBehavior(button, 100);
+            button.addTo(game.scene.stage);
+            return button;
+
+}
+function SetDefaultButtonBehavior(btn, scalein)
+{
+	    btn.scaleSpeed =500;
+	    //btn.scaleStarting=1;
+		//btn.scaleIn(scalein);
+		//btn.rotateAmount=0.010;
+		//btn.rotateSpeed = 500;
+        //btn.rotate(true);
+		btn.scaleAmount =0;
+		btn.clickSound = SOUND_PRESSED;
+		btn.clickSound1 = SOUND_RELEASED;
+}
+
 function CreateText(text,x,y,fontIdx,size)
 {
 		var etext = new game.Text(text);
@@ -312,17 +375,6 @@ function SetColor(etext,tint)
 }
 
 
-function SetDefaultButtonBehavior(btn, scalein)
-{
-	    btn.scaleSpeed =500;
-//btn.scaleIn(scalein);
-		//btn.rotateAmount=0.010;
-		btn.rotateSpeed = 500;
-        //btn.rotate(true);
-		btn.scaleAmount =0.0;
-		btn.clickSound = SOUND_PRESSED;
-		btn.clickSound1 = SOUND_RELEASED;
-}
 
 function AddForegroundUI()
 {
@@ -339,7 +391,7 @@ function AddButtons()
     }
     
 	game.scene.soundButton = new game.Button(soundButton,
-		0.90 * game.width, 0.90 * game.height,
+		0.08 * game.width, 0.95 * game.height,
 		function() {
 	        if(game.mute == false)
 	        {

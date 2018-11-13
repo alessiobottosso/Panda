@@ -150,6 +150,7 @@ game.createClass('Tween', {
         this.interpolationFunction = game.Tween.Interpolation.Linear;
 
         for (var field in object) {
+            if (typeof object[field] !== 'number') continue;
             this._valuesStart[field] = parseFloat(object[field], 10);
         }
     },
@@ -741,6 +742,7 @@ game.addAttributes('Tween', {
     },
 
     /**
+        Get all tweens for specific object.
         @method getTweensForObject
         @static
         @param {Class} object
@@ -752,11 +754,12 @@ game.addAttributes('Tween', {
         for (var i = game.scene.tweens.length - 1; i >= 0; i--) {
             var tween = game.scene.tweens[i];
             if (tween.object === object) tweens.push(tween);
-        };
+        }
         return tweens;
     },
 
     /**
+        Stop all tweens for specific object.
         @method stopTweensForObject
         @static
         @param {Class} object
@@ -766,7 +769,7 @@ game.addAttributes('Tween', {
         for (var i = game.scene.tweens.length - 1; i >= 0; i--) {
             var tween = game.scene.tweens[i];
             if (tween.object === object) tween.stop();
-        };
+        }
     }
 });
 

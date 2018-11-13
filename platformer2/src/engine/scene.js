@@ -1,4 +1,4 @@
-﻿/**
+/**
     @module scene
 **/
 game.module(
@@ -7,6 +7,7 @@ game.module(
 .body(function() {
 
 /**
+    Game scene. Instance of current scene is at `game.scene`
     @class Scene
 **/
 game.createClass('Scene', {
@@ -26,6 +27,17 @@ game.createClass('Scene', {
         @property {Array} objects
     **/
     objects: [],
+    /**
+        Is scene paused.
+        @property {Boolean} paused
+        @default false
+    **/
+    paused: false,
+    /**
+        List of physics worlds in scene.
+        @property {Array} physics
+    **/
+    physics: [],
     /**
         Main container for scene.
         @property {Container} stage
@@ -62,6 +74,26 @@ game.createClass('Scene', {
     **/
     _mouseDownY: null,
     /**
+        @property {Array} _pausedAnims
+        @private
+    **/
+    _pausedAnims: [],
+    /**
+        @property {Array} _pausedObjects
+        @private
+    **/
+    _pausedObjects: [],
+    /**
+        @property {Array} _pausedTimers
+        @private
+    **/
+    _pausedTimers: [],
+    /**
+        @property {Array} _pausedTweens
+        @private
+    **/
+    _pausedTweens: [],
+    /**
         @property {Array} _updateOrder
         @private
     **/
@@ -73,7 +105,8 @@ game.createClass('Scene', {
             this.backgroundColor = '#000';
         }
 
-        game.input._reset();
+        if (game.input) game.input._reset();
+        if (game.keyboard) game.keyboard._reset();
 
         game.scene = this;
         
@@ -122,6 +155,7 @@ game.createClass('Scene', {
         @param {Boolean} shift
         @param {Boolean} ctrl
         @param {Boolean} alt
+        @return {Boolean} return true to prevent default keydown action.
     **/
     keydown: function() {},
     
@@ -170,13 +204,50 @@ game.createClass('Scene', {
     mouseup: function() {},
 
     /**
+        Called, when scene is paused.
+        @method onPause
+    **/
+    onPause: function() {},
+    /**
         Called, when system is resized.
         @method onResize
     **/
     onResize: function() {},
+    /**
+        Called, when paused scene is resumed.
+        @method onResume
+    **/
+    onResume: function() {},
+
+    /**
+        Pause scene. All current objects, timers and tweens are saved and restored when pause is resumed. Also physics are not updated when scene is paused.
+        @method pause
+    **/
+    pause: function() {
+        if (this.paused) return;
+        this._pausedAnims.length = 0;
+        this._pausedObjects.length = 0;
+        this._pausedTimers.length = 0;
+        this._pausedTweens.length = 0;
+        for (var i = 0; i < this.objects.length; i++) {
+            this._pausedObjects.push(this.objects[i]);
+        }
+        for (var i = 0; i < this.timers.length; i++) {
+            this._pausedTimers.push(this.timers[i]);
+        }
+        for (var i = 0; i < this.tweens.length; i++) {
+            this._pausedTweens.push(this.tweens[i]);
+        }
+        this._getPausedAnims();
+        this.objects.length = 0;
+        this.timers.length = 0;
+        this.tweens.length = 0;
+        this.paused = true;
+        this.onPause();
+    },
     
     /**
-        Remove object from scene.
+        Remove object from scene, so it's update function doesn't get called anymore.
         @method removeObject
         @param {Object} object
     **/
@@ -219,6 +290,26 @@ game.createClass('Scene', {
     },
 
     /**
+        Resume paused scene.
+        @method resume
+    **/
+    resume: function() {
+        if (!this.paused) return;
+        for (var i = 0; i < this._pausedObjects.length; i++) {
+            this.objects.push(this._pausedObjects[i]);
+        }
+        for (var i = 0; i < this._pausedTimers.length; i++) {
+            this.timers.push(this._pausedTimers[i]);
+        }
+        for (var i = 0; i < this._pausedTweens.length; i++) {
+            this.tweens.push(this._pausedTweens[i]);
+        }
+        this._pausedAnims.length = 0;
+        this.paused = false;
+        this.onResume();
+    },
+
+    /**
         Callback for swipe.
         @method swipe
         @param {String} direction
@@ -246,6 +337,15 @@ game.createClass('Scene', {
         
         var exit = this.exit(sceneName);
         return exit;
+    },
+
+    _getPausedAnims: function(container) {
+        container = container || this.stage;
+        for (var i = 0; i < container.children.length; i++) {
+            var child = container.children[i];
+            if (child instanceof game.Animation) this._pausedAnims.push(child);
+            if (child.children.length) this._getPausedAnims(child);
+        }
     },
 
     /**
@@ -291,7 +391,10 @@ game.createClass('Scene', {
     **/
     _mouseup: function(x, y, id, event) {
         this.isMouseDown = false;
-        if (this._mouseDownTime) this.click(x, y, id, event);
+        if (this._mouseDownTime) {
+            var time = game.Timer.time - this._mouseDownTime;
+            if (game.Input.clickTimeout === 0 || time < game.Input.clickTimeout) this.click(x, y, id, event);
+        }
         this._mouseDownTime = null;
         this.mouseup(x, y, id, event);
     },
@@ -340,7 +443,10 @@ game.createClass('Scene', {
         @private
     **/
     _updateCollision: function() {
-        if (this.world) this.world._updateCollision();
+        if (this.paused) return;
+        for (var i = 0; i < this.physics.length; i++) {
+            this.physics[i]._updateCollision();
+        }
     },
 
     /**
@@ -359,7 +465,10 @@ game.createClass('Scene', {
         @private
     **/
     _updatePhysics: function() {
-        if (this.world) this.world._update();
+        if (this.paused) return;
+        for (var i = 0; i < this.physics.length; i++) {
+            this.physics[i]._update();
+        }
     },
 
     /**
@@ -367,7 +476,7 @@ game.createClass('Scene', {
         @private
     **/
     _updateRenderer: function() {
-        game.renderer._render(this.stage);
+        if (game.renderer) game.renderer._render(this.stage);
     },
 
     /**
@@ -386,7 +495,7 @@ game.createClass('Scene', {
         for (var i = this.timers.length - 1; i >= 0; i--) {
             if (this.timers[i].time() === 0) {
                 if (typeof this.timers[i].callback === 'function') this.timers[i].callback();
-                if (this.timers[i].repeat) this.timers[i].reset();
+                if (this.timers[i].repeat) this.timers[i]._base = game.Timer.time;
                 else this.timers.splice(i, 1);
             }
         }

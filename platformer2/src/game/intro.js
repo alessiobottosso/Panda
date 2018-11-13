@@ -20,29 +20,31 @@ game.module(
         this.text.y+=game.height * 0.05 + this.text.height/2;
         this.text.addTo(game.scene.stage)
 
-        this.button = new game.ForgeButton(BUTTON_PRESSED, BUTTON_RELEASED,
-            HALF_WIDTH,0.9*game.height,"skip",{},40,"#555555","#550055",
-            ()=>
+        
+        this.button = CreateDefaultButton(HALF_WIDTH,0.95*game.height,"Skip",35,
+            function()
             {
-                GoToScene('Select');
+                game.scene.start();
             });
 
-        // this.button = new game.Button(BUTTON_PRESSED, 
-        //     HALF_WIDTH,0.8*game.height,
-        //     ()=>
-        //     {
-        //         GoToScene('Select');
-        //     });
             
-        //SetDefaultButtonBehavior(game.scene.button,100);
-        this.button.addTo(game.scene.stage);
-    
-            //GoToScene('Main');
+        AddForegroundUI();
     	},
         update:function()
         {
     	    CommonUpdate();
-        }
+        },
+        keydown: function(key) 
+        {
+            if (key === 'SPACE') 
+            {
+                game.scene.start();
+            }
+        },
+    	start: function()
+    	{
+    	    GoToScene('Select');
+    	},
 
     });
 

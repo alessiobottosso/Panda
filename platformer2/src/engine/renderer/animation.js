@@ -1,4 +1,4 @@
-﻿/**
+/**
     @module renderer.animation
 **/
 game.module(
@@ -10,7 +10,7 @@ game.module(
 .body(function() {
 
 /**
-    Animation that is generated from multiple textures.
+    Animation that is generated from multiple textures. Animation can also contain multiple animations created with addAnim method.
     @class Animation
     @extends Sprite
     @constructor
@@ -105,17 +105,27 @@ game.createClass('Animation', 'Sprite', {
     /**
         Add new animation.
         @method addAnim
-        @param {String} name
-        @param {Array} frames
-        @param {Object} [props]
+        @param {String} name Name of animation.
+        @param {Array|Number} frames List of invidual frame indexes or start frame index.
+        @param {Number|Object} [frameCount] Number of frames or animation properties.
+        @param {Object} [props] Animation properties.
         @chainable
     **/
-    addAnim: function(name, frames, props) {
-        if (!name || !frames) return;
+    addAnim: function(name, frames, frameCount, props) {
+        if (!name || typeof frames === undefined) return;
+
+        if (typeof frameCount === 'object') props = frameCount;
 
         var textures = [];
-        for (var i = 0; i < frames.length; i++) {
-            textures[i] = this.textures[frames[i]];
+        if (frames.length) {
+            for (var i = 0; i < frames.length; i++) {
+                textures[i] = this.textures[frames[i]];
+            }
+        }
+        else if (typeof frames === 'number' && typeof frameCount === 'number') {
+            for (var i = 0; i < frameCount; i++) {
+                textures[i] = this.textures[frames + i];
+            }
         }
 
         var anim = new game.Animation(textures);
@@ -176,59 +186,62 @@ game.createClass('Animation', 'Sprite', {
         return this;
     },
 
+    updateTransform: function() {
+        if (this.playing) this._updateAnimation();
+        this.super();
+    },
+
     /**
-        @method updateAnimation
+        @method _updateAnimation
+        @private
     **/
-    updateAnimation: function() {
-        if (!this.currentAnim.textures) throw 'No textures found for animation';
-        this._frameTime += this.currentAnim.speed * game.delta;
+    _updateAnimation: function() {
+        if (game.scene.paused && game.scene._pausedAnims.indexOf(this) !== -1) return;
+        var anim = this.currentAnim;
+        if (!anim.textures) throw 'No textures found for animation';
+        this._frameTime += anim.speed * game.delta;
 
         if (this._frameTime >= 1) {
-            this._frameTime = 0;
+            this._frameTime = this._frameTime % 1;
 
-            if (this.currentAnim.random && this.currentAnim.textures.length > 1) {
+            if (anim.random && anim.textures.length > 1) {
                 var nextFrame = this.currentFrame;
                 while (nextFrame === this.currentFrame) {
-                    nextFrame = Math.round(Math.random(0, this.currentAnim.textures.length - 1));
+                    nextFrame = Math.round(Math.random(0, anim.textures.length - 1));
                 }
 
                 this.currentFrame = nextFrame;
-                this.setTexture(this.currentAnim.textures[nextFrame]);
+                this.setTexture(anim.textures[nextFrame]);
                 return;
             }
 
-            var nextFrame = this.currentFrame + (this.currentAnim.reverse ? -1 : 1);
+            var nextFrame = this.currentFrame + (anim.reverse ? -1 : 1);
 
-            if (nextFrame >= this.currentAnim.textures.length) {
-                if (this.currentAnim.loop) {
+            if (nextFrame >= anim.textures.length) {
+                if (anim.loop) {
                     this.currentFrame = 0;
-                    this.setTexture(this.currentAnim.textures[0]);
+                    this.setTexture(anim.textures[0]);
                 }
                 else {
                     this.playing = false;
-                    if (this.onComplete) this.onComplete();
+                    if (anim.onComplete) anim.onComplete();
                 }
             }
             else if (nextFrame < 0) {
-                if (this.currentAnim.loop) {
-                    this.currentFrame = this.currentAnim.textures.length - 1;
-                    this.setTexture(this.currentAnim.textures.last());
+                if (anim.loop) {
+                    this.currentFrame = anim.textures.length - 1;
+                    this.setTexture(anim.textures.last());
                 }
                 else {
                     this.playing = false;
-                    if (this.onComplete) this.onComplete();
+                    if (anim.onComplete) anim.onComplete();
                 }
             }
             else {
                 this.currentFrame = nextFrame;
-                this.setTexture(this.currentAnim.textures[nextFrame]);
+                this.setTexture(anim.textures[nextFrame]);
             }
         }
-    },
-
-    updateTransform: function() {
-        if (this.playing) this.updateAnimation();
-        this.super();
     }
 });
 
@@ -254,8 +267,13 @@ game.addAttributes('Animation', {
                 }
             }
         }
-        textures.sort();
-        if (textures.length > 0) return new game.Animation(textures);
+        if (textures.length > 0) {
+            textures.sort(game.compare);
+            return new game.Animation(textures);
+        }
+        else {
+            throw 'No textures found for ' + name;
+        }
     }
 });
 
