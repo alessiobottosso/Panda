@@ -12,7 +12,7 @@
 //LEVEL_DESIGN="level.json"
 LEVEL_DESIGN="";
 
-LOCAL_MODE=false;
+LOCAL_MODE=true;
 FR_DEBUG = true;
 FR_TIMEMALUS=30;
 FR_TIMEBONUS=3;
@@ -85,8 +85,8 @@ TUTORIAL2 = "Juv_Xmas_UI_Tutorial_02Time.png"
 TUTORIAL3 = "Juv_Xmas_UI_Tutorial_03Presents.png"
 
 PROD=false;
-ENDPOINT_PROD = "http://xmas.juventus.com"
-ENDPOINT_PRE = "http://levelupyourxmas.staging.weareserver.it"
+ENDPOINT_PROD = "https://xmas.juventus.com"
+ENDPOINT_PRE = "https://levelupyourxmas.staging.weareserver.it"
 ENDPOINT1 = "/startGame"
 ENDPOINT2 = "/endGame"
 
@@ -572,7 +572,6 @@ function StartGame()
                     xhr.open('POST', endpoint, true);
                     xhr.onreadystatechange = function(e) 
                     {
-                        console.log(JSON.stringify(xhr.readyState))
                         if (xhr.readyState == 4 && xhr.status == 200) 
                         {
                             var response = JSON.parse(xhr.responseText);

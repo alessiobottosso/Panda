@@ -74,7 +74,7 @@ game.module(
                 this.page
                 ,HALF_WIDTH*0.2,
                 
-            0.111*game.height,0,22)
+            0.111*game.height,0,50)
     	    //this.text.anchorCenter();
     	    game.scene.message.anchor.set(0,0)
     	    game.scene.message.align = 'left';
