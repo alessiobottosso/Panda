@@ -22,10 +22,11 @@ game.createClass('Player', {
         
         var sheet = new game.SpriteSheet('player1.png', 128, 128);
         this.sprite = new game.Animation(sheet.textures);
-        this.sprite.addAnim('stand', [0], { speed: 10, loop: true });
-        this.sprite.addAnim('run', [0, 1, 2, 3], { speed: 12, loop: true });
-        this.sprite.addAnim('jump', [4,5,6], { speed: 8, loop: false });
-        this.sprite.addAnim('jump1', [7,8], { speed: 5, loop: false });
+        this.sprite.addAnim('stand', [0,0,11,0,12,12], { speed: 5, loop: true });
+        this.sprite.addAnim('run', [0, 1, 2, 3,0,4,5,6], { speed: 12, loop: true });
+        this.sprite.addAnim('jump', [7,8], { speed: 6, loop: false });
+        this.sprite.addAnim('jump1', [9,10], { speed: 6 , loop: false });
+        this.sprite.addAnim('feedback', [0,13,14,15,16,15,16], { speed: 6 , loop: false });
 
         
         this.sprite.anchorCenter();
@@ -92,7 +93,7 @@ game.createClass('Player', {
     {
     if(body.gid==2)
     {
-        game.scene.maxTime+=3;
+        game.scene.maxTime+=FR_TIMEBONUS;
         PlaySound(SOUND_STAR)
     }
     if(body.gid==3)
@@ -160,9 +161,15 @@ game.createClass('Player', {
         this.sprite.y=position;
         this.jumps = 0;
         this.respawn = 10;
-        game.scene.maxTime -=15;
+        game.scene.maxTime -=FR_TIMEMALUS;
     },    
     update: function() {
+        // if(game.scene.loading) 
+        // {
+        //     this.body.velocity.y=0;
+        //     this.body.velocity.x=0;
+        //     return;
+        // }
         if(this.respawn > 0)
         {
             this.respawn--;

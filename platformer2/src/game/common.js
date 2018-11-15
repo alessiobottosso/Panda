@@ -12,8 +12,11 @@
 //LEVEL_DESIGN="level.json"
 LEVEL_DESIGN="";
 
-LOCAL_MODE=true;
-DEBUG = true;
+LOCAL_MODE=false;
+FR_DEBUG = true;
+FR_TIMEMALUS=30;
+FR_TIMEBONUS=3;
+
 
 TestLevel=false;
 
@@ -30,6 +33,7 @@ layerFg="main";
 layerSx="sx";
 layerDx="dx";
 layerBg="bg";
+
 
 COLOR_BLACK = "#000000";
 COLOR_WHITE = "#FFFFFF";
@@ -48,6 +52,15 @@ BUTTON_ACTIVE = "Juv_Xmas_UI_Button_Active.png";
 BUTTON_DISABLED = "Juv_Xmas_UI_Button_Disabled.png";
 BUTTON_PRESSED = "Juv_Xmas_UI_Button_Pressed.png";
 
+BUTTON1_ACTIVE = "Juv_Xmas_UI_Forward_Active.png";
+BUTTON1_DISABLED = "Juv_Xmas_UI_Forward_Disabled.png";
+BUTTON1_PRESSED = "Juv_Xmas_UI_Forward_Pressed.png";
+
+TEXTBOX = "Juv_Xmas_UI_Tutorial_TextBox.png";
+
+GREEK_UP = 'Juv_Xmas_UI_Selection_Greek_UP.png';
+GREEK_DOWN = 'Juv_Xmas_UI_Selection_Greek_DOWN.png';
+
 
 
 SOUND_PRESSED = "click1.m4a" ;
@@ -65,10 +78,33 @@ SOUND_JUMP1 = "sfx_player_jump.m4a";
 SOUND_JUMP2 = "sfx_player_double_jump.m4a";
 
 
+PAGE="placeholder.jpg";
+
+TUTORIAL1 = "Juv_Xmas_UI_Tutorial_01Jump.png"
+TUTORIAL2 = "Juv_Xmas_UI_Tutorial_02Time.png"
+TUTORIAL3 = "Juv_Xmas_UI_Tutorial_03Presents.png"
+
+PROD=false;
+ENDPOINT_PROD = "http://xmas.juventus.com"
+ENDPOINT_PRE = "http://levelupyourxmas.staging.weareserver.it"
+ENDPOINT1 = "/startGame"
+ENDPOINT2 = "/endGame"
+
+
+
+game.addAsset(PAGE);
+
+game.addAsset(TEXTBOX);
+game.addAsset(GREEK_UP);
+game.addAsset(GREEK_DOWN);
 
 game.addAsset(BUTTON_ACTIVE);
 game.addAsset(BUTTON_DISABLED);
 game.addAsset(BUTTON_PRESSED);
+
+game.addAsset(BUTTON1_ACTIVE);
+game.addAsset(BUTTON1_DISABLED);
+game.addAsset(BUTTON1_PRESSED);
 
 game.addAsset(SOUND_PRESSED);
 game.addAsset(SOUND_RELEASED);
@@ -114,7 +150,7 @@ game.addAsset('level4.json');
 game.addAsset('level5.json');
 game.addAsset('level6.json');
 
-game.addAsset('player.png');
+//game.addAsset('player.png');
 game.addAsset('player1.png');
 //game.addAsset('player1.png');
 game.addAsset('tileset.png');
@@ -125,8 +161,6 @@ game.addAsset('t1.png');
 
 game.addAsset('block.png');
 
-game.addAsset('Juv_Xmas_UI_4x_SelectPlayer.jpg');
-
 
 game.addAsset('portraitBg1.png');
 game.addAsset('portraitFg.png');
@@ -134,18 +168,19 @@ game.addAsset('portraitBg.png');
 game.addAsset('portraitLock.png');
 
 game.addAsset('portrait0.png');
+game.addAsset('portrait0b.png');
 game.addAsset('portrait1.png');
 game.addAsset('portrait2.png');
 game.addAsset('portrait3.png');
 game.addAsset('portrait4.png');
 game.addAsset('portrait5.png');
 
-game.addAsset('Juv_Xmas_UI_Selection_Greek_DOWN.png');
-game.addAsset('Juv_Xmas_UI_Selection_Greek_UP.png');
 
 
 
-
+game.addAsset(TUTORIAL1);
+game.addAsset(TUTORIAL2);
+game.addAsset(TUTORIAL3);
 
 
 
@@ -346,12 +381,20 @@ function CreateDefaultButton(x,y,text,size,callback)
 {
             var button = new game.ForgeButton(BUTTON_ACTIVE, BUTTON_PRESSED, BUTTON_DISABLED,
             x,y,text,{},size,COLOR_BLACK,COLOR_BLACK,COLOR_DARKGRAY, callback);
-            
             SetDefaultButtonBehavior(button, 100);
             button.addTo(game.scene.stage);
             return button;
-
 }
+
+function CreateDefault1Button(x,y,text,size,callback)
+{
+            var button = new game.ForgeButton(BUTTON1_ACTIVE, BUTTON1_PRESSED, BUTTON1_DISABLED,
+            x,y,text,{},size,COLOR_BLACK,COLOR_BLACK,COLOR_DARKGRAY, callback);
+            SetDefaultButtonBehavior(button, 100);
+            button.addTo(game.scene.stage);
+            return button;
+}
+
 function SetDefaultButtonBehavior(btn, scalein)
 {
 	    btn.scaleSpeed =500;
@@ -500,3 +543,49 @@ function IsWalkable(tileid)
     return false;
 }
 
+function IsCloud(tileid)
+{
+    if(tileid==1+18)
+    {
+        return true;
+    }
+    return false;
+}
+
+//Server Related
+function GetTimestamp()
+{
+    return (~~(Date.now() / 1000));
+}
+
+function StartGame()
+{
+    	   if(!LOCAL_MODE) 
+                {
+                    var xhr = new XMLHttpRequest();
+                    var endpoint = ENDPOINT_PROD
+                    if(!PROD)
+                        endpoint = ENDPOINT_PRE
+                    
+                    endpoint +=ENDPOINT1
+                    
+                    xhr.open('POST', endpoint, true);
+                    xhr.onreadystatechange = function(e) 
+                    {
+                        console.log(JSON.stringify(xhr.readyState))
+                        if (xhr.readyState == 4 && xhr.status == 200) 
+                        {
+                            var response = JSON.parse(xhr.responseText);
+                            //alert(response.ip);
+                            console.log(JSON.stringify(response))
+                            game.startReceived=true;
+                        }
+                    }
+                    xhr.send();
+                }
+                
+                if(LOCAL_MODE) game.startReceived=true;
+                game.scene.button.setEnable(false)
+
+    
+}

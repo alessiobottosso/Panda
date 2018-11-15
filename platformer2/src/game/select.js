@@ -24,12 +24,6 @@ game.module(
             HALF_WIDTH, 0.076*game.height,0,39)
             this.text.addTo(game.scene.stage)
     
-        
-	   // SetColor(text2,tint);
-    //     var f= text2.height/text2.fontClass.lineHeight;
-	   // text2.y =+offsetY + (1/f )*(-text2.height*text2.scale.y/2)
-
-
     	    this.x=0;
     	    this.y=0;
             this.scalex=107;
@@ -37,12 +31,12 @@ game.module(
             this.yy = game.height*0.45;
     	    this.xx = HALF_WIDTH- this.scalex*3;
     	    
-            var s = new game.Sprite('Juv_Xmas_UI_Selection_Greek_UP.png')
+            var s = new game.Sprite(GREEK_UP)
             s.x = HALF_WIDTH
             s.y = game.height*0.14
             s.anchorCenter();
             s.addTo(game.scene.stage);
-    	    
+
             var s = new game.Sprite('block.png')
             s.x = HALF_WIDTH
             s.y = game.height*0.282
@@ -51,7 +45,7 @@ game.module(
             s.anchorCenter();
             s.addTo(game.scene.stage);
     	    
-            var s = new game.Sprite('Juv_Xmas_UI_Selection_Greek_DOWN.png')
+            var s = new game.Sprite(GREEK_DOWN)
             s.x = HALF_WIDTH
             s.y = game.height*0.424
             s.anchorCenter();
@@ -78,7 +72,7 @@ game.module(
         
 
         this.button = new CreateDefaultButton(
-            HALF_WIDTH,0.95*game.height,"select",40,
+            HALF_WIDTH,0.95*game.height,"CONFIRM",30,
             function()
             {  
                 game.scene.start();
@@ -86,14 +80,6 @@ game.module(
 
         this.button.addTo(game.scene.stage);
 
-        // this.button = new game.ForgeButton(BUTTON_PRESSED, BUTTON_RELEASED,
-        //     HALF_WIDTH,0.9*game.height,"button",{},40,"#555555","#550055",function()
-        //     {  
-        //         game.scene.start();
-        //     });
-
-        // SetDefaultButtonBehavior(game.scene.button,100);
-        // this.button.addTo(game.scene.stage);
         
             var s = new game.Sprite(PORTRAIT+'Fg.png')
             
@@ -139,6 +125,11 @@ game.module(
                 this.plot(x,y,PORTRAIT+j+'.png',0+4,4)
                 if(y>=this.rowLocked)
                     this.plot(x,y,PORTRAIT+'Lock.png',4,4)
+                if(i==0)
+                {
+                    this.pressed = this.plot(x,y,PORTRAIT+j+'b.png',0+4,4)
+                    this.pressed.alpha=0;
+                }
                 
             }
 
@@ -153,6 +144,7 @@ game.module(
                 s.x+=this.xx+offset;
                 s.y+=this.yy+offset;
                 s.addTo(game.scene.stage);
+                return s
     	},
         keydown: function(key) 
         {
@@ -247,6 +239,17 @@ game.module(
     	{
     	    this.super(x,y)
     	    this.select(x,y);
+    	    var x1=this.xx;
+    	    var x2=this.xx + 96;
+    	    var y1=this.yy;
+    	    var y2=this.yy + 96;
+    	    if(x>x1 && x<x2 && y>y1&&y<y2)
+    	        this.pressed.alpha=1;
+        },
+    	mouseup: function(x, y)
+    	{
+    	    this.super(x,y)
+    	    this.pressed.alpha=0;
         },
         update:function()
         {

@@ -7,6 +7,7 @@
     'game.tutorial',
     'game.select',
     'game.intro',
+    'game.outro',
     'game.preloading',
     'game.player',
     'game.poisson',
@@ -59,6 +60,10 @@ game.createScene('Main', {
 
         this.container1 = new game.Container();
         this.container1.addTo(this.container);
+
+        this.container2 = new game.Container();
+        this.container2.addTo(this.container);
+
         game.disp =0;
         game.built=0;
         game.blockIdx=0;
@@ -113,6 +118,7 @@ game.createScene('Main', {
         this.timer=0;
         this.stepb=0;
         this.steps=[];
+        this.loading=false;
     },
     mousedown: function(x, y)
     	{
@@ -122,6 +128,15 @@ game.createScene('Main', {
     update:function()
     {
         CommonUpdate();
+        if(game.scene.loading) return;
+        if(game.scene.timeComputated <0 )
+        {
+            game.score = game.scene.points;
+            console.log(game.score)
+            game.scene.loading=true;
+            GoToScene("Outro")
+        }
+        
         if(this.steps.length>10)
         {
             var s= this.steps.shift();
@@ -166,7 +181,8 @@ game.createScene('Main', {
         {
             a=1;
             this.timeComputated = ~~((v1-v)/1000)
-            this.text.setText(this.timeComputated);
+            if(this.timeComputated > 0)
+                this.text.setText(this.timeComputated);
         }
         
         if(this.scoreComputated!=this.points)
@@ -330,6 +346,7 @@ game.createScene('Main', {
         {
             element.addTo(game.scene.container0)
         });
+
         game.built += this.block.tilemap.pixelWidth
         //console.log(game.built);
     },
@@ -386,30 +403,17 @@ game.createScene('Main', {
         {
             this.player.jump();
         }
-        if (key === '0') 
-        {
-            TestLevel=!TestLevel;
-        }
-
-        if (key === 'PLUS') 
-        {
-            Lambda++
-        }
-        if (key === 'MINUS') 
-        {
-            Lambda--
-        }
         if (key === 'LEFT') {
             player.alive=false;
         }
         if (key === 'RIGHT') {
             player.alive=true;
         }
-        if (DEBUG && key === 'UP') 
+        if (FR_DEBUG && key === 'UP') 
         {
             game.scene.player.body.velocity.y = -1000;
         }
-        if (DEBUG && key === 'Down') 
+        if (FR_DEBUG && key === 'Down') 
         {
             game.scene.player.body.velocity.x = -1000;
         }
@@ -556,9 +560,10 @@ game.createClass('Block', {
         {
             var tile = layer.tiles[-1+ length-i];
             //if(tile.tileid)
-            if(IsWalkable(tile.tileid))
+            if(!IsCloud(tile.tileid))
             if(tile.tilex!==undefined)
             {
+                
                 if(tile.tilex<min)
                 {
                     min = tile.tilex;
@@ -571,11 +576,25 @@ game.createClass('Block', {
                 }
             }
         }
-        
+
         var value=0;
         for (var i = 0; i < w; i++) 
         {
             var idx = -1+w-i;
+            if(this.blockSafe[idx] == 0)
+            {
+                this.blockSafe[idx] = value;
+            }
+            else
+            {
+                value= this.blockSafe[idx];
+            }
+        }   
+        
+        value=this.blockSafe[0];
+        for (var i = 0; i < w; i++) 
+        {
+            var idx = i;
             if(this.blockSafe[idx] == 0)
             {
                 this.blockSafe[idx] = value;
@@ -608,6 +627,15 @@ game.createClass('Block', {
             body.sprite = sprite;            
             this.objsBodies.push(body);
         }
+        
+        // this.fgSprites=[];
+        // if(this.tilemap.layers.fg)
+        // for (var i = 0; i < this.tilemap.layers.fg.tiles.length; i++) 
+        // {
+        //     var tile = layer.tiles[i];
+        //     this.fgSprites.push(tile);
+        // }
+
     },
     isInside:function(x)
     {

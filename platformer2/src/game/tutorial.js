@@ -13,55 +13,182 @@ game.module(
         
         init: function() 
     	{
+    	    AddForegroundUI();
     	    game.startReceived=false;
-        this.text = new game.Text("02 - Tutorial");
-        this.text.cache=true;
-        this.text.anchor.set(0,0);
-        this.text.x=game.width/2 - this.text.width/2
-        this.text.y+=game.height * 0.05 + this.text.height/2;
-        this.text.addTo(game.scene.stage)
+            this.page=1;
+            this.text = CreateText("TUTORIAL",HALF_WIDTH,
+            0.025*game.height,0,35)
+            this.text.addTo(game.scene.stage)
 
-        this.button = new CreateDefaultButton(
-            HALF_WIDTH,0.95*game.height,"button",40,
+            
+            var s = new game.Sprite(TEXTBOX)
+            s.x = HALF_WIDTH
+            s.y = game.height*0.18
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+            
+            var s = new game.Sprite(GREEK_UP)
+            s.x = HALF_WIDTH
+            s.y = game.height*0.335
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+
+            var s = new game.Sprite('block.png')
+            s.x = HALF_WIDTH
+            s.y = game.height*0.62
+            s.scale.y=5.9;
+            s.scale.x=8;
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+    	    
+            var s = new game.Sprite(GREEK_DOWN)
+            s.x = HALF_WIDTH
+            s.y = game.height*0.891
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+
+
+            var s = new game.Sprite(TUTORIAL1)
+            s.x = HALF_WIDTH
+            s.y = game.height*0.622
+            s.scale.y=1;
+            s.scale.x=1;
+            s.alpha=0;
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+            this.tutorial1=s;
+
+            var s = new game.Sprite(TUTORIAL2)
+            s.x = HALF_WIDTH
+            s.y = game.height*0.622
+            s.scale.y=1;
+            s.scale.x=1;
+            s.alpha=0;
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+            this.tutorial2=s;
+
+            var s = new game.Sprite(TUTORIAL3)
+            s.x = HALF_WIDTH
+            s.y = game.height*0.622
+            s.scale.y=1;
+            s.scale.x=1;
+            s.alpha=0;
+            s.anchorCenter();
+            s.addTo(game.scene.stage);
+            this.tutorial3=s;
+
+            this.writePage();
+
+
+
+            // this.button = new CreateDefaultButton(
+            // HALF_WIDTH,0.95*game.height,"START",30,
+            // function()
+            // {  
+            //     game.scene.start();
+            // });
+
+            this.button = CreateDefault1Button(1.9*HALF_WIDTH,
+            0.95*game.height,"x",1,
             function()
-            {  
-                game.scene.start();
+            {
+                game.scene.doPress();
             });
 
-    
             //GoToScene('Main');
+            this.timer = 0
+            this.tutorial1.alpha=1;
+            
+            // var s = new game.Sprite(PAGE)
+            // s.x = HALF_WIDTH
+            // s.y = game.height*0.5
+            // s.alpha =0.1
+            // s.anchorCenter();
+            // s.addTo(game.scene.stage);
+
+    	},
+    	writePage:function()
+    	{
+            var message1 ="COLLECT THE XMAS PRESENTS - Collect\nall the presents you can to improve\nyour score.";
+            var message2 ="HOW to JUMP and DOUBLE JUMP - Click on\nyour screen once in order to perform a jump\nClick on your screen twice to perform a double\njump and reach higher platforms.";
+            var message3 ="HOLES and STARS - Be careful to not fall into the\nfloor's holes! Your time will decrease every time\nyou fall.\nCollecting the stars will increase your\navailable time.";
+            if(game.scene.message) game.scene.message.remove();
+            var message="";
+            if(game.scene.page==1)
+            {
+                message = message1;
+                game.scene.tutorial3.alpha=0;
+                game.scene.tutorial2.alpha=0;
+                game.scene.tutorial1.alpha=1;
+            }
+            if(game.scene.page==2)
+            {
+                message = message2;
+                game.scene.tutorial1.alpha=0;
+                game.scene.tutorial2.alpha=1;
+                game.scene.tutorial3.alpha=0;
+            }
+            if(game.scene.page==3)
+            {
+                message = message3;
+                game.scene.tutorial1.alpha=0;
+                game.scene.tutorial2.alpha=0;
+                game.scene.tutorial3.alpha=1;
+            }
+            game.scene.message = CreateText(
+                message
+                ,HALF_WIDTH*0.2,
+                
+            0.111*game.height,0,22)
+    	    //this.text.anchorCenter();
+    	    game.scene.message.anchor.set(0,0)
+    	    game.scene.message.align = 'left';
+	        game.scene.message.updateText();
+
+            game.scene.message.addTo(game.scene.stage)
+
+    	},
+    	nextPage:function()
+    	{
+    	    this.page++;
+    	    if(this.page ==4)
+    	    {
+    	        game.scene.start();
+    	    }
+            else
+            {
+    	        this.writePage();
+                
+            }
     	},
     	start:function()
     	{
-    	   if(!LOCAL_MODE) 
-                {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', "https://ipinfo.io/json", true);
-                    xhr.send();
-                    xhr.onreadystatechange = function(e) 
-                    {
-                        if (xhr.readyState == 4 && xhr.status == 200) 
-                        {
-                            var response = JSON.parse(xhr.responseText);
-                            //alert(response.ip);
-                            game.startReceived=true;
-                        }
-                    }
-                }
-                
-                if(LOCAL_MODE) game.startReceived=true;
-                game.scene.button.setEnable(false)
-
+    	    StartGame();
     	},
     	update:function()
     	{
     	    CommonUpdate();
     	},
+    	doPress:function()
+    	{
+    	    var timeDiff = Date.now() - this.timer
+    	    this.timer=Date.now();
+    	    //console.log(timeDiff)//RME
+            if(timeDiff > 300)
+            {
+                this.nextPage();
+            }
+            else
+            {
+                game.scene.start();
+            }
+    	},
         keydown: function(key) 
         {
             if (key === 'SPACE') 
             {
-                game.scene.start();
+                this.doPress();
             }
         },
 

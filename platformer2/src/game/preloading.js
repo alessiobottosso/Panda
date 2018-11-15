@@ -13,6 +13,11 @@ game.module(
         
         init: function() 
     	{
+    	    if (!Date.now) 
+    	    {
+                Date.now = function() { return new Date().getTime(); }
+            }
+            
             HALF_WIDTH = game.width / 2;
             game.Input.clickTimeout = 60000;
             LoadMute();
@@ -26,6 +31,7 @@ game.module(
             {
                 
                 GoToScene('Intro');
+                //GoToScene('Tutorial');
             }
     	},
     	update:function()
