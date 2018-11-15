@@ -110,9 +110,9 @@ game.module(
     	},
     	writePage:function()
     	{
-            var message1 ="COLLECT THE XMAS PRESENTS - Collect\nall the presents you can to improve\nyour score.";
-            var message2 ="HOW to JUMP and DOUBLE JUMP - Click on\nyour screen once in order to perform a jump\nClick on your screen twice to perform a double\njump and reach higher platforms.";
-            var message3 ="HOLES and STARS - Be careful to not fall into the\nfloor's holes! Your time will decrease every time\nyou fall.\nCollecting the stars will increase your\navailable time.";
+            var message1 ="HOW to JUMP and DOUBLE JUMP - Click on\nyour screen once in order to perform a jump\nClick on your screen twice to perform a double\njump and reach higher platforms.";
+            var message2 ="HOLES and STARS - Be careful to not fall into the\nfloor's holes! Your time will decrease every time\nyou fall.\nCollecting the stars will increase your\navailable time.";
+            var message3 ="COLLECT THE XMAS PRESENTS - Collect\nall the presents you can to improve\nyour score.";
             if(game.scene.message) game.scene.message.remove();
             var message="";
             if(game.scene.page==1)

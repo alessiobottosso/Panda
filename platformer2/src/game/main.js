@@ -234,7 +234,15 @@ game.createScene('Main', {
         {
             this.updateBackground();            
         }
-
+        if(this.block)
+        {
+            this.block.update();
+        }
+        if(this.previousBlock)
+        {
+            this.previousBlock.update();
+        }
+        
         // if(Fake3d)
         // {
         //     if( !updated)
@@ -466,6 +474,8 @@ game.createClass('Block', {
                     s.anchor.set(0,0);
                     s.position.y=obj.y-obj.height;
                     s.position.x=obj.x+displacementX
+                    s.originalPosx=s.position.x
+                    s.originalPosy=s.position.y
                     s.gid = obj.gid;
                     s.id = obj.id;
                     s.bid = index;
@@ -635,8 +645,18 @@ game.createClass('Block', {
         //     var tile = layer.tiles[i];
         //     this.fgSprites.push(tile);
         // }
-
+        this.deltapack=0;
     },
+    update:function()
+    {
+        for (var i = 0; i < this.objs.length; i++) 
+        {
+            var obj = this.objs[i];
+            obj.position.y=obj.originalPosy+3*Math.sin(obj.position.x+this.deltapack/20);
+        }
+        this.deltapack+=1;
+    },
+    
     isInside:function(x)
     {
       if(x<this.startingx)  return false;
