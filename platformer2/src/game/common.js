@@ -12,7 +12,7 @@
 //LEVEL_DESIGN="level.json"
 LEVEL_DESIGN="";
 
-LOCAL_MODE=false;
+LOCAL_MODE=true;
 FR_DEBUG = true;
 FR_TIMEMALUS=30;
 FR_TIMEBONUS=3;
