@@ -517,19 +517,6 @@ function PlaySound(sound, x ,y)
 
 }
 
-function CommonUpdate()
-{
-    if(game.currentScene=="Tutorial")
-    {
-        if(game.startReceived==true)
-        {
-            game.startReceived=false;
-            GoToScene("Main");
-        }
-        
-    }
-}
-
 function IsWalkable(tileid)
 {
     if(tileid==1+20)
@@ -552,6 +539,29 @@ function IsCloud(tileid)
     return false;
 }
 
+function CommonUpdate()
+{
+    if(game.currentScene=="Tutorial")
+    {
+        if(game.startReceived==true)
+        {
+            game.startReceived=false;
+            GoToScene("Main");
+        }
+        if(game.startSendTimer !=0 && game.startReceived==false)
+        {
+            var time =  Date.now() - game.startSendTimer ;
+            if(time>10000)
+            {
+                //timeout request
+                game.startReceived=true;
+                //TODO ERROR HANDLING
+            }
+        }
+    }
+}
+
+
 //Server Related
 function GetTimestamp()
 {
@@ -562,29 +572,47 @@ function StartGame()
 {
     	   if(!LOCAL_MODE) 
                 {
-                    var xhr = new XMLHttpRequest();
-                    var endpoint = ENDPOINT_PROD
-                    if(!PROD)
-                        endpoint = ENDPOINT_PRE
-                    
-                    endpoint +=ENDPOINT1
-                    
-                    xhr.open('POST', endpoint, true);
-                    xhr.onreadystatechange = function(e) 
-                    {
-                        if (xhr.readyState == 4 && xhr.status == 200) 
-                        {
-                            var response = JSON.parse(xhr.responseText);
-                            //alert(response.ip);
-                            console.log(JSON.stringify(response))
-                            game.startReceived=true;
-                        }
-                    }
-                    xhr.send();
+                    game.startRequestNumber=0;
+                    DoStartRequest();
                 }
                 
                 if(LOCAL_MODE) game.startReceived=true;
                 game.scene.button.setEnable(false)
 
     
+}
+function DoStartRequest()
+{
+                    game.startRequestNumber++;
+                    var xhr = new XMLHttpRequest();
+                    var endpoint = ENDPOINT_PROD
+                    if(!PROD)
+                        endpoint = ENDPOINT_PRE
+                    
+                    endpoint +=ENDPOINT1
+                    game.startSendTimer = Date.now()
+                    xhr.open('POST', endpoint, true);
+                    xhr.onreadystatechange = function(e) 
+                    {
+                        if (xhr.readyState == 4)
+                        {
+                            if (xhr.status == 200) 
+                            {
+                                var response = JSON.parse(xhr.responseText);
+                                //alert(response.ip);
+                                console.log(JSON.stringify(response))
+                                game.startReceived=true;
+                            }
+                            else
+                            {
+                                //error
+                                if(game.startRequestNumber==1)
+                                {
+                                    DoStartRequest();
+                                }
+                            }
+                        }
+                    }
+                    xhr.send();
+
 }
