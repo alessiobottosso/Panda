@@ -23,11 +23,18 @@ game.module(
         this.text.addTo(game.scene.stage)
 
 
-        this.button = CreateDefault1Button(1.8*HALF_WIDTH,
-            0.95*game.height,"x",1,
+        // this.button = CreateDefault1Button(1.8*HALF_WIDTH,
+        //     0.95*game.height,"x",1,
+        //     function()
+        //     {
+        //         game.scene.doPress();
+        //     });
+    
+       this.button = new CreateDefaultButton(
+            1.6*HALF_WIDTH,0.95*game.height,"SKIP",30,
             function()
-            {
-                game.scene.doPress();
+            {  
+                game.scene.start();
             });
 
         var s = new game.Sprite("Placeholder_Intro.png")
@@ -82,6 +89,10 @@ game.module(
     	update:function()
     	{
     	    CommonUpdate();
+    	},
+    	mousedown:function(x,y)
+    	{
+    	    game.scene.doPress();
     	},
     	doPress:function()
     	{

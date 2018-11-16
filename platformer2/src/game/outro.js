@@ -7,7 +7,7 @@ game.module(
 )
 .body(function() {
 
-    game.addAsset("Placeholder_Intro.png");
+    game.addAsset("Placeholder_Ending.png");
     
     game.createScene('Outro', 
     {
@@ -20,15 +20,14 @@ game.module(
             this.text.addTo(game.scene.stage)
 
 
-
         this.button = CreateDefaultButton(1*HALF_WIDTH,
-            0.95*game.height,"Restart",30,
+            0.95*game.height,"RESTART",30,
             function()
             {
                 game.scene.start();
             });
 
-        var s = new game.Sprite("Placeholder_Intro.png")
+        var s = new game.Sprite("Placeholder_Ending.png")
             s.x = HALF_WIDTH
             s.y = game.height*0.5
             s.scale.y=1;

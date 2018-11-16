@@ -89,13 +89,18 @@ game.module(
             //     game.scene.start();
             // });
 
-            this.button = CreateDefault1Button(1.9*HALF_WIDTH,
-            0.95*game.height,"x",1,
+            // this.button = CreateDefault1Button(1.9*HALF_WIDTH,
+            // 0.95*game.height,"x",1,
+            // function()
+            // {
+            //     game.scene.doPress();
+            // });
+           this.button = new CreateDefaultButton(
+            1.6*HALF_WIDTH,0.95*game.height,"SKIP",30,
             function()
-            {
-                game.scene.doPress();
+            {  
+                game.scene.start();
             });
-
             //GoToScene('Main');
             this.timer = 0
             this.tutorial1.alpha=1;
@@ -183,6 +188,10 @@ game.module(
             {
                 game.scene.start();
             }
+    	},
+    	mousedown:function(x,y)
+    	{
+    	    game.scene.doPress();
     	},
         keydown: function(key) 
         {
