@@ -452,6 +452,14 @@ function SetColor(etext,tint)
 
 function AddForegroundUI()
 {
+    if(FR_DEBUG)
+    {
+	    var title = CreateText("0",
+		    -200+ HALF_WIDTH,0.9 * game.height,0,80,0);
+	    title.addTo(game.scene.stage);
+	    game.scene.fps=title;
+    }
+
     AddButtons();
 }
 
@@ -555,6 +563,11 @@ function IsCloud(tileid)
 
 function CommonUpdate()
 {
+    if(game.scene.fps&& FR_DEBUG)
+        game.scene.fps.setText((1/game.delta).toFixed(1))
+
+    //TODO do this better!
+    
     if(game.currentScene=="Tutorial")
     {
         ServerUpdateStart();
