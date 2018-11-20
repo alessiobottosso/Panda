@@ -171,6 +171,7 @@ game.module(
     	start:function()
     	{
     	    StartGame();
+    	    //GoToScene("Main");
     	},
     	update:function()
     	{

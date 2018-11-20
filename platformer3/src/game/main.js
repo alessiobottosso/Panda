@@ -168,8 +168,8 @@ game.createScene('Main', {
         this.loadingStars=0;
         
         //TODO do this better!
-        // this.vfx1 = this.createVFX();
-        // this.vfx1.addTo(game.scene.container2)
+        this.vfx1 = this.createVFX();
+        this.vfx1.addTo(game.scene.container2)
 
         // this.vfx2 = this.createVFX();
         // this.vfx2.addTo(game.scene.container2)
@@ -182,18 +182,18 @@ game.createScene('Main', {
     },
     createVFX:function()
     {
-        // var speed1 =100;
-        // var sheet = new game.SpriteSheet(VFX, 104, 104);
-        // var sprite = new game.Animation(sheet.textures);
-        // sprite.addAnim('stand', [0,0,11,0,12,12], { speed: 5, loop: true });
-        // //sprite.addAnim('a', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]);
-        // //sprite.addAnim('run', [19,20,21,22,23,24,25,26,27,28,29,30,31],  { speed: speed1, loop: false });
-        // sprite.anchorCenter();
+        var sheet = new game.SpriteSheet(VFX, 104, 104);
+        var sprite = new game.Animation(sheet.textures);
+        sprite.addAnim('jump', [0,0,11,0,12,12], { speed: 5, loop: true });
+        sprite.jump.loop=false;
+        sprite.play("jump");
+        //sprite.addAnim('jump', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],  { speed: 10, loop: false });
+        //sprite.addAnim('run', [19,20,21,22,23,24,25,26,27,28,29,30,31],  { speed: speed1, loop: false });
+        //sprite.speed = 10;
+        //sprite.play('stand');
         
-        // sprite.speed = 10;
-        // sprite.play('jump1');
-
-        // return sprite;        
+        sprite.anchorCenter();
+        return sprite;
     },
     vfxspecial:function(x, y)
     {
@@ -224,8 +224,8 @@ game.createScene('Main', {
     },
     jumpVfx:function(x,y)
     {
-        // this.vfx1.position.set(x, y);
-        // this.vfx1.play('jump');
+        this.vfx1.position.set(x, y);
+        this.vfx1.play('jump');
     },
     mousedown: function(x, y)
     {

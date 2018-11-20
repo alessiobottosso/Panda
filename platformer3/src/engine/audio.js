@@ -82,7 +82,7 @@ game.createClass('Audio', {
 
         if (!window.AudioContext) return;
 
-        this._context = new AudioContext(
+		this._context = new AudioContext(
 		{
 			latencyHint: 'interactive'
 		});

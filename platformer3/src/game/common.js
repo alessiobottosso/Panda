@@ -9,10 +9,11 @@
 )
 
 .body(function() {
-LEVEL_DESIGN="level.json"
-//LEVEL_DESIGN="";
+//LEVEL_DESIGN="level0.json"
+LEVEL_DESIGN="";
 
 LOCAL_MODE=true;
+
 FR_DEBUG = true;
 FR_TIMEMALUS=30;
 FR_TIMEBONUS=3;
@@ -28,7 +29,7 @@ FR_SESSIONID="";
 FR_SPEED=500;
 TestLevel=false;
 
-MaxLevel=6;
+MaxLevel=8; 
 MaxLambda=3;
 FR_DIELEVEL=2000;
 LowLimit=800;
@@ -97,7 +98,7 @@ ENDPOINT_PRE = "https://levelupyourxmas.staging.weareserver.it"
 ENDPOINT1 = "/startGame"
 ENDPOINT2 = "/endGame"
 
-VFX = "Vfx_Character_4x.png"
+VFX = "Vfx_Jump_4x.png"
 
 game.addAsset(PAGE);
 
@@ -138,8 +139,6 @@ game.addAsset('UI_SoundOFF.png');
 game.addAsset('level0.png');
 
 
-game.addAsset('layer_03.png');
-game.addAsset('layer_04.png');
 game.addAsset('layer_05.png');
 game.addAsset('layer_06.png');
 game.addAsset('layer_07.png');
@@ -163,6 +162,8 @@ game.addAsset('level3.json');
 game.addAsset('level4.json');
 game.addAsset('level5.json');
 game.addAsset('level6.json');
+game.addAsset('level7.json');
+game.addAsset('level8.json');
 
 //game.addAsset('player.png');
 game.addAsset('player1.png');
@@ -649,16 +650,21 @@ function SendEndGame()
                     DoEndRequest();
                 }
                 
-                if(LOCAL_MODE) game.endReceived=true;
+                if(LOCAL_MODE) 
+                {
+                    console.log("SendEndGame")//rme
+                    game.endReceived=true;
+                }
                 //game.scene.button.setEnable(false)
 }
 
 function ServerUpdateStart()
 {
-        if(game.startSent && game.startReceived==true)
+        if(game.startReceived==true)
         {
             game.startSent=false;
             game.startReceived=false;
+            game.startSendTimer=0;
             GoToScene("Main");
         }
         if(game.startSendTimer !=0 && game.startSent && game.startReceived==false)
@@ -678,10 +684,12 @@ function ServerUpdateEnd()
 {
     //if(game.endSent)
     {
-        if(game.endSent && game.endReceived==true)
+        if(game.endReceived==true)
         {
+            console.log("received")//rme
             game.endSent=false;
-            game.endeceived=false;
+            game.endReceived=false;
+            game.endSendTimer=0;
             GoToScene("Outro");
         }
         if(game.endSendTimer !=0 && game.endSent && game.endReceived==false)
@@ -689,6 +697,7 @@ function ServerUpdateEnd()
             var time =  Date.now() - game.endSendTimer ;
             if(time>10000)
             {
+                console.log("timeout")//rme
                 //timeout request
                 game.endReceived=true;
                 //TODO ERROR HANDLING
