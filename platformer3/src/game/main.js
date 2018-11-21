@@ -114,13 +114,13 @@ game.createScene('Main', {
 
 
 
-        this.score1 = CreateText1("WWWWWWWWWWWWWWWWWWWW"/*game.name*/,0,0,0,16.5, {});
+        this.score1 = CreateText1(game.name,0,0,0,16.5, {});
         this.score1.x+=25;
         this.score1.y+=2+game.height * 0.136 + this.score1.height/2;
         SetColor(this.score1,"#000000",0.7)
         this.score1.addTo(game.scene.stage)
 
-        this.score1 = CreateText1("WWWWWWWWWWWWWWWWWWWW"/*game.name*/,0,0,0,16.5, {});
+        this.score1 = CreateText1(game.name,0,0,0,16.5, {});
         this.score1.x+=25;
         this.score1.y+=game.height * 0.136 + this.score1.height/2;
         this.score1.cache = true;

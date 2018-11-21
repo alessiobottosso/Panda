@@ -528,7 +528,7 @@ function AddForegroundUI()
     if(FR_DEBUG)
     {
 	    var title = CreateText("0",
-		    -200+ HALF_WIDTH,0.9 * game.height,0,80,0);
+		    HALF_WIDTH+330,0.9825 * game.height,0,20,0);
 	    title.addTo(game.scene.stage);
 	    game.scene.fps=title;
     }
@@ -617,11 +617,13 @@ function PlaySound(sound, x ,y)
 
 function IsWalkable(tileid)
 {
-    if(tileid==1+20)
+    ++tileid;
+    tileid = tileid % 16;
+    if(tileid==4)
     {
         return true;
     }
-    if(tileid==1+16)
+    if(tileid==0)
     {
         return true;
     }
@@ -630,7 +632,9 @@ function IsWalkable(tileid)
 
 function IsCloud(tileid)
 {
-    if(tileid==1+18)
+    ++tileid;
+    tileid = tileid % 16;
+    if(tileid==2)
     {
         return true;
     }
