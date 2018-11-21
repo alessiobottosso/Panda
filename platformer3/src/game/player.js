@@ -222,7 +222,7 @@ game.createClass('Player', {
         // Movement
         if(this.alive)
         {
-            this.body.velocity.x = this.runSpeed * 0.9 + Math.random() * this.runSpeed*0.1;
+            this.body.velocity.x = this.runSpeed * 0.95 + Math.random() * this.runSpeed*0.05;
         }else
         {
             this.body.velocity.x = 0;
