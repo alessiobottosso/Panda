@@ -102,7 +102,7 @@ game.module(
     	{
     	    if(this.selectedImg) this.selectedImg.remove();
             this.selectIdx = this.x+this.y*6;
-            //if(this.selectIdx>=6)this.selectIdx = 1;
+            if(this.selectIdx>=6)this.selectIdx = 1;
             var s = new game.Sprite(PORTRAIT+this.selectIdx+'.png')
             s.x = HALF_WIDTH
             s.y = 8+2+game.height*0.25
@@ -111,15 +111,13 @@ game.module(
             s.scale.y=1;
             s.addTo(game.scene.stage);
             this.selectedImg = s;
-                	    console.log(this.selectIdx)//rme
-
     	},
     	buildGrid:function ()
     	{
     	    
             for(var i=0;i<24;++i)
             {
-                var j=(i<MaxPlayer)?i:1;
+                var j=(i<6)?i:1;
                 var y=~~((i)/6);
                 var x=(i)%6;
                 this.plot(x,y,PORTRAIT+'Bg.png',0)

@@ -7,8 +7,6 @@
     'game.tutorial',
     'game.select',
     'game.intro',
-    'game.error',
-    'game.outro',
     'game.preloading',
     'game.player',
     'game.poisson',
@@ -23,10 +21,6 @@ game.createScene('Main', {
     gravity: 2000,
     
     init: function() {
-        FR_VALIDATION_TOKEN=[];
-        FR_TIMESFALLEN=0;
-        FR_TIMESSTARS=0;
-        
         //try{
         //console.log("scene init");
         var d= 1000
@@ -53,7 +47,7 @@ game.createScene('Main', {
         layer.addTo(game.scene.stage);
         game.scene.bgLayer.push(layer);
         });
-        
+
         this.world = new game.Physics();
         this.world.gravity.y = this.gravity;
         
@@ -90,27 +84,20 @@ game.createScene('Main', {
         this.camera.sensorSize.x=100; 
         this.camera.sensorSize.y=200;   
         this.camera.limit = new game.Rectangle(Infinity, LowLimit, -Infinity, -Infinity);
-        this.camera.maxSpeed=FR_SPEED+100;
+        this.camera.maxSpeed=Speed+100;
         this.camera.threshold=2; 
         this.displacement=0;
 
-        this.maxTime=99;
-        this.text = new game.Text(this.maxTime);
+        this.text = new game.Text("99");
         this.text.cache=true;
         this.text.anchor.set(0,0);
         this.text.x=game.width/2 - this.text.width/2
         this.text.y+=game.height * 0.05 + this.text.height/2;
         this.text.addTo(game.scene.stage)
 
-        this.maxscore = CreateText(FR_PLAYERMAXSCORE,0,0,0,50);
-        this.maxscore.cache=true;
-        this.maxscore.anchor.set(0,0);
-        this.maxscore.x=game.width*0.96-this.maxscore.width*this.maxscore.scale.x
-        this.maxscore.y+=game.height * 0.05 + this.maxscore.height/2;
-        this.maxscore.addTo(game.scene.stage)
-
-
-        this.score = CreateText("0",0,0,0,50);
+        this.score = new game.Text("0");
+        this.score.cache=true;
+        this.score.anchor.set(0,0);
         this.score.x=this.text.width/2
         this.score.y+=game.height * 0.05 + this.text.height/2;
         this.score.addTo(game.scene.stage)
@@ -122,163 +109,23 @@ game.createScene('Main', {
         // {
         //     console.log(e);
         // }
+        this.maxTime=99;
         this.timeComputated=0;
         this.scoreComputated=0;
         
         AddForegroundUI();
-        
-        this.containerConnect = new game.Container();
-        this.containerConnect.addTo(game.scene.stage);
-
-        this.blackLayer = new game.Sprite("block.png");
-        this.blackLayer.tint='#000000'
-        this.blackLayer.alpha=0.8;
-        this.blackLayer.width=game.width;
-        this.blackLayer.height=game.height;
-        this.blackLayer.addTo(this.containerConnect);
-        
-        var star = new game.Sprite(LOADING_STAR);
-        star.x=game.width*0.3;
-        star.y=game.height*0.5;
-        star.alpha=0;
-        star.anchorCenter();
-        star.addTo(this.containerConnect);
-        this.star1=star;
-        var star = new game.Sprite(LOADING_STAR);
-        star.x=game.width*0.5;
-        star.y=game.height*0.5;
-        star.alpha=0;
-        star.anchorCenter();
-        star.addTo(this.containerConnect);
-        this.star2=star;
-        var star = new game.Sprite(LOADING_STAR);
-        star.x=game.width*0.7;
-        star.y=game.height*0.5;
-        star.alpha=0;
-        star.anchorCenter();
-        star.addTo(this.containerConnect);
-        this.star3=star;
-        
-        this.containerConnect.visible=0;
-
         this.timer=0;
         this.stepb=0;
         this.steps=[];
-        this.loading=false;
-        this.loadingStars=0;
-        
-        //TODO do this better!
-        this.vfx1 = this.createVFX();
-        this.vfx1.addTo(game.scene.container2)
-
-        // this.vfx2 = this.createVFX();
-        // this.vfx2.addTo(game.scene.container2)
-
-        // this.vfx3 = this.createVFX();
-        // this.vfx3.addTo(game.scene.container2)
-
-        
-        this.vfxindex=0;
-    },
-    createVFX:function()
-    {
-        var sheet = new game.SpriteSheet(VFX, 104, 104);
-        var sprite = new game.Animation(sheet.textures);
-        sprite.addAnim('jump', [0,0,11,0,12,12], { speed: 5, loop: true });
-        sprite.jump.loop=false;
-        sprite.play("jump");
-        //sprite.addAnim('jump', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],  { speed: 10, loop: false });
-        //sprite.addAnim('run', [19,20,21,22,23,24,25,26,27,28,29,30,31],  { speed: speed1, loop: false });
-        //sprite.speed = 10;
-        //sprite.play('stand');
-        
-        sprite.anchorCenter();
-        return sprite;
-    },
-    vfxspecial:function(x, y)
-    {
-        // try{
-        // this.vfx1.position.set(x, y);
-        // this.vfx1.play('jump1');
-        // }
-        // catch(e)
-        // {
-        //     console.log(e);
-        // }
-    },
-    runVfx:function(x,y)
-    {
-        // return;
-        // if(this.vfxindex==0)
-        // {
-        //     this.vfx2.position.set(x, y);
-        //     this.vfx2.play('run');
-        //     ++game.scene.vfxindex;
-        // }
-        // else
-        // {
-        //     this.vfx3.position.set(x, y);
-        //     this.vfx3.play('run');
-        //     game.scene.vfxindex=0;
-        // }
-    },
-    jumpVfx:function(x,y)
-    {
-        this.vfx1.position.set(x, y);
-        this.vfx1.play('jump');
     },
     mousedown: function(x, y)
-    {
-    	this.super(x,y)
+    	{
+    	    this.super(x,y)
         this.player.jump();
-    },
-    loadingUpdate:function()
-    {
-        if(this.loading)
-        {
-            this.loadingStars++;
-            var v = this.loadingStars + 0
-            if(v>128) v=v-128;
-            if(v>64)
-                this.star1.alpha =  ((128-v ))/64
-            else
-                this.star1.alpha =  ((v ))/64
-            var v = this.loadingStars + 16
-            if(v>128) v=v-128;
-            if(v>64)
-                this.star2.alpha =  ((128-v ))/64
-            else
-                this.star2.alpha =  ((v ))/64
-            
-            var v = this.loadingStars + 32
-            if(v>128) v=v-128;
-            if(v>64)
-                this.star3.alpha =  ((128-v ))/64
-            else
-                this.star3.alpha =  ((v ))/64
-            
-            if(this.loadingStars>128)
-            {
-                this.loadingStars=0;
-            }
-        }
     },
     update:function()
     {
-        this.loadingUpdate();
         CommonUpdate();
-        if(game.scene.loading) return;
-        if(game.scene.timeComputated <0 )
-        {
-            FR_SCORE = game.scene.points;
-            game.scene.loading=true;
-            this.text.setText(0);
-
-            //GoToScene("Outro")
-            this.containerConnect.visible=true;
-            SendEndGame();
-        }
-        
         if(this.steps.length>10)
         {
             var s= this.steps.shift();
@@ -301,8 +148,6 @@ game.createScene('Main', {
                 if(!top.sounded)
                 {
                     top.sounded=true; 
-                    var pos = game.scene.player.sprite.position;
-                    this.runVfx(pos.x,pos.y)
                     if(this.stepb==0)
                     {
                         PlaySound(SOUND_STEP1)
@@ -325,8 +170,7 @@ game.createScene('Main', {
         {
             a=1;
             this.timeComputated = ~~((v1-v)/1000)
-            if(this.timeComputated > 0)
-                this.text.setText(this.timeComputated);
+            this.text.setText(this.timeComputated);
         }
         
         if(this.scoreComputated!=this.points)
@@ -378,15 +222,7 @@ game.createScene('Main', {
         {
             this.updateBackground();            
         }
-        if(this.block)
-        {
-            this.block.update();
-        }
-        if(this.previousBlock)
-        {
-            this.previousBlock.update();
-        }
-        
+
         // if(Fake3d)
         // {
         //     if( !updated)
@@ -616,19 +452,20 @@ game.createClass('Block', {
                 {
                     var s = tilemap.spriteFromTile(obj.gid);
                     s.anchor.set(0,0);
-                    s.objx=obj.x
-                    s.objy=obj.y
                     s.position.y=obj.y-obj.height;
                     s.position.x=obj.x+displacementX
-                    s.originalPosx=s.position.x
-                    s.originalPosy=s.position.y
                     s.gid = obj.gid;
                     s.id = obj.id;
                     s.bid = index;
                     objs.push(s);
                     //
-                 //game.scene.bgLayer.push(layer);
+                // 
+                // game.scene.bgLayer.push(layer);
                 });
+
+                // var s = new game.Sprite(layer.image)
+                // console.log(layer.y)
+                // this.imgLayers.push(s);
             }else
             if(layer.data)
             {
@@ -775,9 +612,6 @@ game.createClass('Block', {
             var body = this.addBodyForObj(sprite);
             body.id = sprite.id;
             body.gid = sprite.gid;
-            body.bid = sprite.bid;
-            body.objx=sprite.objx;
-            body.objy=sprite.objy;
             body.sprite = sprite;            
             this.objsBodies.push(body);
         }
@@ -789,18 +623,8 @@ game.createClass('Block', {
         //     var tile = layer.tiles[i];
         //     this.fgSprites.push(tile);
         // }
-        this.deltapack=0;
+
     },
-    update:function()
-    {
-        for (var i = 0; i < this.objs.length; i++) 
-        {
-            var obj = this.objs[i];
-            obj.position.y=obj.originalPosy+3*Math.sin(obj.position.x+this.deltapack/20);
-        }
-        this.deltapack+=1;
-    },
-    
     isInside:function(x)
     {
       if(x<this.startingx)  return false;

@@ -22,25 +22,11 @@ game.module(
             
             game.locale ="it_IT"
             game.name = "Name.Surname88"
-            FR_PLAYERID="app_juve.testUser.00"
+            FR_PLAYERID="app_juve.testUser.00" 
             
             HALF_WIDTH = game.width / 2;
             game.Input.clickTimeout = 60000;
             LoadMute();
-
-            	    var music = new game.Music(MUSIC_MAIN);
-            	    
-            	    if(game.mute)
-            	    {
-            	        music.volume = 0;    
-            	    }
-            	    else
-            	    {
-                	    music.volume = MUSIC_VOLUME;    
-            	    }
-            	    
-                    music.play();
-    				game.music = music;
 
             if(LEVEL_DESIGN!="")
             {
