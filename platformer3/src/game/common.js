@@ -12,9 +12,10 @@
 //LEVEL_DESIGN="level0.json"
 LEVEL_DESIGN="";
 
-LEVEL_DESIGN_SEQUENTIAL=true
-MUSIC_VOLUME=0.25;
-LOCAL_MODE=true;
+LEVEL_DESIGN_SEQUENTIAL=false
+MUSIC_VOLUME=0.20;
+FR_ALLOW_UNKNOW=true;
+LOCAL_MODE=false;
 
 FR_DEBUG = true;
 FR_TIMEMALUS=30;
@@ -43,6 +44,7 @@ layerFg="main";
 layerSx="sx";
 layerDx="dx";
 layerBg="bg";
+PointSize=8;
 
 
 COLOR_BLACK = "#000000";
@@ -78,6 +80,8 @@ SOUND_RELEASED = "click2.m4a";
 
 SOUND_SELECT = "sfx_select.m4a" ;
 
+SOUND_TIME = "stx_time_running.m4a" ;
+
 SOUND_STAR = "sfx_collect_star.m4a";
 SOUND_PACK = "sfx_collect_gift.m4a";
 
@@ -91,6 +95,8 @@ SOUND_STEP2 = "sfx_step_terrain_02.m4a";
 SOUND_JUMP1 = "sfx_player_jump.m4a";
 SOUND_JUMP2 = "sfx_player_double_jump.m4a";
 
+BORDER = "border.png";
+
 
 PAGE="placeholder.jpg";
 
@@ -99,10 +105,10 @@ TUTORIAL2 = "Juv_Xmas_UI_Tutorial_02Time.png"
 TUTORIAL3 = "Juv_Xmas_UI_Tutorial_03Presents.png"
 
 PROD=false;
-ENDPOINT_PROD = "https://xmas.juventus.com"
-ENDPOINT_PRE = "https://levelupyourxmas.staging.weareserver.it"
-ENDPOINT1 = "/startGame"
-ENDPOINT2 = "/endGame"
+ENDPOINT_PROD = "https://xmas.juventus.com/"
+ENDPOINT_PRE = "https://levelupyourxmas.staging.weareserver.it/"
+ENDPOINT1 = "api/startGame"
+ENDPOINT2 = "api/endGame"
 
 VFX = "Vfx_Jump_4x.png"
 VFX2 = "Vfx_Run_4x.png"
@@ -136,6 +142,10 @@ game.addAsset(BUTTON1_ACTIVE);
 game.addAsset(BUTTON1_DISABLED);
 game.addAsset(BUTTON1_PRESSED);
 
+
+game.addAsset(SOUND_SELECT);
+game.addAsset(SOUND_TIME);
+
 game.addAsset(SOUND_PRESSED);
 game.addAsset(SOUND_RELEASED);
 game.addAsset(SOUND_STAR);
@@ -146,6 +156,8 @@ game.addAsset(SOUND_STEP2);
 
 game.addAsset(SOUND_JUMP1);
 game.addAsset(SOUND_JUMP2);
+
+game.addAsset(BORDER);
 
 game.addAsset("L1_House_01.png");
 game.addAsset("L1_House_02.png");
@@ -166,13 +178,12 @@ game.addAsset("L2_House_02.png");
 game.addAsset("L2_House_03.png");
 game.addAsset("L2_House_04.png");
 game.addAsset("L2_tree_02.png");
+game.addAsset("Stadium.png");
 
 
 
 game.addAsset('UI_Sound.png');
 game.addAsset('UI_SoundOFF.png');
-
-game.addAsset('level0.png');
 
 
 game.addAsset('layer_04.png');
@@ -181,7 +192,6 @@ game.addAsset('layer_06.png');
 //game.addAsset('layer_07.png');
 game.addAsset('layer_08.png');
 
-game.addAsset('layer_10.png');//remove me    
 
 
 
@@ -194,7 +204,7 @@ game.addAsset('minecraft.fnt');
 game.addAsset('level.json');
 
 var num=0;
-for(num=0;num<MaxLevel;++num)
+for(num=0;num<MaxLevel+1;++num)
 {
     game.addAsset('level'+num +'.json');
     
@@ -228,6 +238,7 @@ game.addAsset('t1.png');
 game.addAsset('block.png');
 
 
+game.addAsset('portraitBg2.png');
 game.addAsset('portraitBg1.png');
 game.addAsset('portraitFg.png');
 game.addAsset('portraitBg.png');
@@ -463,12 +474,33 @@ function SetDefaultButtonBehavior(btn, scalein)
 		btn.clickSound1 = SOUND_RELEASED;
 }
 
-function CreateText(text,x,y,fontIdx,size)
+function CreateText(text,x,y,fontIdx,size,option)
 {
-		var etext = new game.Text(text);
+        if(!option) option={}
+		var etext = new game.Text(text,option);
 
 		var width = etext.width / etext.scale.x;
         etext.anchor.set(width / 2, 0);
+            
+		etext.mySize = size
+		var f= etext.height/etext.fontClass.lineHeight;
+		etext.myFactorX = etext.height / (f*size);
+		etext.height =	f*size;
+		
+		etext.width = etext.width / etext.myFactorX;
+			
+		etext.x = x
+		etext.y = y
+		return etext;
+}
+
+function CreateText1(text,x,y,fontIdx,size,option)
+{
+        if(!option) option={}
+		var etext = new game.Text(text,option);
+
+		var width = etext.width / etext.scale.x;
+        etext.anchor.set(0, 0);
             
 		etext.mySize = size
 		var f= etext.height/etext.fontClass.lineHeight;

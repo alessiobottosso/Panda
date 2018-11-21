@@ -111,7 +111,7 @@ game.module(
             s.scale.y=1;
             s.addTo(game.scene.stage);
             this.selectedImg = s;
-                	    console.log(this.selectIdx)//rme
+                	    
 
     	},
     	buildGrid:function ()
@@ -155,24 +155,28 @@ game.module(
             }
             if (key === 'LEFT') 
             {
+                PlaySound(SOUND_SELECT);
                 this.x--
                 if(this.x<0)
                     this.x=0
             }
             if (key === 'RIGHT') 
             {
+                PlaySound(SOUND_SELECT);
                 this.x++
                 if(this.x>5)
                     this.x=5
             }
             if (key === 'UP') 
             {
+                PlaySound(SOUND_SELECT);
                 this.y--
                 if(this.y<0)
                     this.y=0
             }
             if (key === 'DOWN') 
             {
+                PlaySound(SOUND_SELECT);
                 if(this.y+1<this.rowLocked)
                 this.y++
                 if(this.y>3)
@@ -203,7 +207,7 @@ game.module(
     	{
     	    if (y < game.height*0.40) return;
     	    if (y > game.height*0.80) return;
-    	    
+    	    PlaySound(SOUND_SELECT);
     	    var k=0;
     	    for(var i=0;i<5;++i)
     	    {

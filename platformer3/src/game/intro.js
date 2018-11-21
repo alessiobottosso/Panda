@@ -23,15 +23,16 @@ game.module(
         this.text.addTo(game.scene.stage)
 
 
-        // this.button = CreateDefault1Button(1.8*HALF_WIDTH,
-        //     0.95*game.height,"x",1,
-        //     function()
-        //     {
-        //         game.scene.doPress();
-        //     });
+        this.button = CreateDefault1Button(1.8*HALF_WIDTH,
+            0.95*game.height,"x",1,
+            function()
+            {
+                game.scene.doPress();
+            });
+            
         var skip = GetLocalizedString("SKIP");
        this.button = new CreateDefaultButton(
-            1.6*HALF_WIDTH,0.95*game.height,skip,30,
+            1*HALF_WIDTH,0.95*game.height,skip,30,
             function()
             {  
                 game.scene.start();
@@ -92,6 +93,7 @@ game.module(
     	},
     	mousedown:function(x,y)
     	{
+    	    if(y<game.height*0.9)
     	    game.scene.doPress();
     	},
     	doPress:function()

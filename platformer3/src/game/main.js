@@ -29,7 +29,7 @@ game.createScene('Main', {
         
         //try{
         //console.log("scene init");
-        var d= 1000
+        var d= 500
         Lambda=1;
         this.points=0;
         this.time=0;
@@ -74,7 +74,7 @@ game.createScene('Main', {
         this.createBlock(game.built);
         
         //this.player = new game.Player(1960, 960);
-        this.player = new game.Player(d, 1400);
+        this.player = new game.Player(d, 1460);
         game.imgDisplacementY = 0;
 
         //this.block.imgLayers[0].position.x+=this.initialCorrectionX;
@@ -94,25 +94,73 @@ game.createScene('Main', {
         this.displacement=0;
 
         this.maxTime=99;
-        this.text = new game.Text(this.maxTime);
-        this.text.cache=true;
-        this.text.anchor.set(0,0);
-        this.text.x=game.width/2 - this.text.width/2
-        this.text.y+=game.height * 0.05 + this.text.height/2;
+
+        this.text1 = CreateText(this.format1(this.maxTime),
+            0,0,0,60, {align:"center"});
+        this.text1.anchorCenter();
+        this.text1.x+=HALF_WIDTH;
+        this.text1.y+=game.height * 0.052 + this.text1.height/2;
+        this.text1.y+=2;
+        SetColor(this.text1,"#000000",0.7)
+        this.text1.addTo(game.scene.stage)
+
+        this.text = CreateText(this.format1(this.maxTime),
+            0,0,0,60, {align:"center"});
+        this.text.anchorCenter();
+        this.text.x+=HALF_WIDTH;
+        this.text.y+=game.height * 0.052 + this.text.height/2;
         this.text.addTo(game.scene.stage)
 
-        this.maxscore = CreateText(FR_PLAYERMAXSCORE,0,0,0,50);
+
+
+
+        this.score1 = CreateText1("WWWWWWWWWWWWWWWWWWWW"/*game.name*/,0,0,0,16.5, {});
+        this.score1.x+=25;
+        this.score1.y+=2+game.height * 0.136 + this.score1.height/2;
+        SetColor(this.score1,"#000000",0.7)
+        this.score1.addTo(game.scene.stage)
+
+        this.score1 = CreateText1("WWWWWWWWWWWWWWWWWWWW"/*game.name*/,0,0,0,16.5, {});
+        this.score1.x+=25;
+        this.score1.y+=game.height * 0.136 + this.score1.height/2;
+        this.score1.cache = true;
+        this.score1.addTo(game.scene.stage)
+
+        this.scoreb = CreateText1("00000000",0,0,0,30, {});
+        this.scoreb.x+=25;
+        this.scoreb.y+=2+(game.height * 0.16) + this.scoreb.height/2;
+        SetColor(this.scoreb,"#000000",0.7)
+
+        this.scoreb.addTo(game.scene.stage)
+
+        this.score = CreateText1("00000000",0,0,0,30, {});
+        this.score.x+=25;
+        this.score.y+=game.height * 0.16 + this.score.height/2;
+        this.score.addTo(game.scene.stage)
+
+        this.border = new game.Sprite(BORDER);
+        this.border.anchorCenter();
+        this.border.x+=game.width*0.85;
+        this.border.y+=game.height*0.08;
+        this.border.addTo(game.scene.stage)
+
+        var v= this.fill(FR_PLAYERMAXSCORE.toString());
+        this.maxscore = CreateText(v,
+            0,0,0,22);
         this.maxscore.cache=true;
+        SetColor(this.maxscore,COLOR_DOVEGRAY)
         this.maxscore.anchor.set(0,0);
-        this.maxscore.x=game.width*0.96-this.maxscore.width*this.maxscore.scale.x
-        this.maxscore.y+=game.height * 0.05 + this.maxscore.height/2;
+        this.maxscore.x=game.width*0.94-this.maxscore.width*this.maxscore.scale.x
+        this.maxscore.y+=game.height * 0.04 + this.maxscore.height/2;
         this.maxscore.addTo(game.scene.stage)
 
+        this.score1 = CreateText1("HIGH SCORE",
+            0,0,0,28, {});
+        this.score1.x+=game.width*0.90-this.maxscore.width*this.maxscore.scale.x
+        this.score1.y+=game.height * 0.008 + this.score1.height/2;
+        SetColor(this.score1,COLOR_DOVEGRAY,0.7)
+        this.score1.addTo(game.scene.stage)
 
-        this.score = CreateText("0",0,0,0,50);
-        this.score.x=this.text.width/2
-        this.score.y+=game.height * 0.05 + this.text.height/2;
-        this.score.addTo(game.scene.stage)
 
         this.initialCorrectionX=0;
         //console.log("end scene init");
@@ -169,12 +217,37 @@ game.createScene('Main', {
         //TODO do this better!
         this.createVFX();
 
-
+        var portrait = new game.Sprite("portraitBg2.png");
+        portrait.x=game.width*0.1;
+        portrait.y=game.height*0.075;
+        portrait.anchorCenter();
+        portrait.addTo(game.scene.stage)
+        var num=game.selectIdx;
+        var portrait = new game.Sprite("portrait"+ num +".png");
+        portrait.x=game.width*0.1;
+        portrait.y=game.height*0.075;
+        
+        portrait.scale.x=0.5;
+        portrait.scale.y=0.5;
+        portrait.anchorCenter();
+        portrait.addTo(game.scene.stage)
+        
+        
         // this.vfx3 = this.createVFX();
         // this.vfx3.addTo(game.scene.container2)
 
         
         this.vfxindex=0;
+    },
+    format1:function(param)
+    {
+        var v1=~~(param/60);
+        var v2=(param%60);
+        
+        var res = this.fillVariant(v1.toString(), 2);
+        
+        res+=":"+this.fillVariant(v2.toString(), 2);
+        return res
     },
     createVFX:function()
     {
@@ -285,6 +358,26 @@ game.createScene('Main', {
             }
         }
     },
+    changeTime:function(value)
+    {
+        var v1=this.format1(value)
+        this.text.setText(v1);
+        if(this.text1)
+        {
+            this.text1.setText(v1);
+            if(value>10)
+            {
+                SetColor(this.text1,"#000000",0.7)
+                
+            }
+            else
+            {
+                SetColor(this.text1,"#FF0000",0.7)
+                if(value>0)
+                    PlaySound(SOUND_TIME);
+            }
+        }
+    },
     update:function()
     {
         this.loadingUpdate();
@@ -294,11 +387,11 @@ game.createScene('Main', {
         {
             FR_SCORE = game.scene.points;
             game.scene.loading=true;
-            this.text.setText(0);
+            this.changeTime(0)
 
-            //GoToScene("Outro")
+            GoToScene("Outro")
             this.containerConnect.visible=true;
-            SendEndGame();
+            //SendEndGame(); 
         }
         
         if(this.steps.length>10)
@@ -347,14 +440,19 @@ game.createScene('Main', {
         {
             a=1;
             this.timeComputated = ~~((v1-v)/1000)
-            if(this.timeComputated > 0)
-                this.text.setText(this.timeComputated);
+            if(this.timeComputated >= 0)
+            {
+                this.changeTime(this.timeComputated)
+            }
         }
         
         if(this.scoreComputated!=this.points)
         {
             this.scoreComputated = this.points;
-            this.score.setText(this.points);
+            var stringed = this.fill(this.points.toString())
+            this.score.setText(stringed);
+            this.scoreb.setText(stringed);
+            SetColor(this.scoreb,"#000000",0.7)
         }
         
         //if(!game.scene) return;
@@ -453,6 +551,24 @@ game.createScene('Main', {
         }
         
         this.timer++;
+    },
+    fillVariant:function(string1,variant)
+    {
+        if(string1.length<variant)
+        {
+            return this.fillVariant("0"+string1)
+        }
+        else
+        return string1;
+    },
+    fill:function(string1)
+    {
+        if(string1.length<PointSize)
+        {
+            return this.fill("0"+string1)
+        }
+        else
+        return string1;
     },
     collide: function(body, dir) {
         if(body.collisionGroup==0)

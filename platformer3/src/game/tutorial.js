@@ -90,14 +90,15 @@ game.module(
             //     game.scene.start();
             // });
 
-            // this.button = CreateDefault1Button(1.9*HALF_WIDTH,
-            // 0.95*game.height,"x",1,
-            // function()
-            // {
-            //     game.scene.doPress();
-            // });
+            this.button = CreateDefault1Button(1.9*HALF_WIDTH,
+            0.95*game.height,"x",1,
+            function()
+            {
+                game.scene.doPress();
+            });
+            
            this.button = new CreateDefaultButton(
-            1.6*HALF_WIDTH,0.95*game.height,"SKIP",30,
+            HALF_WIDTH,0.95*game.height,"SKIP",30,
             function()
             {  
                 game.scene.start();
@@ -193,6 +194,7 @@ game.module(
     	},
     	mousedown:function(x,y)
     	{
+    	    if(y<game.height*0.9)
     	    game.scene.doPress();
     	},
         keydown: function(key) 
