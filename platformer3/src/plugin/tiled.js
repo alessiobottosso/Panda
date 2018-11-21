@@ -25,6 +25,7 @@ game.Tilemap = game.Class.extend({
     tileHeight: 0,
 
     staticInit: function(json, skipInits) {
+		this.myName=json
         this.json = game.getJSON(json);
         if (!this.json) throw 'Tilemap ' + json + ' not found';
         
@@ -65,6 +66,10 @@ game.Tilemap = game.Class.extend({
             var layer = new game.TileLayer(this.json.layers[i]);
 
             if (this.addingLayer(layer)) {
+				if(this.layers[layer.name]) 
+				{
+					console.log(this.myName + "/" + layer.name)
+				}
                 this.layers[layer.name] = layer;
                 var container = new game.Container();
                 container.alpha = layer.opacity;

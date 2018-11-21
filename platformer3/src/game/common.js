@@ -617,6 +617,9 @@ function PlaySound(sound, x ,y)
 
 function IsWalkable(tileid)
 {
+    if(tileid<16) return false
+    
+    
     --tileid;
     tileid = tileid % 16;
     if(tileid==6)
