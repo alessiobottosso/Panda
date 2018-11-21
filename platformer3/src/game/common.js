@@ -12,7 +12,7 @@
 //LEVEL_DESIGN="level0.json"
 LEVEL_DESIGN="";
 
-LEVEL_DESIGN_SEQUENTIAL=false
+LEVEL_DESIGN_SEQUENTIAL=true
 MUSIC_VOLUME=0.20;
 FR_ALLOW_UNKNOW=true;
 LOCAL_MODE=false;
@@ -32,8 +32,8 @@ FR_SESSIONID="";
 FR_SPEED=500;
 TestLevel=false;
 
-MaxLevel=6; 
-MaxLambda=3;
+MaxLevel=12; 
+MaxLambda=6;
 FR_DIELEVEL=2000;
 LowLimit=800;
 Lambda = 1;
@@ -617,8 +617,12 @@ function PlaySound(sound, x ,y)
 
 function IsWalkable(tileid)
 {
-    ++tileid;
+    --tileid;
     tileid = tileid % 16;
+    if(tileid==6)
+    {
+        return true;
+    }
     if(tileid==4)
     {
         return true;
@@ -632,12 +636,14 @@ function IsWalkable(tileid)
 
 function IsCloud(tileid)
 {
-    ++tileid;
+    --tileid;
     tileid = tileid % 16;
     if(tileid==2)
     {
+        //console.log(tileid + " true") 
         return true;
     }
+        //console.log(tileid) 
     return false;
 }
 

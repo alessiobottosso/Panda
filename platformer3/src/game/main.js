@@ -95,6 +95,7 @@ game.createScene('Main', {
 
         this.maxTime=99;
 
+
         this.text1 = CreateText(this.format1(this.maxTime),
             0,0,0,60, {align:"center"});
         this.text1.anchorCenter();
@@ -854,21 +855,25 @@ game.createClass('Block', {
         {
             var tile = layer.tiles[-1+ length-i];
             //if(tile.tileid)
+//console.log(tile)
             if(!IsCloud(tile.tileid))
-            if(tile.tilex!==undefined)
             {
-                
-                if(tile.tilex<min)
+                if(tile.tilex!==undefined)
                 {
-                    min = tile.tilex;
-                    this.startingx = tile.position.x
-                }
-                var bs = this.blockSafe[tile.tilex];
-                if(tile.tiley == bs || bs==0)
-                {
-                    this.blockSafe[tile.tilex] = tile.tiley-1
+                    
+                    if(tile.tilex<min)
+                    {
+                        min = tile.tilex;
+                        this.startingx = tile.position.x
+                    }
+                    var bs = this.blockSafe[tile.tilex];
+                    if(tile.tiley == bs || bs==0)
+                    {
+                        this.blockSafe[tile.tilex] = tile.tiley-1
+                    }
                 }
             }
+            //console.log(JSON.stringify(this.blockSafe));
         }
 
         var value=0;
