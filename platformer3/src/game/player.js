@@ -19,8 +19,8 @@ game.createClass('Player', {
         // this.sprite.addAnim('stand', [1, 0, 2, 0], { speed: 10, loop: true });
         // this.sprite.addAnim('run', [3, 4, 5, 4]);
         // this.sprite.addAnim('jump', [6]);
-        
-        var sheet = new game.SpriteSheet('player1.png', 128, 128);
+        var name = "player"+ game.selectIdx+".png"
+        var sheet = new game.SpriteSheet(name, 128, 128);
         this.sprite = new game.Animation(sheet.textures);
         this.sprite.addAnim('stand', [0,0,11,0,12,12], { speed: 5, loop: true });
         this.sprite.addAnim('run', [0, 1, 2, 3,0,4,5,6], { speed: 12, loop: true });
@@ -105,6 +105,7 @@ game.createClass('Player', {
     {
     if(body.gid==2)
     {
+        game.scene.starVfx(body.position.x, body.position.y);
         game.scene.maxTime+=FR_TIMEBONUS;
         FR_TIMESSTARS++;
         PlaySound(SOUND_STAR)
@@ -112,18 +113,21 @@ game.createClass('Player', {
     }
     if(body.gid==3)
     {
+        game.scene.packVfx(body.position.x, body.position.y);
         game.scene.points++;
         PlaySound(SOUND_PACK)
         this.addValidation(body);
     }
     if(body.gid==4)
     {
+        game.scene.packVfx(body.position.x, body.position.y);
         game.scene.points+=5;
         PlaySound(SOUND_PACK)
         this.addValidation(body);
     }
     if(body.gid==5)
     {
+        game.scene.packVfx(body.position.x, body.position.y);
         game.scene.points+=10;
         PlaySound(SOUND_PACK)
         this.addValidation(body);
