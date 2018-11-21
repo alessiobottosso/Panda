@@ -6,7 +6,7 @@ game.config = {
     system: {
         width: 768,
         height: 1024,
-        scale: true ,
+        scale: true,
         center: true,
         rotateScreen: false,
         resize: false,

@@ -12,6 +12,8 @@
 //LEVEL_DESIGN="level0.json"
 LEVEL_DESIGN="";
 
+LEVEL_DESIGN_SEQUENTIAL=true
+MUSIC_VOLUME=0.25;
 LOCAL_MODE=true;
 
 FR_DEBUG = true;
@@ -29,7 +31,7 @@ FR_SESSIONID="";
 FR_SPEED=500;
 TestLevel=false;
 
-MaxLevel=8; 
+MaxLevel=6; 
 MaxLambda=3;
 FR_DIELEVEL=2000;
 LowLimit=800;
@@ -79,8 +81,12 @@ SOUND_SELECT = "sfx_select.m4a" ;
 SOUND_STAR = "sfx_collect_star.m4a";
 SOUND_PACK = "sfx_collect_gift.m4a";
 
-SOUND_STEP1 = "audio1.m4a";
-SOUND_STEP2 = "audio2.m4a";
+
+
+MUSIC_MAIN = "mus_main_vers_II.m4a";
+
+SOUND_STEP1 = "sfx_step_terrain_01.m4a";
+SOUND_STEP2 = "sfx_step_terrain_02.m4a";
 
 SOUND_JUMP1 = "sfx_player_jump.m4a";
 SOUND_JUMP2 = "sfx_player_double_jump.m4a";
@@ -99,10 +105,19 @@ ENDPOINT1 = "/startGame"
 ENDPOINT2 = "/endGame"
 
 VFX = "Vfx_Jump_4x.png"
+VFX2 = "Vfx_Run_4x.png"
 
-game.addAsset(PAGE);
+VFX3 = "Vfx_Gift_4x.png"
+VFX4 = "Vfx_Star_4x.png" 
+
+
+game.addAsset(MUSIC_MAIN);
+
 
 game.addAsset(VFX);
+game.addAsset(VFX2);
+game.addAsset(VFX3);
+game.addAsset(VFX4);
 
 
 game.addAsset("localization.json");
@@ -132,6 +147,27 @@ game.addAsset(SOUND_STEP2);
 game.addAsset(SOUND_JUMP1);
 game.addAsset(SOUND_JUMP2);
 
+game.addAsset("L1_House_01.png");
+game.addAsset("L1_House_02.png");
+game.addAsset("L1_House_03.png");
+game.addAsset("L1_House_04.png");
+game.addAsset("L1_Reindeer.png");
+game.addAsset("L1_Snowman_01.png");
+game.addAsset("L1_Snowman_02.png");
+game.addAsset("L1_Snow_01.png");
+game.addAsset("L1_Snow_02.png");
+game.addAsset("L1_Snow_03.png");
+game.addAsset("L1_Snow_04.png");
+game.addAsset("L1_Tree_01.png");
+game.addAsset("L1_Tree_02.png");
+game.addAsset("L1_Tree_03.png");
+game.addAsset("L2_House_01.png");
+game.addAsset("L2_House_02.png");
+game.addAsset("L2_House_03.png");
+game.addAsset("L2_House_04.png");
+game.addAsset("L2_tree_02.png");
+
+
 
 game.addAsset('UI_Sound.png');
 game.addAsset('UI_SoundOFF.png');
@@ -139,12 +175,14 @@ game.addAsset('UI_SoundOFF.png');
 game.addAsset('level0.png');
 
 
+game.addAsset('layer_04.png');
 game.addAsset('layer_05.png');
 game.addAsset('layer_06.png');
-game.addAsset('layer_07.png');
+//game.addAsset('layer_07.png');
 game.addAsset('layer_08.png');
 
-game.addAsset('layer_10.png');
+game.addAsset('layer_10.png');//remove me    
+
 
 
 
@@ -155,18 +193,31 @@ game.addAsset('minecraft.fnt');
 
 game.addAsset('level.json');
 
-game.addAsset('level0.json');
-game.addAsset('level1.json');
-game.addAsset('level2.json');
-game.addAsset('level3.json');
-game.addAsset('level4.json');
-game.addAsset('level5.json');
-game.addAsset('level6.json');
-game.addAsset('level7.json');
-game.addAsset('level8.json');
+var num=0;
+for(num=0;num<MaxLevel;++num)
+{
+    game.addAsset('level'+num +'.json');
+    
+}
 
-//game.addAsset('player.png');
-game.addAsset('player1.png');
+MaxPlayer=14;
+var num=0;
+for(num=1;num<MaxPlayer;++num)
+{
+    game.addAsset('player'+num +'.png');
+    
+}
+
+game.addAsset('portrait0.png');
+game.addAsset('portrait0b.png');
+var num=0;
+for(num=1;num<MaxPlayer;++num)
+{
+    game.addAsset('portrait'+num +'.png');
+    
+}
+
+
 //game.addAsset('player1.png');
 game.addAsset('tileset.png');
 
@@ -181,17 +232,6 @@ game.addAsset('portraitBg1.png');
 game.addAsset('portraitFg.png');
 game.addAsset('portraitBg.png');
 game.addAsset('portraitLock.png');
-
-game.addAsset('portrait0.png');
-game.addAsset('portrait0b.png');
-game.addAsset('portrait1.png');
-game.addAsset('portrait2.png');
-game.addAsset('portrait3.png');
-game.addAsset('portrait4.png');
-game.addAsset('portrait5.png');
-
-
-
 
 game.addAsset(TUTORIAL1);
 game.addAsset(TUTORIAL2);
@@ -480,9 +520,12 @@ function AddButtons()
 	        {
 	            game.mute = true;
     	        this.sprite.setTexture('UI_SoundOFF.png');
+    	        
+    	        game.music.volume = 0;
             }
 	        else
 	        {
+	            game.music.volume = MUSIC_VOLUME;
 	            game.audio.playSound(SOUND_PRESSED);
 	            game.mute = false;
     	        this.sprite.setTexture('UI_Sound.png');

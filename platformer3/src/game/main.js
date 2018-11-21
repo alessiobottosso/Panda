@@ -38,12 +38,11 @@ game.createScene('Main', {
         this.layers =[];
         
         this.layers.push("layer_08.png");
-        this.layers.push("layer_07.png");
+        //this.layers.push("layer_07.png");
         this.layers.push("layer_06.png");
-        
-         this.layers.push("layer_05.png");
+        this.layers.push("layer_05.png");
          
-        // this.layers.push("layer_04.png");
+        this.layers.push("layer_04.png");
         // this.layers.push("layer_03.png");
 
         this.bgLayer=[];    
@@ -168,11 +167,8 @@ game.createScene('Main', {
         this.loadingStars=0;
         
         //TODO do this better!
-        this.vfx1 = this.createVFX();
-        this.vfx1.addTo(game.scene.container2)
+        this.createVFX();
 
-        // this.vfx2 = this.createVFX();
-        // this.vfx2.addTo(game.scene.container2)
 
         // this.vfx3 = this.createVFX();
         // this.vfx3.addTo(game.scene.container2)
@@ -183,44 +179,70 @@ game.createScene('Main', {
     createVFX:function()
     {
         var sheet = new game.SpriteSheet(VFX, 104, 104);
-        var sprite = new game.Animation(sheet.textures);
-        sprite.addAnim('jump', [0,0,11,0,12,12], { speed: 5, loop: true });
-        sprite.jump.loop=false;
-        sprite.play("jump");
-        //sprite.addAnim('jump', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],  { speed: 10, loop: false });
-        //sprite.addAnim('run', [19,20,21,22,23,24,25,26,27,28,29,30,31],  { speed: speed1, loop: false });
-        //sprite.speed = 10;
-        //sprite.play('stand');
+        this.vfx1 = new game.Animation(sheet.textures);
+        this.vfx1.addAnim('jump', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0],  { speed: 20, loop: false });
+        this.vfx1.anims.jump.loop=false;
+        this.vfx1.anchorCenter();
+        this.vfx1.addTo(game.scene.container2)
+
+        var sheet = new game.SpriteSheet(VFX2, 104, 104);
+        this.vfx2 = new game.Animation(sheet.textures);
+        this.vfx2.addAnim('run', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0],  { speed: 30, loop: false });
+        //this.vfx2.anims.run.loop=false;
+        this.vfx2.anchorCenter();
+        this.vfx2.addTo(game.scene.container2)
+
+        var sheet = new game.SpriteSheet(VFX2, 104, 104);
+        this.vfx2b = new game.Animation(sheet.textures);
+        this.vfx2b.addAnim('run', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0],  { speed: 30, loop: false });
+        //this.vfx2.anims.run.loop=false;
+        this.vfx2b.anchorCenter();
+        this.vfx2b.addTo(game.scene.container2)
         
-        sprite.anchorCenter();
-        return sprite;
+        var sheet = new game.SpriteSheet(VFX3, 104, 104);
+        this.vfx3 = new game.Animation(sheet.textures);
+        this.vfx3.addAnim('idle', [0,1,2,3,4,5,6,7,8],  { speed: 10, loop: false });
+        this.vfx3.addAnim('fade', [9,10,11,12,13,14,15,16,17,18,19,20],  { speed: 20, loop: false });
+        //this.vfx2.anims.run.loop=false;
+        this.vfx3.anchorCenter();
+        this.vfx3.addTo(game.scene.container2)
+        
+        var sheet = new game.SpriteSheet(VFX4, 104, 104);
+        this.vfx4 = new game.Animation(sheet.textures);
+        this.vfx4.addAnim('idle', [0,1,2,3,4,5],  { speed: 30, loop: false });
+        this.vfx4.addAnim('fade', [6,7,8,9,10,11,12,13,14,15,16,17,18],  { speed:  20, loop: false });
+        //this.vfx2.anims.run.loop=false;
+        this.vfx4.anchorCenter();
+        this.vfx4.addTo(game.scene.container2)
+        
+        
+        //Frame: 0 - 5
+        
     },
-    vfxspecial:function(x, y)
+    starVfx:function(x,y)
     {
-        // try{
-        // this.vfx1.position.set(x, y);
-        // this.vfx1.play('jump1');
-        // }
-        // catch(e)
-        // {
-        //     console.log(e);
-        // }
+        this.vfx4.position.set(x, y);
+        this.vfx4.play('fade');
+    },
+    packVfx:function(x,y)
+    {
+        this.vfx3.position.set(x, y);
+        this.vfx3.play('fade');
     },
     runVfx:function(x,y)
     {
-        // return;
-        // if(this.vfxindex==0)
-        // {
-        //     this.vfx2.position.set(x, y);
-        //     this.vfx2.play('run');
-        //     ++game.scene.vfxindex;
-        // }
-        // else
-        // {
-        //     this.vfx3.position.set(x, y);
-        //     this.vfx3.play('run');
-        //     game.scene.vfxindex=0;
-        // }
+        if(this.vfxindex==0)
+        {
+            this.vfx2.position.set(x, y);
+            this.vfx2.play('run');
+            ++game.scene.vfxindex;
+        }
+        else
+        {
+            this.vfx2b.position.set(x, y);
+            this.vfx2b.play('run');
+            game.scene.vfxindex=0;
+        }
     },
     jumpVfx:function(x,y)
     {
@@ -485,6 +507,11 @@ game.createScene('Main', {
         if(TestLevel==true)
         {
             blockName= LEVEL_DESIGN
+        }
+        if(LEVEL_DESIGN_SEQUENTIAL)
+        {
+            pRnd = index % MaxLevel
+            blockName= 'level'+ pRnd + '.json' ;
         }
         this.block = new game.Block(blockName, displacementX, index);
         this.block.imgLayers.forEach(function(element) 
