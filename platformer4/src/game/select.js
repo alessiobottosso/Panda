@@ -204,7 +204,7 @@ game.module(
     	select: function(x, y)
     	{
     	    if (y < game.height*0.40) return;
-    	    if (y > game.height*0.80) return;
+    	    if (y > game.height*0.90) return;
     	    PlaySound(SOUND_SELECT);
     	    var k=0;
     	    for(var i=0;i<5;++i)
