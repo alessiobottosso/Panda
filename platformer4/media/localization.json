@@ -1,0 +1,16 @@
+{
+	"localizedTexts": {
+		"SKIP": {
+			"ENG": "SKIP",
+			"ITA": "SALTA"
+		},
+		"SELECTPLAYER": {
+			"ENG": "SELECT YOUR PLAYER",
+			"ITA": "SELEZIONA IL GIOCATORE"
+		},
+		"CONFIRM": {
+			"ENG": "CONFIRM",
+			"ITA": "CONFERMA"
+		}
+	}
+}
