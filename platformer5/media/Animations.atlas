@@ -1,0 +1,410 @@
+
+Animations.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Images/01_Luci_01
+  rotate: true
+  xy: 2002, 1730
+  size: 316, 44
+  orig: 316, 44
+  offset: 0, 0
+  index: -1
+Images/01_Luci_02
+  rotate: false
+  xy: 496, 100
+  size: 300, 52
+  orig: 300, 52
+  offset: 0, 0
+  index: -1
+Images/01_Stadium
+  rotate: true
+  xy: 0, 252
+  size: 768, 1024
+  orig: 768, 1024
+  offset: 0, 0
+  index: -1
+Images/01_Text
+  rotate: true
+  xy: 2002, 1494
+  size: 234, 23
+  orig: 234, 23
+  offset: 0, 0
+  index: -1
+Images/01_Textbox
+  rotate: false
+  xy: 496, 30
+  size: 280, 68
+  orig: 280, 68
+  offset: 0, 0
+  index: -1
+Images/02_Baloon
+  rotate: false
+  xy: 810, 86
+  size: 192, 164
+  orig: 192, 164
+  offset: 0, 0
+  index: -1
+Images/02_Spogliatoio_Text
+  rotate: false
+  xy: 0, 1022
+  size: 2000, 1024
+  orig: 2000, 1024
+  offset: 0, 0
+  index: -1
+Images/02_Text_Baloon_CHN
+  rotate: true
+  xy: 2002, 1028
+  size: 93, 23
+  orig: 93, 23
+  offset: 0, 0
+  index: -1
+Images/02_Text_Baloon_ENG
+  rotate: true
+  xy: 1004, 159
+  size: 91, 17
+  orig: 93, 23
+  offset: 1, 3
+  index: -1
+Images/02_Text_Baloon_ITA
+  rotate: false
+  xy: 496, 5
+  size: 93, 23
+  orig: 93, 23
+  offset: 0, 0
+  index: -1
+Images/02_Text_Box_CHN
+  rotate: false
+  xy: 997, 0
+  size: 152, 59
+  orig: 152, 59
+  offset: 0, 0
+  index: -1
+Images/02_Text_Box_ENG
+  rotate: true
+  xy: 2002, 1341
+  size: 151, 45
+  orig: 152, 59
+  offset: 0, 9
+  index: -1
+Images/02_Text_Box_ITA
+  rotate: false
+  xy: 1151, 0
+  size: 152, 59
+  orig: 152, 59
+  offset: 0, 0
+  index: -1
+Images/03_Babbo
+  rotate: false
+  xy: 1026, 396
+  size: 473, 624
+  orig: 473, 624
+  offset: 0, 0
+  index: -1
+Images/03_Baloon
+  rotate: true
+  xy: 1803, 414
+  size: 284, 228
+  orig: 284, 228
+  offset: 0, 0
+  index: -1
+Images/03_Rays
+  rotate: false
+  xy: 0, 154
+  size: 808, 96
+  orig: 808, 96
+  offset: 0, 0
+  index: -1
+Images/03_Text_Box_01_CHN
+  rotate: false
+  xy: 778, 25
+  size: 217, 59
+  orig: 217, 59
+  offset: 0, 0
+  index: -1
+Images/03_Text_Box_01_ENG
+  rotate: false
+  xy: 1223, 61
+  size: 174, 59
+  orig: 217, 59
+  offset: 22, 0
+  index: -1
+Images/03_Text_Box_01_ITA
+  rotate: false
+  xy: 1004, 61
+  size: 217, 59
+  orig: 217, 59
+  offset: 0, 0
+  index: -1
+Images/03_Text_Box_02_CHN
+  rotate: false
+  xy: 0, 21
+  size: 246, 131
+  orig: 246, 131
+  offset: 0, 0
+  index: -1
+Images/03_Text_Box_02_ENG
+  rotate: false
+  xy: 1803, 324
+  size: 245, 88
+  orig: 246, 131
+  offset: 1, 24
+  index: -1
+Images/03_Text_Box_02_ITA
+  rotate: false
+  xy: 248, 21
+  size: 246, 131
+  orig: 246, 131
+  offset: 0, 0
+  index: -1
+Images/04_Babbo
+  rotate: false
+  xy: 1026, 122
+  size: 404, 272
+  orig: 404, 272
+  offset: 0, 0
+  index: -1
+Images/04_Baloon
+  rotate: true
+  xy: 1803, 700
+  size: 320, 196
+  orig: 320, 196
+  offset: 0, 0
+  index: -1
+Images/04_Bg_01
+  rotate: true
+  xy: 1501, 252
+  size: 768, 300
+  orig: 768, 300
+  offset: 0, 0
+  index: -1
+Images/04_Text_Baloon_CHN
+  rotate: false
+  xy: 1726, 4
+  size: 260, 161
+  orig: 260, 161
+  offset: 0, 0
+  index: -1
+Images/04_Text_Baloon_ENG
+  rotate: false
+  xy: 1803, 167
+  size: 233, 155
+  orig: 260, 161
+  offset: 13, 2
+  index: -1
+Images/05_Babbo_01
+  rotate: true
+  xy: 1411, 1
+  size: 71, 100
+  orig: 72, 100
+  offset: 1, 0
+  index: -1
+Images/05_Babbo_02
+  rotate: false
+  xy: 1432, 302
+  size: 67, 92
+  orig: 68, 92
+  offset: 1, 0
+  index: -1
+Images/05_Babbo_03
+  rotate: true
+  xy: 1513, 0
+  size: 72, 100
+  orig: 72, 100
+  offset: 0, 0
+  index: -1
+Images/05_Babbo_05
+  rotate: false
+  xy: 2002, 1123
+  size: 43, 100
+  orig: 44, 100
+  offset: 1, 0
+  index: -1
+Images/05_Babbo_06
+  rotate: true
+  xy: 1305, 4
+  size: 55, 104
+  orig: 56, 104
+  offset: 1, 0
+  index: -1
+Images/05_Baloon
+  rotate: false
+  xy: 1432, 74
+  size: 292, 176
+  orig: 292, 176
+  offset: 0, 0
+  index: -1
+Images/05_Pacco_01
+  rotate: false
+  xy: 1988, 3
+  size: 60, 72
+  orig: 60, 72
+  offset: 0, 0
+  index: -1
+Images/05_Pacco_02
+  rotate: true
+  xy: 1726, 174
+  size: 76, 56
+  orig: 76, 56
+  offset: 0, 0
+  index: -1
+Images/05_Pacco_03
+  rotate: false
+  xy: 1988, 77
+  size: 60, 88
+  orig: 60, 88
+  offset: 0, 0
+  index: -1
+Images/Toc
+  rotate: true
+  xy: 2002, 1225
+  size: 114, 38
+  orig: 114, 38
+  offset: 0, 0
+  index: -1
+Images/Vfx_Knock_02
+  rotate: false
+  xy: 1615, 0
+  size: 88, 72
+  orig: 104, 104
+  offset: 12, 28
+  index: -1
+
+Animations2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Images/02_Box
+  rotate: true
+  xy: 1916, 1819
+  size: 216, 96
+  orig: 216, 96
+  offset: 0, 0
+  index: -1
+Images/03_Flat_Background
+  rotate: true
+  xy: 0, 241
+  size: 768, 1024
+  orig: 768, 1024
+  offset: 0, 0
+  index: -1
+Images/04_Bg_02
+  rotate: true
+  xy: 1026, 241
+  size: 768, 300
+  orig: 768, 300
+  offset: 0, 0
+  index: -1
+Images/04_Bg_03
+  rotate: true
+  xy: 1328, 133
+  size: 768, 300
+  orig: 768, 300
+  offset: 0, 0
+  index: -1
+Images/04_Bg_04
+  rotate: true
+  xy: 1630, 133
+  size: 768, 300
+  orig: 768, 300
+  offset: 0, 0
+  index: -1
+Images/04_Text_Baloon_ITA
+  rotate: false
+  xy: 0, 78
+  size: 260, 161
+  orig: 260, 161
+  offset: 0, 0
+  index: -1
+Images/05_Babbo_04
+  rotate: false
+  xy: 1328, 905
+  size: 79, 104
+  orig: 80, 104
+  offset: 1, 0
+  index: -1
+Images/05_Background
+  rotate: false
+  xy: 0, 1011
+  size: 1536, 1024
+  orig: 1536, 1024
+  offset: 0, 0
+  index: -1
+Images/05_Tetto
+  rotate: true
+  xy: 1538, 903
+  size: 1132, 376
+  orig: 1132, 376
+  offset: 0, 0
+  index: -1
+Images/Vfx_Knock_01
+  rotate: false
+  xy: 0, 0
+  size: 84, 76
+  orig: 104, 104
+  offset: 8, 16
+  index: -1
+Images/Vfx_Knock_03
+  rotate: false
+  xy: 262, 167
+  size: 88, 72
+  orig: 104, 104
+  offset: 16, 32
+  index: -1
+Images/Vfx_Knock_04
+  rotate: false
+  xy: 1916, 1753
+  size: 84, 64
+  orig: 104, 104
+  offset: 20, 40
+  index: -1
+
+Animations3.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Images/03_Porta_01
+  rotate: false
+  xy: 0, 669
+  size: 768, 1024
+  orig: 768, 1024
+  offset: 0, 0
+  index: -1
+Images/03_Porta_02
+  rotate: false
+  xy: 770, 670
+  size: 768, 1023
+  orig: 768, 1023
+  offset: 0, 0
+  index: -1
+Images/04_Bg_05
+  rotate: false
+  xy: 0, 367
+  size: 768, 300
+  orig: 768, 300
+  offset: 0, 0
+  index: -1
+Images/04_Bg_06
+  rotate: false
+  xy: 770, 368
+  size: 768, 300
+  orig: 768, 300
+  offset: 0, 0
+  index: -1
+Images/04_Bg_07
+  rotate: true
+  xy: 1540, 925
+  size: 768, 300
+  orig: 768, 300
+  offset: 0, 0
+  index: -1
+Images/05_Glow
+  rotate: false
+  xy: 0, 0
+  size: 365, 365
+  orig: 365, 365
+  offset: 0, 0
+  index: -1
