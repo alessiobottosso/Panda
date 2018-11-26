@@ -1,6 +1,5 @@
 game.config = {
-    canvasId: "game",
-    //mediaFolder:"/media",
+    mediaFolder:"/media",
     name: 'Platformer',
     audio: {
         stopOnSceneChange: false

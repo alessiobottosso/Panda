@@ -10,7 +10,7 @@
          "offsety":1311.15151515152,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -22,7 +22,7 @@
          "offsety":776.878787878788,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -34,7 +34,7 @@
          "offsety":928.454545454545,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -46,7 +46,7 @@
          "offsety":979.969696969697,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -58,7 +58,7 @@
          "offsety":1315.30303030303,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -70,7 +70,7 @@
          "offsety":1432.16666666667,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -82,7 +82,7 @@
          "offsety":1425.16666666667,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -93,18 +93,8 @@
          "name":"bg",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
-         "width":50,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "id":21,
-         "image":"level5.png",
-         "name":"0",
-         "opacity":1,
-         "type":"imagelayer",
          "visible":true,
+         "width":50,
          "x":0,
          "y":0
         }, 

@@ -272,29 +272,6 @@ game.createScene('Main', {
         PlayCinematic(INTRO_OUTRO_JSON, GAMEPLAY, 
             HALF_WIDTH, game.height * 0.48);
         */
-        
-        this.level=[];
-        var sprite  = new game.Sprite("level1.png");
-        sprite.addTo(game.scene.container0);
-        sprite.y+=5000;
-        this.level.push(sprite);
-        var sprite  = new game.Sprite("level2.png");
-        sprite.addTo(game.scene.container0);
-        sprite.y+=5000;
-        this.level.push(sprite);
-        var sprite  = new game.Sprite("level3.png");
-        sprite.addTo(game.scene.container0);
-        sprite.y+=5000;
-        this.level.push(sprite);
-        var sprite  = new game.Sprite("level4.png");
-        sprite.addTo(game.scene.container0);
-        sprite.y+=5000;
-        this.level.push(sprite);
-        var sprite  = new game.Sprite("level5.png");
-        sprite.addTo(game.scene.container0);
-        sprite.y+=5000;
-        this.level.push(sprite);
-
     },
     format1:function(param)
     {
@@ -631,7 +608,6 @@ game.createScene('Main', {
             }
             updated=true;
         }
-        //console.log(game.built);//rme
         
         
         if(game.scene.blockConstruction==0 && game.scene.player.sprite.position.x > game.built-game.width)
@@ -743,17 +719,6 @@ game.createScene('Main', {
                 game.scene.stadiumBlock.remove();
             }
             game.scene.prevPrevBlock.remove();
-    
-            if(game.scene.prevPrevBlock)
-            {
-                
-                var id = game.scene.prevPrevBlock.id
-                if(id!=game.scene.block.id && id>0)
-                {
-                    if(game.scene.level[id-1])
-                        game.scene.level[id-1].y+=5000;
-                }
-            }
         }
     },
     createBlock:function(displacementX)
@@ -761,15 +726,6 @@ game.createScene('Main', {
         var index = game.blockIdx
         game.blockIdx++;
         var pRnd = PRnd(Lambda)
-        var same=false
-        while (same)
-        {
-            pRnd = PRnd(Lambda)
-            if(pRnd==game.scene.block.id)
-            {
-             same=true;   
-            }
-        }
         //console.log(pRnd)
         this.prevPrevBlock = this.previousBlock;
         this.previousBlock = this.block;
@@ -928,17 +884,7 @@ game.createClass('Block', {
         // this.calculateBlockSafe();
         // //console.log(JSON.stringify(this.blockSafe));
         // this.createColliders();
-        // this.createObjColliders();     
-        
-        if(game.scene.level)
-        {
-        var l =game.scene.level.length;
-        if(id<l && id > 0)
-        {
-            game.scene.level[id-1].x =displacementX;
-            game.scene.level[id-1].y =0;
-        }
-        }
+        // this.createObjColliders();        
         this.deltapack=0;
     },
     dressBlock:function()
@@ -950,7 +896,7 @@ game.createClass('Block', {
             var layer = this.tilemap.layers[key];
             //console.log(layer);
             
-            if(layer.image && layer.visible && 0)//TODO
+            if(layer.image && layer.visible)
             {
                 
                 var s = new game.Sprite(layer.image)
@@ -1269,13 +1215,6 @@ game.createClass('Block', {
             }
           }
         }
-        
-        if( this.id <game.scene.level.length)
-        {
-            game.scene.level[this.id-1].x-=displacementX;
-            console.log("moved" + this.id)//rme
-        }
-        
      },
     indexOfId:function(array, body){
         for(var i=0;i<array.length;++i)

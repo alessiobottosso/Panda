@@ -10,7 +10,7 @@
          "offsety":734.727272727273,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -22,7 +22,7 @@
          "offsety":871.878787878788,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -34,7 +34,7 @@
          "offsety":727.939393939394,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -46,7 +46,7 @@
          "offsety":1169.09090909091,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -58,7 +58,7 @@
          "offsety":1308.9696969697,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -70,7 +70,7 @@
          "offsety":1129.69696969697,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -82,7 +82,7 @@
          "offsety":1232.9696969697,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -94,7 +94,7 @@
          "offsety":1314.78787878788,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -106,7 +106,7 @@
          "offsety":1348.12121212121,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -118,7 +118,7 @@
          "offsety":928.242424242423,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -130,7 +130,7 @@
          "offsety":1448.66666666667,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -142,7 +142,7 @@
          "offsety":1320,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -154,7 +154,7 @@
          "offsety":1308,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -166,7 +166,7 @@
          "offsety":1468.66666666667,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -178,7 +178,7 @@
          "offsety":1358.66666666667,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -190,7 +190,7 @@
          "offsety":1476.60606060606,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -202,7 +202,7 @@
          "offsety":1485.75757575758,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -214,7 +214,7 @@
          "offsety":1283.75757575758,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -224,7 +224,7 @@
          "name":"d",
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -236,7 +236,7 @@
          "offsety":1282.42424242424,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -248,7 +248,7 @@
          "offsety":1260.75757575758,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -260,7 +260,7 @@
          "offsety":1504.25757575758,
          "opacity":1,
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -271,18 +271,8 @@
          "name":"bg",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
-         "width":50,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "id":44,
-         "image":"level2.png",
-         "name":"0",
-         "opacity":1,
-         "type":"imagelayer",
          "visible":true,
+         "width":50,
          "x":0,
          "y":0
         }, 

@@ -100,7 +100,7 @@ game.module(
                 });
                 
             this.scoreStep = 0;
-            
+
             if (this.score < 10)
             {
                 this.scoreDelay = 0.5;
@@ -130,6 +130,7 @@ game.module(
             this.scoreVisible = false;
             
             AddForegroundUI();
+
     	},
     	
     	displayScore: function()
@@ -185,11 +186,17 @@ game.module(
         	        this.scoreStep;
         	        this.scoreTimer = 0;
         	        
-        	        this.scoreText.setText("");
-        	        this.scoreText = CreateText(this.shownScore,HALF_WIDTH,
-                        0.295*game.height,0,95)
+        	        //this.scoreText.setText("");
+        	        
+        	       // this.scoreText = CreateText(this.shownScore,HALF_WIDTH,
+                //         0.295*game.height,0,95)
+                        
+
+                this.scoreText.setText(this.shownScore);
+                this.scoreText.x = 30+ HALF_WIDTH - this.scoreText.width/2
                     SetColor(this.scoreText,COLOR_BLACK);
-                    this.scoreText.addTo(game.scene.stage)
+                    
+                    //this.scoreText.addTo(game.scene.stage)
         	    }
         	    else if (this.shownScore >= this.score)
         	    {

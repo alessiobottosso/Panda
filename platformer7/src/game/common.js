@@ -1,6 +1,6 @@
 var FR_ALLOW_UNKNOW=true;
 var FR_PASSTROUGH=false;
-var FR_DEBUG = true;
+var FR_DEBUG = false;
 var FR_TIMEMALUS=30;
 var FR_TIMEBONUS=3;
 var FR_VALIDATION_TOKEN=[];
@@ -30,7 +30,7 @@ game.module(
 LEVEL_DESIGN="";
 LEVEL_DESIGN_SEQUENTIAL=false
 MUSIC_VOLUME=0.20;
-LOCAL_MODE=true;    
+LOCAL_MODE=false;    
 
 
 TestLevel=false;
@@ -303,11 +303,6 @@ game.addAsset('minecraft.fnt');
 
 
 
-game.addAsset('level1.png');
-game.addAsset('level2.png');
-game.addAsset('level3.png');
-game.addAsset('level4.png');
-game.addAsset('level5.png');
 
 game.addAsset('level.json');
 
@@ -317,11 +312,6 @@ for(num=0;num<MaxLevel+1;++num)
     game.addAsset('level'+num +'.json');
     
 }
-//var num=0;
-//for(num=0;num<MaxLevel+1;++num)
-//{
-//    game.addAsset('level'+num +'.png');    
-//}
 
 MaxPlayer=25;
 var num=0;
