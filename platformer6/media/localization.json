@@ -1,0 +1,44 @@
+{
+	"localizedTexts": {
+		"ERROR1": {
+			"ENG": "There was a connection\nproblem, we are sorry but\nit was not possible\nto start the game.",
+			"ITA": "Si e' verificato un problema\ndi connessione, ci  dispiace\nma non e' stato possibile\navviare la partita."
+		},
+		"ERROR2": {
+			"ENG": "There was a connection\nproblem, we are sorry but\nwe were unable to\nsave your score.",
+			"ITA": "Si e' verificato un problema\ndi connessione ci dispiace\nma non e' stato possibile\nregistrare il tuo punteggio."
+		},
+		"SKIP": {
+			"ENG": "SKIP",
+			"ITA": "SALTA"
+		},
+		"SELECTPLAYER": {
+			"ENG": "SELECT YOUR PLAYER",
+			"ITA": "SELEZIONA IL GIOCATORE"
+		},
+		"CONFIRM": {
+			"ENG": "CONFIRM",
+			"ITA": "CONFERMA"
+		},
+		"TUTORIAL1": {
+			"ENG": "HOW to JUMP and DOUBLE JUMP - Click on\nyour screen once in order to perform a jump\nClick on your screen twice to perform a double\njump and reach higher platforms.",
+			"ITA": "Come SALTARE e fare DOPPIO SALTO:\nFai tap una volta sullo schermo per saltare.\nFai doppio tap sullo schermo per eseguire\nun doppio salto e raggiungere le piattaforme\npiu' alte"
+		},
+		"TUTORIAL2": {
+			"ENG": "HOLES and STARS - Be careful to not fall into the\nfloor's holes! Your time will decrease every time\nyou fall.\nCollecting the stars will increase your\navailable time.",
+			"ITA": "CADUTA e STELLE\nFai attenzione a non cadere all'interno dei buchi\ndel terreno. Il tempo residuo diminuira'\ndopo ogni caduta. Raccogliere le stelle\naumentera' il tuo tempo residuo"
+		},
+		"TUTORIAL3": {
+			"ENG": "COLLECT THE XMAS PRESENTS - Collect\nall the presents you can to improve\nyour score.",
+			"ITA": "RACCOGLI I PACCHI DI NATALE\nRaccogli piu' pacchi possibili\nper aumentare il tuo punteggio."
+		},
+		"SHARE": {
+			"ENG": "SHARE",
+			"ITA": "CONDIVIDI"
+		},
+		"RESTART": {
+			"ENG": "RESTART",
+			"ITA": "RIPROVA"
+		}
+	}
+}
