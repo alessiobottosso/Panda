@@ -94,11 +94,11 @@ game.module(
     	        game.introMusic.stop();
     	        game.playingIntro1 = false;
     	    }
-    	    if (game.playingIntro2 == false)
-    	    {
-    	        game.playingIntro2 = true;
-    	        game.intro2Music.play();
-    	    }
+    	   // if (game.playingIntro2 == false)
+    	   // {
+    	   //     game.playingIntro2 = true;
+    	   //     game.intro2Music.play();
+    	   // }
     	    
     	    GoToScene("Select")
     	},
