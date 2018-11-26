@@ -1,5 +1,5 @@
 game.config = {
-    mediaFolder:"/media",
+    //mediaFolder:"/media",
     name: 'Platformer',
     audio: {
         stopOnSceneChange: false

@@ -445,7 +445,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":42,
+ "nextlayerid":44,
  "nextobjectid":150,
  "orientation":"orthogonal",
  "renderorder":"right-down",
@@ -462,12 +462,12 @@
              "width":12
             },
          "image":"tileset.png",
-         "imageheight":576,
+         "imageheight":384,
          "imagewidth":1024,
          "margin":0,
          "name":"tileset_level1",
          "spacing":0,
-         "tilecount":144,
+         "tilecount":96,
          "tileheight":64,
          "tilewidth":64
         }],
