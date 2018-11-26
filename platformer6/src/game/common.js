@@ -30,7 +30,7 @@ game.module(
 LEVEL_DESIGN="";
 LEVEL_DESIGN_SEQUENTIAL=false
 MUSIC_VOLUME=0.20;
-LOCAL_MODE=false;    
+LOCAL_MODE=true;    
 
 
 TestLevel=false;
