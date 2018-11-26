@@ -179,6 +179,12 @@ game.module(
     	},
     	start:function()
     	{
+    	    if (game.playingIntro2)
+            {
+                game.intro2Music.stop();
+                game.playingIntro2 = false;
+            }
+    	    
     	    StartGame();
     	    //GoToScene("Main");
     	},

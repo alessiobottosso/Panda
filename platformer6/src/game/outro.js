@@ -130,8 +130,6 @@ game.module(
             this.scoreVisible = false;
             
             AddForegroundUI();
-            
-            this.writePage();
     	},
     	
     	displayScore: function()
@@ -151,38 +149,6 @@ game.module(
         {
             this.player.alive = false;
         },
-    	
-    	writePage:function()
-    	{
-    	    /*
-            if(game.scene.message) game.scene.message.remove()
-            game.scene.message = CreateText(
-                this.page
-                ,HALF_WIDTH*0.2,
-                
-            0.111*game.height,0,50)
-    	    //this.text.anchorCenter();
-    	    game.scene.message.anchor.set(0,0)
-    	    game.scene.message.align = 'left';
-	        game.scene.message.updateText();
-
-            game.scene.message.addTo(game.scene.stage)
-            */
-    	},
-
-    	nextPage:function()
-    	{
-    	    this.page++;
-    	    if(this.page > game.cinematicSequence.length)
-    	    {
-    	        game.scene.start();
-    	    }
-            else
-            {
-                NextCinematic();
-    	        this.writePage();
-            }
-    	},
     	
 	    start:function()
     	{
@@ -246,27 +212,12 @@ game.module(
     	    }
     	},
     	
-    	doPress:function()
-    	{
-    	    var timeDiff = Date.now() - this.timer
-    	    this.timer=Date.now();
-    	    //console.log(timeDiff)//RME
-            if(timeDiff > 300)
-            {
-                this.nextPage();
-            }
-            else
-            {
-                game.scene.start();
-            }
-    	},
-    	
-    	
+	
         keydown: function(key) 
         {
             if (key === 'SPACE') 
             {
-                this.doPress();
+                this.start();
             }
         },
     });

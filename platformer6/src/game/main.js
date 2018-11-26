@@ -28,12 +28,6 @@ game.createScene('Main', {
         FR_VALIDATION_TOKEN=[];
         FR_TIMESFALLEN=0;
         FR_TIMESSTARS=0;
-
-        if (game.playingIntro2)
-        {
-            game.intro2Music.stop();
-            game.playingIntro2 = false;
-        }
         
         game.mainMusic.play();
         //try{
