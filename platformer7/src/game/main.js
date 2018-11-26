@@ -631,7 +631,7 @@ game.createScene('Main', {
             }
             updated=true;
         }
-        console.log(game.built);//rme
+        //console.log(game.built);//rme
         
         
         if(game.scene.blockConstruction==0 && game.scene.player.sprite.position.x > game.built-game.width)
