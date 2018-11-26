@@ -50,34 +50,9 @@ game.module(
             game.name = "CRISTIAN.S0001"
             game.gname = ""
             FR_PLAYERID="00000000000000.00000000"
-            this.loggedin = false;
-            try
-            {
-                if(app_juve)
-                {
-                    if(app_juve.lang=="en")
-                    {
-                        game.locale="en_US"
-                    }
-                    if(app_juve.user)
-                    {
-                        if(app_juve.user.userID)
-                        {
-                           FR_PLAYERID = app_juve.user.userID
-                           loggedin = true;
-                        }
-                        if(app_juve.user.nickname)
-                        {
-                            game.name = app_juve.user.nickname
-                        }
-                    }
-                }
-        	}
-    	    catch(e)
-    	    {
-    	        console.log(e)
-    	        this.loggedin = false;
-    	    }
+            game.loggedin = false;
+            
+            SetLoginVars();
             
             HALF_WIDTH = game.width / 2;
             game.Input.clickTimeout = 60000;
@@ -153,7 +128,7 @@ game.module(
             else
             {
                 
-                if(this.loggedin || FR_ALLOW_UNKNOW)
+                if(game.loggedin || FR_ALLOW_UNKNOW)
                 //GoToScene("Select");
                 GoToScene('Intro');
             }
@@ -165,5 +140,40 @@ game.module(
         }
 
     });
+
+    
 });
+
+function SetLoginVars()
+{
+            try
+            {
+                if(app_juve)
+                {
+                    if(app_juve.lang=="en")
+                    {
+                        game.locale="en_US"
+                    }
+                    if(app_juve.user)
+                    {
+                        if(app_juve.user.userID)
+                        {
+                           FR_PLAYERID = app_juve.user.userID
+                           game.loggedin = true;
+                        }
+                        if(app_juve.user.nickname)
+                        {
+                            game.name = app_juve.user.nickname
+                        }
+                    }
+                }
+        	}
+    	    catch(e)
+    	    {
+    	        console.log(e)
+    	        game.loggedin = false;
+    	    }
+
+}
+
 

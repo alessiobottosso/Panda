@@ -354,37 +354,6 @@ game.addAsset('portraitLock.png');
 game.addAsset(INTRO_OUTRO_ATLAS);
 game.addAsset(INTRO_OUTRO_JSON);
 
-function SetLoginVars()
-{
-            try
-            {
-                if(app_juve)
-                {
-                    if(app_juve.lang=="en")
-                    {
-                        game.locale="en_US"
-                    }
-                    if(app_juve.user)
-                    {
-                        if(app_juve.user.userID)
-                        {
-                           FR_PLAYERID = app_juve.user.userID
-                           game.loggedin = true;
-                        }
-                        if(app_juve.user.nickname)
-                        {
-                            game.name = app_juve.user.nickname
-                        }
-                    }
-                }
-        	}
-    	    catch(e)
-    	    {
-    	        console.log(e)
-    	        game.loggedin = false;
-    	    }
-
-}
 
 game.createClass('ForgeButton', 'Button', {
 	//We extend the standard button
@@ -911,6 +880,7 @@ function GetTimestamp()
 
 function StartGame()
 {
+    SetLoginVars();
     SendStartGame();
 }
 
@@ -1329,7 +1299,7 @@ function CinematicEvent(entry, event)
             if (game.playingIntro2 == false)
             {
                 PlaySound(SOUND_SANTA);
-                game.intro2Music.play();
+                PlayMusic(game.intro2Music);
                 
                 game.playingIntro2 = true;
             }
@@ -1376,5 +1346,20 @@ function CinematicEvent(entry, event)
             //console.log(event.data.name);
             break;
         }
+    }
+}
+
+function PlayMusic(music)
+{
+    try
+    {
+        if (music)
+        {
+            music.play();
+        }
+    }
+    catch (e)
+    {
+        console.log(e.message);
     }
 }

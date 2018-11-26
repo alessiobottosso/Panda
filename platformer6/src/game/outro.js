@@ -25,7 +25,7 @@ game.module(
     	    
     	    this.hasFinished = false;
     	    
-    	    game.outroMusic.play();
+    	    PlayMusic(game.outroMusic);
 
     	    this.world = new game.Physics();
             this.world.gravity.y = this.gravity;

@@ -16,7 +16,7 @@ game.module(
     	    game.playingIntro1 = false;
     	    game.playingIntro2 = false;
     	    
-    	    game.introMusic.play();
+    	    PlayMusic(game.introMusic);
     	    game.playingIntro1 = true;
        
             this.timer = 0;

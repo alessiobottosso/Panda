@@ -29,7 +29,7 @@ game.createScene('Main', {
         FR_TIMESFALLEN=0;
         FR_TIMESSTARS=0;
         
-        game.mainMusic.play();
+        PlayMusic(game.mainMusic);
         //try{
         //console.log("scene init");
         var d= 500

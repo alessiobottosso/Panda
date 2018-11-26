@@ -13,6 +13,7 @@ game.module(
         
         init: function() 
     	{
+    	    SetLoginVars();
     	    if (game.playingIntro1 == true)
     	    {
     	        game.introMusic.stop();
@@ -21,7 +22,7 @@ game.module(
     	    if (game.playingIntro2 == false)
     	    {
     	        game.playingIntro2 = true;
-    	        game.intro2Music.play();
+    	        PlayMusic(game.intro2Music);
     	    }
     	    
     	    AddForegroundUI();
