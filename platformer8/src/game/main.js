@@ -505,6 +505,11 @@ game.createScene('Main', {
 
             //GoToScene("Outro")
             this.containerConnect.visible=true;
+            
+            game.scene.bgLayer.forEach(function(element) {
+                element.remove()
+            });
+            
             SendEndGame();
             try
             {
