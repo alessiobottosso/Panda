@@ -27,6 +27,7 @@ game.createScene('Main', {
     {
         if (key === 'SPACE') 
         {
+            delete this.scenetext._cachedSprite.texture.baseTexture;
             this.scenetext._cachedSprite.texture.remove();
             this.scenetext.remove();
             game.system.setScene("Main");
