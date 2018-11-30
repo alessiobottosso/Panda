@@ -300,6 +300,10 @@ game.addAsset(TUTORIAL2_ENG);
 game.addAsset(TUTORIAL3_ENG);
 
 game.addAsset('minecraft.fnt');
+game.addAsset('minecraftb.fnt');
+game.addAsset('minecraftr.fnt');
+game.addAsset('minecraftd.fnt');
+game.addAsset('minecrafty.fnt');
 
 
 
@@ -418,9 +422,22 @@ game.createClass('ForgeButton', 'Button', {
 	innerCreateText: function(text,container,size,tint,offsetY)
 	{
 	    var x= container.width/2;
-	    var text2 = CreateText(text,0,0,10,size)
+	    var fontIdx=0;
+	    if(tint == COLOR_BLACK)
+	    {
+	        fontIdx=1;
+	    }
+	    if(tint == COLOR_YELLOW)
+	    {
+	        fontIdx=4;
+	    }
+	    if(tint == COLOR_DARKDARKGRAY)
+	    {
+	        fontIdx=3;
+	    }
+	    var text2 = CreateText(text,0,0,fontIdx,size)
 	    
-	    SetColor(text2,tint);
+	    //SetColor(text2,tint);
         var f= text2.height/text2.fontClass.lineHeight;
 	    text2.y =+offsetY + (1/f )*(-text2.height*text2.scale.y/2)
 	    //text2.x = container.width/2;

@@ -132,8 +132,8 @@ game.module(
     	displayScore: function()
     	{
             this.scoreText = CreateText(this.shownScore,HALF_WIDTH,
-            0.295*game.height,0,95)
-            SetColor(this.scoreText,COLOR_BLACK);
+            0.295*game.height,1,95)
+            //SetColor(this.scoreText,COLOR_BLACK);
             this.scoreText.addTo(game.scene.stage)
             
             this.scoreVisible = true;
@@ -200,7 +200,7 @@ game.module(
 
                 this.scoreText.setText(this.shownScore);
                 this.scoreText.x = 30+ HALF_WIDTH - this.scoreText.width/2
-                    SetColor(this.scoreText,COLOR_BLACK);
+                //SetColor(this.scoreText,COLOR_BLACK);
                     
                     //this.scoreText.addTo(game.scene.stage)
         	    }

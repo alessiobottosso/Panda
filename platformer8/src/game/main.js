@@ -112,12 +112,12 @@ game.createScene('Main', {
 
 
         this.text1 = CreateText(this.format1(this.maxTime),
-            0,0,0,60, {align:"center"});
+            0,0,1,60, {align:"center"});
         this.text1.anchorCenter();
         this.text1.x+=HALF_WIDTH;
         this.text1.y+=game.height * 0.052 + this.text1.height/2;
         this.text1.y+=2;
-        SetColor(this.text1,"#000000",0.7)
+        //SetColor(this.text1,"#000000",0.7)
         this.text1.addTo(game.scene.stage)
 
         this.text = CreateText(this.format1(this.maxTime),
@@ -130,10 +130,10 @@ game.createScene('Main', {
 
 
 
-        this.score1 = CreateText1(game.name,0,0,0,16.5, {});
+        this.score1 = CreateText1(game.name,0,0,1,16.5, {});
         this.score1.x+=25;
         this.score1.y+=2+game.height * 0.136 + this.score1.height/2;
-        SetColor(this.score1,"#000000",0.7)
+        //SetColor(this.score1,"#000000",0.7)
         this.score1.addTo(game.scene.stage)
 
         this.score1 = CreateText1(game.name,0,0,0,16.5, {});
@@ -142,10 +142,10 @@ game.createScene('Main', {
         this.score1.cache = true;
         this.score1.addTo(game.scene.stage)
 
-        this.scoreb = CreateText1("00000000",0,0,0,30, {});
+        this.scoreb = CreateText1("00000000",0,0,1,30, {});
         this.scoreb.x+=25;
         this.scoreb.y+=2+(game.height * 0.16) + this.scoreb.height/2;
-        SetColor(this.scoreb,"#000000",0.7)
+        //SetColor(this.scoreb,"#000000",0.7)
 
         this.scoreb.addTo(game.scene.stage)
 
@@ -162,19 +162,19 @@ game.createScene('Main', {
 
         var v= this.fill(RF_HKVFQRGHGLRPQWYGYGSZ.toString());
         this.maxscore = CreateText(v,
-            0,0,0,22);
+            0,0,3,22);
         this.maxscore.cache=true;
-        SetColor(this.maxscore,COLOR_DOVEGRAY)
+        //SetColor(this.maxscore,COLOR_DOVEGRAY)
         this.maxscore.anchor.set(0,0);
         this.maxscore.x=game.width*0.94-this.maxscore.width*this.maxscore.scale.x
         this.maxscore.y+=game.height * 0.04 + this.maxscore.height/2;
         this.maxscore.addTo(game.scene.stage)
 
         this.score1 = CreateText1("HIGH SCORE",
-            0,0,0,28, {});
+            0,0,3,28, {});
         this.score1.x+=game.width*0.90-this.maxscore.width*this.maxscore.scale.x
         this.score1.y+=game.height * 0.008 + this.score1.height/2;
-        SetColor(this.score1,COLOR_DOVEGRAY,0.7)
+        //SetColor(this.score1,COLOR_DOVEGRAY,0.7)
         this.score1.addTo(game.scene.stage)
 
 
@@ -440,12 +440,14 @@ game.createScene('Main', {
             this.text1.setText(v1);
             if(value>10)
             {
-                SetColor(this.text1,"#000000",0.7)
+                SetFontColor(this.text1, 1)
+                //SetColor(this.text1,"#000000",0.7)
                 
             }
             else
             {
-                SetColor(this.text1,"#FF0000",0.7)
+                SetFontColor(this.text1, 2)
+                //SetColor(this.text1,"#FF0000",0.7)
                 if(value>0)
                     PlaySound(SOUND_TIME);
             }
@@ -581,7 +583,7 @@ game.createScene('Main', {
             var stringed = this.fill(this.points.toString())
             this.score.setText(stringed);
             this.scoreb.setText(stringed);
-            SetColor(this.scoreb,"#000000",0.7)
+            //SetColor(this.scoreb,"#000000",0.7)
             if(this.points > RF_HKVFQRGHGLRPQWYGYGSZ)
             {
               this.scoreBouncingTimer=1;  

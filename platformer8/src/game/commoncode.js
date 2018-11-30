@@ -47,7 +47,7 @@ function CreateText(text,x,y,fontIdx,size,option)
 {
         if(!option) option={}
 		var etext = new game.Text(text,option);
-
+		SetFontColor(etext,fontIdx)
 		var width = etext.width / etext.scale.x;
         etext.anchor.set(width / 2, 0);
             
@@ -63,10 +63,35 @@ function CreateText(text,x,y,fontIdx,size,option)
 		return etext;
 }
 
+function SetFontColor(etext, fontIdx)
+{
+		if(fontIdx == 0)
+		{
+			etext.setFont('Minecraft');
+		}
+		if(fontIdx == 1) 
+		{
+			etext.setFont('Minecraftb');
+		}
+		if(fontIdx == 2)
+		{
+			etext.setFont('Minecraftr');
+		}
+		if(fontIdx == 3)
+		{
+			etext.setFont('Minecraftd');
+		}
+		if(fontIdx == 4)
+		{
+			etext.setFont('Minecrafty');
+		}
+}
+
 function CreateText1(text,x,y,fontIdx,size,option)
 {
         if(!option) option={}
 		var etext = new game.Text(text,option);
+		SetFontColor(etext,fontIdx)
 
 		var width = etext.width / etext.scale.x;
         etext.anchor.set(0, 0);
@@ -85,9 +110,9 @@ function CreateText1(text,x,y,fontIdx,size,option)
 
 function SetColor(etext,tint)
 {
-// 		etext.cache = true;
-// 		etext._cachedSprite.tint = tint;
-// 		etext._cachedSprite.tintAlpha = 1; 
+ 		etext.cache = true;
+ 		etext._cachedSprite.tint = tint;
+ 		etext._cachedSprite.tintAlpha = 1; 
 }
 
 

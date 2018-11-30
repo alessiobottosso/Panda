@@ -31,12 +31,12 @@ game.module(
                 message1
                 ,HALF_WIDTH*0.39,
                 
-            0.42*game.height,0,29)
+            0.42*game.height,1,29)
     	    //this.text.anchorCenter();
     	    game.scene.message.anchor.set(0,0)
     	    game.scene.message.align = 'left';
 	        game.scene.message.updateText();
-    	    SetColor(game.scene.message,COLOR_BLACK,1);
+    	    //SetColor(game.scene.message,COLOR_BLACK,1);
 
             game.scene.message.addTo(game.scene.stage)
 
