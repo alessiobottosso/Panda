@@ -12,6 +12,24 @@ game.module(
 .body(function() {
 });
 
+function StopScoreSound()
+{
+            try
+            {
+                if (game.playingScoreSound == true)
+                {
+                    game.playingScoreSound = true;
+                    if (game.scoreSound != null)
+                    {
+                        game.scoreSound.stop();
+                    }
+                }
+            }
+            catch(e)
+            {
+            }
+}
+
 function CreateDefaultButton(x,y,text,size, callback)
 {
             var button = new game.ForgeButton(BUTTON_ACTIVE, BUTTON_PRESSED, BUTTON_DISABLED,

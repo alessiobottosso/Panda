@@ -1,4 +1,5 @@
 game.config = {
+    //mediaFolder:"/media",
     name: 'JuventusXMAS',
     audio: {
         stopOnSceneChange: false

@@ -151,16 +151,24 @@ game.module(
     	{
     	    game.outroMusic.stop();
 
-            if (game.playingScoreSound == true)
+            StopScoreSound();  
+            if(!game.loggedin)
             {
-                game.playingScoreSound = true;
-                if (game.scoreSound != null)
+        	    GoToScene("Select")
+            }
+            else
+            {
+                try
                 {
-                    game.scoreSound.stop();
+                    if(app_juve)
+                    {
+                        app_juve.restartRefresh();
+                    }
+                }
+                catch(e)
+                {
                 }
             }
-    	    
-    	    GoToScene("Select")
     	},
     	
     	update:function()
@@ -235,3 +243,4 @@ game.module(
         },
     });
 });
+

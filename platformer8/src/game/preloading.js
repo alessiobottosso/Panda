@@ -124,6 +124,22 @@ game.module(
     	},
     	postLoad:function()
     	{
+    	    var skipIntro=false;
+    	    try
+    	    {
+    	        if(app_juve)
+    	        {
+    	            if(app_juve.skip_intro)
+    	            {
+    	                skipIntro=true;
+    	            }
+    	        }
+    	    }
+    	    catch(e)
+    	    {
+    	        
+    	    }
+    	    
             if(LEVEL_DESIGN!="")
             {
                 TestLevel=true;
@@ -132,10 +148,17 @@ game.module(
             }
             else
             {
-                
                 if(game.loggedin || RF_WBPZPBYZRISMQHIEYEBZ)
-                //GoToScene("Select");
-                GoToScene('Intro');
+                {
+                    if(skipIntro)
+                    {
+                        GoToScene("Select");        
+                    }
+                    else
+                    {
+                        GoToScene('Intro');
+                    }
+                }
             }
     	    
     	},
