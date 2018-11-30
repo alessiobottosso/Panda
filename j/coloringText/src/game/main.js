@@ -17,7 +17,7 @@ game.createScene('Main', {
         etext.cache = true;
 		etext._cachedSprite.tint = "#668899";
 		etext._cachedSprite.tintAlpha = 1; 	
-		
+	this.scenetext = etext
     },
 
     update: function() {
@@ -27,6 +27,8 @@ game.createScene('Main', {
     {
         if (key === 'SPACE') 
         {
+            this.scenetext._cachedSprite.texture.remove();
+            this.scenetext.remove();
             game.system.setScene("Main");
         }
         
