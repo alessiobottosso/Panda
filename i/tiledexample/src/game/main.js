@@ -9,6 +9,12 @@ game.createScene('Main', {
     init: function() {
     	this.sprite = new game.TilingSprite('sprite.png', game.width, game.height);
     	this.sprite.addTo(this.stage);
+
+    	this.sprite2 = new game.Sprite('sprite.png');
+    	this.sprite2.anchorCenter();
+    	this.sprite2.x = game.width/2
+    	this.sprite2.y = game.height/2
+    	this.sprite2.addTo(this.stage);
     	
     },
 
