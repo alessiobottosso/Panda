@@ -392,7 +392,7 @@ game.createClass('System', {
         this._newSceneName = null;
         if (this.scene && this.scene._exit(sceneName)) return;
         if (this.paused) this.paused = false;
-        game.TilingSprite.clearCache();
+		if (this.clearTiledCache) game.TilingSprite.clearCache();
         game.Sprite._clearTintedTextures();
         this.scene = new game[sceneName](param);
         this._startRunLoop();
@@ -495,6 +495,7 @@ game.addAttributes('System', {
         @attribute {Number} frameRate
         @default null
     **/
+	clearTiledCache: true,
     frameRate: null,
     /**
         System height.
