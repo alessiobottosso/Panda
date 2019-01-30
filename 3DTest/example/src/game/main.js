@@ -82,13 +82,9 @@ game.createScene('Multi', {
         //this.brick.mesh.rotation.x -= 1 * game.delta;
         //this.brick.mesh.rotation.z -= 1.5 * game.delta;
         this.brick.mesh.position.y -= 40 * game.delta;
-        var space=128;
-        game.scene.a=game.scene.a+1;
-        
-        if(game.scene.a==space)
+        if(this.brick.mesh.position.y<-100)
         {
-            game.scene.a=0;
-            this.brick.mesh.position.y += 40*space*game.delta;
+            this.brick.mesh.position.y =0;
         }
 
 
