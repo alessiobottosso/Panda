@@ -54063,7 +54063,7 @@ game.Plane3D = game.Object3D.extend({
             height = tex.height;
         }
         var geometry = new THREE.PlaneGeometry(width, height || width, widthSegments, heightSegments);
-        this.super(geometry, texture);
+        this.super(geometry, texture, props);
     }
 });
 
